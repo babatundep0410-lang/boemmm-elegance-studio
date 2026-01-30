@@ -15,7 +15,7 @@ const navItems = [{
   label: "Bedroom",
   href: "#bedroom"
 }, {
-  label: "About",
+  label: "About us",
   href: "#about"
 }, {
   label: "Contact",
