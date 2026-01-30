@@ -12,9 +12,6 @@ const navItems = [{
   label: "AR Experience",
   href: "#ar-experience"
 }, {
-  label: "Bedroom",
-  href: "#bedroom"
-}, {
   label: "About us",
   href: "#about"
 }, {
