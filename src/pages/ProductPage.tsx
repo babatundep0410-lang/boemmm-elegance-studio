@@ -3,8 +3,7 @@ import { useParams, Link } from 'react-router-dom';
 import { getProductBySlug } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
-import { Minus, Plus, ChevronDown } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Minus, Plus } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -17,14 +16,13 @@ const ProductPage = () => {
   const product = getProductBySlug(collectionSlug || '', categorySlug || '');
   const { addItem } = useCart();
   const [quantity, setQuantity] = useState(1);
-  const [activeImage, setActiveImage] = useState(0);
 
   if (!product) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <h1 className="font-serif text-3xl mb-4">Product Not Found</h1>
-          <Link to="/collections" className="text-accent hover:underline">
+          <Link to="/collections" className="text-muted-foreground hover:text-foreground transition-colors">
             View all collections
           </Link>
         </div>
@@ -53,214 +51,183 @@ const ProductPage = () => {
     }).format(price);
   };
 
-  // Placeholder images array
-  const images = product.images.length > 0 
-    ? product.images 
-    : [null, null, null]; // Placeholder slots
+  // Placeholder images - in production these would come from product.images
+  const placeholderImages = [
+    { id: 1, label: 'Technical drawing - Top view' },
+    { id: 2, label: 'Technical drawing - Side view' },
+  ];
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Breadcrumb */}
-      <nav className="max-w-7xl mx-auto px-6 lg:px-12 py-4">
-        <ol className="flex items-center gap-2 text-sm text-muted-foreground">
-          <li>
-            <Link to="/collections" className="hover:text-foreground transition-colors">
-              Collections
-            </Link>
-          </li>
-          <li>/</li>
-          <li>
-            <Link
-              to={`/collections/${product.collectionSlug}`}
-              className="hover:text-foreground transition-colors"
-            >
-              {product.collection}
-            </Link>
-          </li>
-          <li>/</li>
-          <li className="text-foreground">{product.name}</li>
-        </ol>
-      </nav>
-
-      {/* Product Section */}
-      <section className="max-w-7xl mx-auto px-6 lg:px-12 py-8">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-24">
-          {/* Image Gallery */}
-          <div className="space-y-4">
-            {/* Main Image */}
-            <div className="aspect-square bg-muted border border-border flex items-center justify-center">
-              {images[activeImage] ? (
-                <img
-                  src={images[activeImage]}
-                  alt={product.name}
-                  className="w-full h-full object-contain"
-                />
-              ) : (
-                <div className="text-center p-8">
-                  <p className="text-muted-foreground text-sm">
-                    Product image placeholder
-                  </p>
-                  <p className="text-xs text-muted-foreground/60 mt-2">
-                    High-resolution imagery coming soon
-                  </p>
-                </div>
-              )}
+      {/* Main Product Section - Two Column Layout */}
+      <section className="max-w-[1600px] mx-auto">
+        <div className="grid lg:grid-cols-[1fr,420px] xl:grid-cols-[1fr,480px] min-h-screen">
+          
+          {/* Left Column - Product Images (Stacked) */}
+          <div className="border-r border-border">
+            {/* Primary Image */}
+            <div className="border-b border-border">
+              <div className="aspect-[4/3] lg:aspect-[16/12] flex items-center justify-center p-8 lg:p-16">
+                {product.images[0] ? (
+                  <img
+                    src={product.images[0]}
+                    alt={product.name}
+                    className="max-w-full max-h-full object-contain"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center border border-border">
+                    <div className="text-center text-muted-foreground">
+                      <p className="text-sm">{placeholderImages[0].label}</p>
+                      <p className="text-xs mt-1 opacity-60">Product imagery coming soon</p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
 
-            {/* Thumbnail Gallery */}
-            <div className="grid grid-cols-4 gap-4">
-              {images.map((img, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveImage(idx)}
-                  className={cn(
-                    "aspect-square bg-muted border transition-all",
-                    activeImage === idx
-                      ? "border-foreground"
-                      : "border-border hover:border-muted-foreground"
-                  )}
-                >
-                  {img ? (
-                    <img
-                      src={img}
-                      alt={`${product.name} view ${idx + 1}`}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <span className="text-[10px] text-muted-foreground">
-                        View {idx + 1}
-                      </span>
+            {/* Secondary Image */}
+            <div>
+              <div className="aspect-[4/3] lg:aspect-[16/10] flex items-center justify-center p-8 lg:p-16">
+                {product.images[1] ? (
+                  <img
+                    src={product.images[1]}
+                    alt={`${product.name} - alternate view`}
+                    className="max-w-full max-h-full object-contain"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center border border-border">
+                    <div className="text-center text-muted-foreground">
+                      <p className="text-sm">{placeholderImages[1].label}</p>
+                      <p className="text-xs mt-1 opacity-60">Product imagery coming soon</p>
                     </div>
-                  )}
-                </button>
-              ))}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
-          {/* Product Info */}
-          <div className="lg:py-8">
-            <h1 className="font-serif text-3xl md:text-4xl mb-4">
+          {/* Right Column - Product Information */}
+          <div className="px-8 lg:px-12 py-12 lg:py-16 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
+            {/* Product Name */}
+            <h1 className="font-serif text-3xl lg:text-4xl text-foreground mb-6 leading-tight">
               {product.name}
             </h1>
-            
-            <p className="text-muted-foreground leading-relaxed mb-4">
-              {product.description}
-            </p>
-            
-            <p className="text-muted-foreground leading-relaxed mb-8">
-              {product.longDescription}
-            </p>
 
-            {/* Price */}
-            <div className="mb-6">
-              <p className="text-sm uppercase tracking-wider text-muted-foreground mb-1">
-                Price
+            {/* Product Description */}
+            <div className="space-y-4 mb-10">
+              <p className="text-muted-foreground leading-relaxed text-sm lg:text-base">
+                {product.description}
               </p>
-              <p className="font-serif text-2xl">{formatPrice(product.price)}</p>
+              <p className="text-muted-foreground leading-relaxed text-sm lg:text-base">
+                {product.longDescription}
+              </p>
             </div>
 
-            {/* Quantity */}
-            <div className="mb-8">
-              <p className="text-sm uppercase tracking-wider text-muted-foreground mb-3">
-                Quantity
-              </p>
+            {/* Price Section */}
+            <div className="mb-6">
+              <p className="text-sm font-medium text-foreground mb-1">Price</p>
+              <p className="text-foreground text-lg">{formatPrice(product.price)}</p>
+            </div>
+
+            {/* Quantity Selector */}
+            <div className="mb-6">
+              <p className="text-sm font-medium text-foreground mb-3">Quantity</p>
               <div className="inline-flex items-center border border-border">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="p-3 hover:bg-muted transition-colors"
+                  className="w-10 h-10 flex items-center justify-center hover:bg-muted transition-colors text-muted-foreground"
                   aria-label="Decrease quantity"
                 >
-                  <Minus className="w-4 h-4" />
+                  <Minus className="w-3 h-3" />
                 </button>
-                <span className="px-6 py-3 min-w-[60px] text-center">
+                <span className="w-12 h-10 flex items-center justify-center text-sm text-foreground border-x border-border">
                   {quantity}
                 </span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="p-3 hover:bg-muted transition-colors"
+                  className="w-10 h-10 flex items-center justify-center hover:bg-muted transition-colors text-muted-foreground"
                   aria-label="Increase quantity"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-3 h-3" />
                 </button>
               </div>
             </div>
 
-            {/* Specifications */}
-            <ul className="space-y-2 mb-8 text-sm">
-              <li className="flex">
-                <span className="text-muted-foreground w-28">Material:</span>
-                <span>{product.specifications.material}</span>
+            {/* Quick Specifications - Bullet List */}
+            <ul className="space-y-1.5 mb-8 text-sm text-muted-foreground">
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Crafted {product.specifications.material} {product.name}</span>
               </li>
-              <li className="flex">
-                <span className="text-muted-foreground w-28">Color:</span>
-                <span>{product.specifications.color}</span>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Color: {product.specifications.color}</span>
               </li>
-              <li className="flex">
-                <span className="text-muted-foreground w-28">Dimensions:</span>
-                <span>{product.specifications.dimensions}</span>
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Material: {product.specifications.material}</span>
               </li>
-              {product.specifications.weight && (
-                <li className="flex">
-                  <span className="text-muted-foreground w-28">Weight:</span>
-                  <span>{product.specifications.weight}</span>
-                </li>
-              )}
-              {product.specifications.finish && (
-                <li className="flex">
-                  <span className="text-muted-foreground w-28">Finish:</span>
-                  <span>{product.specifications.finish}</span>
-                </li>
-              )}
+              <li className="flex items-start">
+                <span className="mr-2">•</span>
+                <span>Dimensions: {product.specifications.dimensions}</span>
+              </li>
             </ul>
 
-            {/* Add to Cart */}
+            {/* Add to Cart Button */}
             <Button
               onClick={handleAddToCart}
-              className="w-full bg-foreground text-background hover:bg-foreground/90 py-6 text-sm uppercase tracking-wider"
+              className="bg-foreground/80 hover:bg-foreground text-background text-sm px-6 py-2.5 h-auto rounded-sm font-normal"
             >
               Add to cart
             </Button>
 
-            {/* Accordions */}
-            <Accordion type="single" collapsible className="mt-8 border-t border-border">
-              <AccordionItem value="details" className="border-b border-border">
-                <AccordionTrigger className="py-4 text-sm uppercase tracking-wider hover:no-underline">
+            {/* Accordion Sections */}
+            <Accordion type="single" collapsible className="mt-10 border-t border-border">
+              <AccordionItem value="details" className="border-b border-border py-0">
+                <AccordionTrigger className="py-4 text-sm font-medium text-foreground hover:no-underline">
                   Product Details
                 </AccordionTrigger>
                 <AccordionContent className="pb-4 text-sm text-muted-foreground leading-relaxed">
                   <p className="mb-3">{product.description}</p>
-                  <p>
+                  <p className="mb-3">
                     Each piece is hand-forged in our Accra workshop, ensuring unique 
                     character and exceptional quality. Minor variations in texture and 
                     finish are signatures of authentic craftsmanship.
                   </p>
+                  <ul className="space-y-1 mt-4">
+                    <li><span className="font-medium text-foreground">Material:</span> {product.specifications.material}</li>
+                    <li><span className="font-medium text-foreground">Dimensions:</span> {product.specifications.dimensions}</li>
+                    {product.specifications.weight && (
+                      <li><span className="font-medium text-foreground">Weight:</span> {product.specifications.weight}</li>
+                    )}
+                    {product.specifications.finish && (
+                      <li><span className="font-medium text-foreground">Finish:</span> {product.specifications.finish}</li>
+                    )}
+                  </ul>
                 </AccordionContent>
               </AccordionItem>
-              
-              <AccordionItem value="shipping" className="border-b border-border">
-                <AccordionTrigger className="py-4 text-sm uppercase tracking-wider hover:no-underline">
+
+              <AccordionItem value="shipping" className="border-b border-border py-0">
+                <AccordionTrigger className="py-4 text-sm font-medium text-foreground hover:no-underline">
                   Shipping
                 </AccordionTrigger>
                 <AccordionContent className="pb-4 text-sm text-muted-foreground leading-relaxed">
                   <p className="mb-3">
-                    We offer worldwide shipping on all orders. Delivery times vary 
-                    by location:
+                    We offer worldwide shipping on all orders. Delivery times vary by location:
                   </p>
-                  <ul className="list-disc list-inside space-y-1">
-                    <li>Ghana: 5-7 business days</li>
-                    <li>West Africa: 7-14 business days</li>
-                    <li>International: 14-28 business days</li>
+                  <ul className="space-y-1">
+                    <li>• Ghana: 5-7 business days</li>
+                    <li>• West Africa: 7-14 business days</li>
+                    <li>• International: 14-28 business days</li>
                   </ul>
                   <p className="mt-3">
-                    White glove delivery available for select locations. Contact us 
-                    for details.
+                    White glove delivery available for select locations. Contact us for details.
                   </p>
                 </AccordionContent>
               </AccordionItem>
-              
-              <AccordionItem value="returns" className="border-b border-border">
-                <AccordionTrigger className="py-4 text-sm uppercase tracking-wider hover:no-underline">
+
+              <AccordionItem value="returns" className="border-b border-border py-0">
+                <AccordionTrigger className="py-4 text-sm font-medium text-foreground hover:no-underline">
                   Returns
                 </AccordionTrigger>
                 <AccordionContent className="pb-4 text-sm text-muted-foreground leading-relaxed">
