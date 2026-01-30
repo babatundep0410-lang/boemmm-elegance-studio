@@ -77,7 +77,7 @@ const ProductPage = () => {
                       className="max-w-full max-h-full object-contain"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center border border-border">
+                    <div className="w-[85%] h-[85%] flex items-center justify-center border border-border">
                       <div className="text-center text-muted-foreground">
                         <p className="text-sm">{placeholderImages[0].label}</p>
                         <p className="text-xs mt-1 opacity-60">Product imagery coming soon</p>
@@ -97,7 +97,7 @@ const ProductPage = () => {
                       className="max-w-full max-h-full object-contain"
                     />
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center border border-border">
+                    <div className="w-[85%] h-[85%] flex items-center justify-center border border-border">
                       <div className="text-center text-muted-foreground">
                         <p className="text-sm">{placeholderImages[1].label}</p>
                         <p className="text-xs mt-1 opacity-60">Product imagery coming soon</p>
