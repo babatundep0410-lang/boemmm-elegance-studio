@@ -6,8 +6,8 @@ const navItems = [{
   label: "Home",
   href: "#home"
 }, {
-  label: "Living",
-  href: "#living"
+  label: "Collection",
+  href: "#collection"
 }, {
   label: "Dining",
   href: "#dining"
