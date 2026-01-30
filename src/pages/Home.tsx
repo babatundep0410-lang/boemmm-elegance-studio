@@ -1,10 +1,13 @@
-import { Logo } from "./Logo";
-import { Navigation } from "./Navigation";
-import { SlideContent, Slide } from "./SlideContent";
-import { SlideIndicators } from "./SlideIndicators";
+import { SlideContent, Slide } from "@/components/SlideContent";
+import { SlideIndicators } from "@/components/SlideIndicators";
 import { useSlider } from "@/hooks/useSlider";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
+import { useState } from "react";
+import { ShoppingBag, Menu } from "lucide-react";
+import { useCart } from "@/contexts/CartContext";
+import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 // Import images
 import slideDining from "@/assets/slide-dining.png";
@@ -43,26 +46,93 @@ const slides: Slide[] = [
   },
 ];
 
-export const HeroSlider = () => {
+const navLinks = [
+  { label: "Home", href: "/" },
+  { label: "Collections", href: "/collections" },
+  { label: "AR Experience", href: "/ar-experience" },
+  { label: "About us", href: "/about" },
+  { label: "Contact us", href: "/contact" },
+];
+
+const Home = () => {
   const { currentSlide, goToSlide, nextSlide, prevSlide, isTransitioning } = useSlider({
     totalSlides: slides.length,
     autoPlayInterval: 6000,
   });
+  const { totalItems, setIsOpen: openCart } = useCart();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-background">
       {/* Header - Logo & Navigation */}
       <header className="absolute top-0 left-0 right-0 z-50 pt-8 pb-4">
-        <Logo className="mb-6" />
-        <Navigation className="hidden md:flex" />
+        <div className="flex items-center justify-center mb-6">
+          <Link to="/" className="logo-text text-foreground tracking-[0.35em]">
+            BOEMMM
+          </Link>
+        </div>
         
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex justify-center">
-          <button className="nav-link text-foreground/90 hover:text-foreground">
-            Menu
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center justify-center gap-12">
+          {navLinks.map((item) => (
+            <Link
+              key={item.label}
+              to={item.href}
+              className="nav-link text-foreground/90 hover:text-foreground py-2"
+            >
+              {item.label}
+            </Link>
+          ))}
+        </nav>
+        
+        {/* Mobile Navigation */}
+        <div className="md:hidden flex justify-between items-center px-6">
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <button className="p-2 text-foreground">
+                <Menu className="w-6 h-6" />
+              </button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-[280px] bg-background">
+              <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
+              <nav className="flex flex-col gap-6 pt-12">
+                {navLinks.map((item) => (
+                  <Link
+                    key={item.label}
+                    to={item.href}
+                    className="text-lg font-serif"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+            </SheetContent>
+          </Sheet>
+          
+          <button onClick={() => openCart(true)} className="p-2 text-foreground relative">
+            <ShoppingBag className="w-5 h-5" />
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-accent-foreground text-xs rounded-full flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
           </button>
         </div>
       </header>
+
+      {/* Cart Icon - Desktop */}
+      <button
+        onClick={() => openCart(true)}
+        className="hidden md:flex fixed top-8 right-8 z-50 p-2 text-foreground hover:text-accent transition-colors"
+      >
+        <ShoppingBag className="w-5 h-5" />
+        {totalItems > 0 && (
+          <span className="absolute -top-1 -right-1 w-5 h-5 bg-accent text-accent-foreground text-xs rounded-full flex items-center justify-center">
+            {totalItems}
+          </span>
+        )}
+      </button>
 
       {/* Slides */}
       <div className="relative w-full h-full">
@@ -124,3 +194,5 @@ export const HeroSlider = () => {
     </div>
   );
 };
+
+export default Home;
