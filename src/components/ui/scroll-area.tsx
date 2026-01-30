@@ -44,9 +44,9 @@ const ThinScrollBar = React.forwardRef<
     ref={ref}
     orientation={orientation}
     className={cn(
-      "flex touch-none select-none transition-colors",
-      orientation === "vertical" && "h-full w-[3px] p-0",
-      orientation === "horizontal" && "h-[3px] flex-col p-0",
+      "flex touch-none select-none transition-colors absolute",
+      orientation === "vertical" && "h-full w-[3px] p-0 right-0 top-0",
+      orientation === "horizontal" && "h-[3px] flex-col p-0 bottom-0 left-0",
       className,
     )}
     {...props}
