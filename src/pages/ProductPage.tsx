@@ -4,6 +4,7 @@ import { getProductBySlug } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Minus, Plus } from 'lucide-react';
+import { ThinScrollArea } from '@/components/ui/scroll-area';
 import {
   Accordion,
   AccordionContent,
@@ -63,89 +64,91 @@ const ProductPage = () => {
       <section className="max-w-[1600px] mx-auto">
         <div className="grid lg:grid-cols-[1fr,420px] xl:grid-cols-[1fr,480px] min-h-screen">
           
-          {/* Left Column - Product Images (Stacked) */}
-          <div className="border-r border-border">
-            {/* Primary Image */}
-            <div className="border-b border-border">
-              <div className="aspect-[4/3] lg:aspect-[16/12] flex items-center justify-center p-8 lg:p-16">
-                {product.images[0] ? (
-                  <img
-                    src={product.images[0]}
-                    alt={product.name}
-                    className="max-w-full max-h-full object-contain"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center border border-border">
-                    <div className="text-center text-muted-foreground">
-                      <p className="text-sm">{placeholderImages[0].label}</p>
-                      <p className="text-xs mt-1 opacity-60">Product imagery coming soon</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            {/* Secondary Image */}
+          {/* Left Column - Scrollable Product Images Gallery */}
+          <ThinScrollArea className="lg:h-screen">
             <div>
-              <div className="aspect-[4/3] lg:aspect-[16/10] flex items-center justify-center p-8 lg:p-16">
-                {product.images[1] ? (
-                  <img
-                    src={product.images[1]}
-                    alt={`${product.name} - alternate view`}
-                    className="max-w-full max-h-full object-contain"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center border border-border">
-                    <div className="text-center text-muted-foreground">
-                      <p className="text-sm">{placeholderImages[1].label}</p>
-                      <p className="text-xs mt-1 opacity-60">Product imagery coming soon</p>
+              {/* Primary Image */}
+              <div className="border-b border-border">
+                <div className="aspect-[4/3] lg:aspect-[16/12] flex items-center justify-center p-8 lg:p-16">
+                  {product.images[0] ? (
+                    <img
+                      src={product.images[0]}
+                      alt={product.name}
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center border border-border">
+                      <div className="text-center text-muted-foreground">
+                        <p className="text-sm">{placeholderImages[0].label}</p>
+                        <p className="text-xs mt-1 opacity-60">Product imagery coming soon</p>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+              </div>
+
+              {/* Secondary Image */}
+              <div>
+                <div className="aspect-[4/3] lg:aspect-[16/10] flex items-center justify-center p-8 lg:p-16">
+                  {product.images[1] ? (
+                    <img
+                      src={product.images[1]}
+                      alt={`${product.name} - alternate view`}
+                      className="max-w-full max-h-full object-contain"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center border border-border">
+                      <div className="text-center text-muted-foreground">
+                        <p className="text-sm">{placeholderImages[1].label}</p>
+                        <p className="text-xs mt-1 opacity-60">Product imagery coming soon</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
+          </ThinScrollArea>
 
           {/* Right Column - Product Information */}
-          <div className="px-8 lg:px-12 py-12 lg:py-16 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
+          <div className="px-8 lg:px-12 py-12 lg:py-16 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto border-l border-border">
             {/* Product Name */}
-            <h1 className="font-serif text-3xl lg:text-4xl text-foreground mb-6 leading-tight">
+            <h1 className="font-serif text-2xl lg:text-3xl text-foreground mb-6 leading-tight">
               {product.name}
             </h1>
 
             {/* Product Description */}
             <div className="space-y-4 mb-10">
-              <p className="text-muted-foreground leading-relaxed text-sm lg:text-base">
+              <p className="text-muted-foreground leading-relaxed text-sm">
                 {product.description}
               </p>
-              <p className="text-muted-foreground leading-relaxed text-sm lg:text-base">
+              <p className="text-muted-foreground leading-relaxed text-sm">
                 {product.longDescription}
               </p>
             </div>
 
             {/* Price Section */}
             <div className="mb-6">
-              <p className="text-sm font-medium text-foreground mb-1">Price</p>
-              <p className="text-foreground text-lg">{formatPrice(product.price)}</p>
+              <p className="text-sm font-semibold text-foreground mb-1">Price</p>
+              <p className="text-foreground">{formatPrice(product.price)}</p>
             </div>
 
             {/* Quantity Selector */}
             <div className="mb-6">
-              <p className="text-sm font-medium text-foreground mb-3">Quantity</p>
-              <div className="inline-flex items-center border border-border">
+              <p className="text-sm font-semibold text-foreground mb-3">Quantity</p>
+              <div className="inline-flex items-center border border-border/70">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="w-10 h-10 flex items-center justify-center hover:bg-muted transition-colors text-muted-foreground"
+                  className="w-9 h-9 flex items-center justify-center hover:bg-muted transition-colors text-muted-foreground"
                   aria-label="Decrease quantity"
                 >
                   <Minus className="w-3 h-3" />
                 </button>
-                <span className="w-12 h-10 flex items-center justify-center text-sm text-foreground border-x border-border">
+                <span className="w-10 h-9 flex items-center justify-center text-sm text-foreground border-x border-border/70">
                   {quantity}
                 </span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="w-10 h-10 flex items-center justify-center hover:bg-muted transition-colors text-muted-foreground"
+                  className="w-9 h-9 flex items-center justify-center hover:bg-muted transition-colors text-muted-foreground"
                   aria-label="Increase quantity"
                 >
                   <Plus className="w-3 h-3" />
@@ -154,21 +157,21 @@ const ProductPage = () => {
             </div>
 
             {/* Quick Specifications - Bullet List */}
-            <ul className="space-y-1.5 mb-8 text-sm text-muted-foreground">
+            <ul className="space-y-1 mb-8 text-sm text-muted-foreground">
               <li className="flex items-start">
-                <span className="mr-2">•</span>
+                <span className="mr-2 text-xs">•</span>
                 <span>Crafted {product.specifications.material} {product.name}</span>
               </li>
               <li className="flex items-start">
-                <span className="mr-2">•</span>
+                <span className="mr-2 text-xs">•</span>
                 <span>Color: {product.specifications.color}</span>
               </li>
               <li className="flex items-start">
-                <span className="mr-2">•</span>
+                <span className="mr-2 text-xs">•</span>
                 <span>Material: {product.specifications.material}</span>
               </li>
               <li className="flex items-start">
-                <span className="mr-2">•</span>
+                <span className="mr-2 text-xs">•</span>
                 <span>Dimensions: {product.specifications.dimensions}</span>
               </li>
             </ul>
@@ -176,7 +179,7 @@ const ProductPage = () => {
             {/* Add to Cart Button */}
             <Button
               onClick={handleAddToCart}
-              className="bg-foreground/80 hover:bg-foreground text-background text-sm px-6 py-2.5 h-auto rounded-sm font-normal"
+              className="bg-[#7a7a7a] hover:bg-[#6a6a6a] text-white text-sm px-6 py-2.5 h-auto rounded font-normal"
             >
               Add to cart
             </Button>

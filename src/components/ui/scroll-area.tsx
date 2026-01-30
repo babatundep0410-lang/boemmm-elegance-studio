@@ -35,4 +35,38 @@ const ScrollBar = React.forwardRef<
 ));
 ScrollBar.displayName = ScrollAreaPrimitive.ScrollAreaScrollbar.displayName;
 
-export { ScrollArea, ScrollBar };
+// Thin scroll indicator variant for product gallery
+const ThinScrollBar = React.forwardRef<
+  React.ElementRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>,
+  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.ScrollAreaScrollbar>
+>(({ className, orientation = "vertical", ...props }, ref) => (
+  <ScrollAreaPrimitive.ScrollAreaScrollbar
+    ref={ref}
+    orientation={orientation}
+    className={cn(
+      "flex touch-none select-none transition-colors",
+      orientation === "vertical" && "h-full w-[3px] p-0",
+      orientation === "horizontal" && "h-[3px] flex-col p-0",
+      className,
+    )}
+    {...props}
+  >
+    <ScrollAreaPrimitive.ScrollAreaThumb className="relative flex-1 bg-foreground/40" />
+  </ScrollAreaPrimitive.ScrollAreaScrollbar>
+));
+ThinScrollBar.displayName = "ThinScrollBar";
+
+// ScrollArea variant with thin scrollbar for galleries
+const ThinScrollArea = React.forwardRef<
+  React.ElementRef<typeof ScrollAreaPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof ScrollAreaPrimitive.Root>
+>(({ className, children, ...props }, ref) => (
+  <ScrollAreaPrimitive.Root ref={ref} className={cn("relative overflow-hidden", className)} {...props}>
+    <ScrollAreaPrimitive.Viewport className="h-full w-full rounded-[inherit]">{children}</ScrollAreaPrimitive.Viewport>
+    <ThinScrollBar />
+    <ScrollAreaPrimitive.Corner />
+  </ScrollAreaPrimitive.Root>
+));
+ThinScrollArea.displayName = "ThinScrollArea";
+
+export { ScrollArea, ScrollBar, ThinScrollArea, ThinScrollBar };
