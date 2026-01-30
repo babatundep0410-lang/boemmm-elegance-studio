@@ -3,8 +3,8 @@ interface NavigationProps {
   className?: string;
 }
 const navItems = [{
-  label: "Collections",
-  href: "#collections"
+  label: "Home",
+  href: "#home"
 }, {
   label: "Living",
   href: "#living"
