@@ -9,8 +9,8 @@ const navItems = [{
   label: "Collection",
   href: "#collection"
 }, {
-  label: "Dining",
-  href: "#dining"
+  label: "AR Experience",
+  href: "#ar-experience"
 }, {
   label: "Bedroom",
   href: "#bedroom"
