@@ -1,7 +1,8 @@
 import { SlideContent, Slide } from "@/components/SlideContent";
 import { SlideIndicators } from "@/components/SlideIndicators";
+import { NavDropdown } from "@/components/NavDropdown";
 import { useSlider } from "@/hooks/useSlider";
-import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -71,8 +72,6 @@ const Home = () => {
   });
   const { totalItems, setIsOpen: openCart } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
-  const [hoveredCollection, setHoveredCollection] = useState<string | null>(null);
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-background">
@@ -90,92 +89,20 @@ const Home = () => {
             Home
           </Link>
 
-          {/* Collections Dropdown */}
-          <div
-            className="relative"
-            onMouseEnter={() => setOpenDropdown('collections')}
-            onMouseLeave={() => { setOpenDropdown(null); setHoveredCollection(null); }}
-          >
-            <button className="nav-link text-foreground/90 hover:text-foreground py-2 flex items-center gap-1">
-              Collections
-              <ChevronDown className={cn(
-                "w-3 h-3 transition-transform duration-300",
-                openDropdown === 'collections' && "rotate-180"
-              )} />
-            </button>
-            <div className={cn(
-              "absolute top-full left-0 pt-2 transition-all duration-300 z-[100]",
-              openDropdown === 'collections' ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
-            )}>
-              <div className="bg-background border border-border shadow-lg min-w-[200px] flex">
-                <div className="p-4">
-                  {collections.map((collection) => (
-                    <div 
-                      key={collection.href}
-                      className="relative"
-                      onMouseEnter={() => setHoveredCollection(collection.href)}
-                    >
-                      <Link
-                        to={collection.href}
-                        className="block py-2 text-sm font-serif text-foreground/80 hover:text-foreground transition-colors flex items-center gap-2"
-                      >
-                        {collection.name}
-                        <ChevronDown className="w-3 h-3 -rotate-90" />
-                      </Link>
-                    </div>
-                  ))}
-                </div>
-                {hoveredCollection && (
-                  <div className="p-4 border-l border-border bg-background min-w-[160px]">
-                    {collections.find(c => c.href === hoveredCollection)?.products.map((product) => (
-                      <Link
-                        key={product.href}
-                        to={product.href}
-                        className="block py-2 text-sm text-foreground/80 hover:text-foreground transition-colors"
-                      >
-                        {product.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
+          <NavDropdown 
+            label="Collections" 
+            items={collections} 
+            hasSubmenus 
+          />
 
           <Link to="/ar-experience" className="nav-link text-foreground/90 hover:text-foreground py-2">
             AR Experience
           </Link>
 
-          {/* About Us Dropdown */}
-          <div
-            className="relative"
-            onMouseEnter={() => setOpenDropdown('about')}
-            onMouseLeave={() => setOpenDropdown(null)}
-          >
-            <button className="nav-link text-foreground/90 hover:text-foreground py-2 flex items-center gap-1">
-              About us
-              <ChevronDown className={cn(
-                "w-3 h-3 transition-transform duration-300",
-                openDropdown === 'about' && "rotate-180"
-              )} />
-            </button>
-            <div className={cn(
-              "absolute top-full left-0 pt-2 transition-all duration-300 z-[100]",
-              openDropdown === 'about' ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
-            )}>
-              <div className="bg-background border border-border shadow-lg min-w-[180px] p-4">
-                {aboutLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    to={link.href}
-                    className="block py-2 text-sm text-foreground/80 hover:text-foreground transition-colors"
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
+          <NavDropdown 
+            label="About us" 
+            items={aboutLinks} 
+          />
 
           <Link to="/contact" className="nav-link text-foreground/90 hover:text-foreground py-2">
             Contact us
