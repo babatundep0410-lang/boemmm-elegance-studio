@@ -45,7 +45,7 @@ const NavDropdown = ({ label, isOpen, onMouseEnter, onMouseLeave, children }: Na
       )} />
     </button>
     <div className={cn(
-      "absolute top-full left-0 pt-2 transition-all duration-300",
+      "absolute top-full left-0 pt-2 transition-all duration-300 z-[100]",
       isOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
     )}>
       {children}
@@ -57,6 +57,7 @@ export const Header = () => {
   const location = useLocation();
   const { totalItems, setIsOpen: openCart } = useCart();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [hoveredCollection, setHoveredCollection] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const isHome = location.pathname === '/';
@@ -85,33 +86,41 @@ export const Header = () => {
             label="Collections"
             isOpen={openDropdown === 'collections'}
             onMouseEnter={() => setOpenDropdown('collections')}
-            onMouseLeave={() => setOpenDropdown(null)}
+            onMouseLeave={() => { setOpenDropdown(null); setHoveredCollection(null); }}
           >
-            <div className="bg-background border border-border shadow-lg min-w-[400px] flex">
+            <div className="bg-background border border-border shadow-lg min-w-[200px] flex">
               {/* Collections list */}
-              <div className="w-1/2 p-4 border-r border-border">
+              <div className="p-4">
                 {collections.map((collection) => (
-                  <Link
+                  <div 
                     key={collection.href}
-                    to={collection.href}
-                    className="block py-2 text-sm font-serif text-foreground/80 hover:text-foreground transition-colors"
+                    className="relative"
+                    onMouseEnter={() => setHoveredCollection(collection.href)}
                   >
-                    {collection.name}
-                  </Link>
+                    <Link
+                      to={collection.href}
+                      className="block py-2 text-sm font-serif text-foreground/80 hover:text-foreground transition-colors flex items-center gap-2"
+                    >
+                      {collection.name}
+                      <ChevronDown className="w-3 h-3 -rotate-90" />
+                    </Link>
+                  </div>
                 ))}
               </div>
-              {/* Products list */}
-              <div className="w-1/2 p-4">
-                {collections[0].products.map((product) => (
-                  <Link
-                    key={product.href}
-                    to={product.href}
-                    className="block py-2 text-sm text-foreground/80 hover:text-foreground transition-colors"
-                  >
-                    {product.name}
-                  </Link>
-                ))}
-              </div>
+              {/* Products list - only show when collection is hovered */}
+              {hoveredCollection && (
+                <div className="p-4 border-l border-border bg-background min-w-[160px]">
+                  {collections.find(c => c.href === hoveredCollection)?.products.map((product) => (
+                    <Link
+                      key={product.href}
+                      to={product.href}
+                      className="block py-2 text-sm text-foreground/80 hover:text-foreground transition-colors"
+                    >
+                      {product.name}
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
           </NavDropdown>
 
