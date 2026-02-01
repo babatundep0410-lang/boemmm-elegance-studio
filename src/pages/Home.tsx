@@ -1,7 +1,7 @@
 import { SlideContent, Slide } from "@/components/SlideContent";
 import { SlideIndicators } from "@/components/SlideIndicators";
 import { useSlider } from "@/hooks/useSlider";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
 import { useState } from "react";
@@ -46,12 +46,22 @@ const slides: Slide[] = [
   },
 ];
 
-const navLinks = [
-  { label: "Home", href: "/" },
-  { label: "Collections", href: "/collections" },
-  { label: "AR Experience", href: "/ar-experience" },
-  { label: "About us", href: "/about" },
-  { label: "Contact us", href: "/contact" },
+const collections = [
+  {
+    name: "Wrought L'émeute",
+    href: '/collections/wrought-lemute',
+    products: [
+      { name: 'Dining Tables', href: '/collections/wrought-lemute/dining-table' },
+      { name: 'Centre Tables', href: '/collections/wrought-lemute/centre-table' },
+      { name: 'Side Tables', href: '/collections/wrought-lemute/side-table' },
+      { name: 'Mirrors', href: '/collections/wrought-lemute/mirror' },
+    ],
+  },
+];
+
+const aboutLinks = [
+  { name: 'Our Story', href: '/about' },
+  { name: 'Articles', href: '/about/articles' },
 ];
 
 const Home = () => {
@@ -61,6 +71,8 @@ const Home = () => {
   });
   const { totalItems, setIsOpen: openCart } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [hoveredCollection, setHoveredCollection] = useState<string | null>(null);
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-background">
@@ -74,15 +86,100 @@ const Home = () => {
         
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center justify-center gap-12">
-          {navLinks.map((item) => (
-            <Link
-              key={item.label}
-              to={item.href}
-              className="nav-link text-foreground/90 hover:text-foreground py-2"
-            >
-              {item.label}
-            </Link>
-          ))}
+          <Link to="/" className="nav-link text-foreground/90 hover:text-foreground py-2">
+            Home
+          </Link>
+
+          {/* Collections Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setOpenDropdown('collections')}
+            onMouseLeave={() => { setOpenDropdown(null); setHoveredCollection(null); }}
+          >
+            <button className="nav-link text-foreground/90 hover:text-foreground py-2 flex items-center gap-1">
+              Collections
+              <ChevronDown className={cn(
+                "w-3 h-3 transition-transform duration-300",
+                openDropdown === 'collections' && "rotate-180"
+              )} />
+            </button>
+            <div className={cn(
+              "absolute top-full left-0 pt-2 transition-all duration-300 z-[100]",
+              openDropdown === 'collections' ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
+            )}>
+              <div className="bg-background border border-border shadow-lg min-w-[200px] flex">
+                <div className="p-4">
+                  {collections.map((collection) => (
+                    <div 
+                      key={collection.href}
+                      className="relative"
+                      onMouseEnter={() => setHoveredCollection(collection.href)}
+                    >
+                      <Link
+                        to={collection.href}
+                        className="block py-2 text-sm font-serif text-foreground/80 hover:text-foreground transition-colors flex items-center gap-2"
+                      >
+                        {collection.name}
+                        <ChevronDown className="w-3 h-3 -rotate-90" />
+                      </Link>
+                    </div>
+                  ))}
+                </div>
+                {hoveredCollection && (
+                  <div className="p-4 border-l border-border bg-background min-w-[160px]">
+                    {collections.find(c => c.href === hoveredCollection)?.products.map((product) => (
+                      <Link
+                        key={product.href}
+                        to={product.href}
+                        className="block py-2 text-sm text-foreground/80 hover:text-foreground transition-colors"
+                      >
+                        {product.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <Link to="/ar-experience" className="nav-link text-foreground/90 hover:text-foreground py-2">
+            AR Experience
+          </Link>
+
+          {/* About Us Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setOpenDropdown('about')}
+            onMouseLeave={() => setOpenDropdown(null)}
+          >
+            <button className="nav-link text-foreground/90 hover:text-foreground py-2 flex items-center gap-1">
+              About us
+              <ChevronDown className={cn(
+                "w-3 h-3 transition-transform duration-300",
+                openDropdown === 'about' && "rotate-180"
+              )} />
+            </button>
+            <div className={cn(
+              "absolute top-full left-0 pt-2 transition-all duration-300 z-[100]",
+              openDropdown === 'about' ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
+            )}>
+              <div className="bg-background border border-border shadow-lg min-w-[180px] p-4">
+                {aboutLinks.map((link) => (
+                  <Link
+                    key={link.href}
+                    to={link.href}
+                    className="block py-2 text-sm text-foreground/80 hover:text-foreground transition-colors"
+                  >
+                    {link.name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <Link to="/contact" className="nav-link text-foreground/90 hover:text-foreground py-2">
+            Contact us
+          </Link>
         </nav>
         
         {/* Mobile Navigation */}
@@ -93,19 +190,69 @@ const Home = () => {
                 <Menu className="w-6 h-6" />
               </button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-[280px] bg-background">
+            <SheetContent side="left" className="w-[300px] bg-background">
               <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
               <nav className="flex flex-col gap-6 pt-12">
-                {navLinks.map((item) => (
-                  <Link
-                    key={item.label}
-                    to={item.href}
-                    className="text-lg font-serif"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    {item.label}
+                <Link to="/" className="text-lg font-serif" onClick={() => setMobileMenuOpen(false)}>
+                  Home
+                </Link>
+                
+                <div>
+                  <Link to="/collections" className="text-lg font-serif" onClick={() => setMobileMenuOpen(false)}>
+                    Collections
                   </Link>
-                ))}
+                  <div className="pl-4 mt-2 flex flex-col gap-2">
+                    {collections.map((collection) => (
+                      <div key={collection.href}>
+                        <Link
+                          to={collection.href}
+                          className="text-sm text-muted-foreground hover:text-foreground"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {collection.name}
+                        </Link>
+                        <div className="pl-4 mt-1 flex flex-col gap-1">
+                          {collection.products.map((product) => (
+                            <Link
+                              key={product.href}
+                              to={product.href}
+                              className="text-xs text-muted-foreground hover:text-foreground"
+                              onClick={() => setMobileMenuOpen(false)}
+                            >
+                              {product.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <Link to="/ar-experience" className="text-lg font-serif" onClick={() => setMobileMenuOpen(false)}>
+                  AR Experience
+                </Link>
+
+                <div>
+                  <Link to="/about" className="text-lg font-serif" onClick={() => setMobileMenuOpen(false)}>
+                    About us
+                  </Link>
+                  <div className="pl-4 mt-2 flex flex-col gap-2">
+                    {aboutLinks.map((link) => (
+                      <Link
+                        key={link.href}
+                        to={link.href}
+                        className="text-sm text-muted-foreground hover:text-foreground"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {link.name}
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                <Link to="/contact" className="text-lg font-serif" onClick={() => setMobileMenuOpen(false)}>
+                  Contact us
+                </Link>
               </nav>
             </SheetContent>
           </Sheet>
