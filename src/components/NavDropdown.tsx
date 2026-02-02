@@ -38,7 +38,7 @@ export const NavDropdown = ({ label, items, hasSubmenus = false }: NavDropdownPr
     timeoutRef.current = setTimeout(() => {
       setIsOpen(false);
       setActiveSubmenu(null);
-    }, 80);
+    }, 100);
   };
 
   const handleSubmenuEnter = (href: string) => {
@@ -51,31 +51,24 @@ export const NavDropdown = ({ label, items, hasSubmenus = false }: NavDropdownPr
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Trigger - matches nav-link exactly */}
-      <button 
-        className={cn(
-          "nav-link py-2 text-foreground/90 hover:text-foreground transition-colors duration-200"
-        )}
-      >
+      {/* Trigger - uses nav-link for underline effect */}
+      <button className="nav-link py-2 text-foreground/90 hover:text-foreground">
         {label}
       </button>
 
-      {/* Dropdown - unfolds seamlessly from trigger */}
+      {/* Dropdown - pure vertical text extension, no container */}
       <div 
         className={cn(
-          "absolute top-full left-0 pt-1 z-[100]",
-          "transition-all duration-200 ease-out origin-top",
+          "absolute top-full left-0 pt-4 z-[100]",
+          "transition-opacity duration-150",
           isOpen 
-            ? "opacity-100 scale-y-100 pointer-events-auto" 
-            : "opacity-0 scale-y-95 pointer-events-none"
+            ? "opacity-100 pointer-events-auto" 
+            : "opacity-0 pointer-events-none"
         )}
       >
-        <div className={cn(
-          "bg-background/95 backdrop-blur-sm",
-          hasSubmenus && activeSubmenu && "flex"
-        )}>
-          {/* Main menu items - same style as nav-link */}
-          <div className="flex flex-col gap-1 py-2">
+        <div className={cn(hasSubmenus && activeSubmenu && "flex gap-8")}>
+          {/* Primary items - same nav-link styling */}
+          <div className="flex flex-col gap-3">
             {items.map((item) => {
               const hasProducts = hasSubmenus && 'products' in item && item.products && item.products.length > 0;
               
@@ -87,8 +80,7 @@ export const NavDropdown = ({ label, items, hasSubmenus = false }: NavDropdownPr
                   <Link
                     to={item.href}
                     className={cn(
-                      "nav-link relative block py-1.5 text-foreground/70 hover:text-foreground",
-                      "whitespace-nowrap",
+                      "nav-link text-foreground/60 hover:text-foreground",
                       activeSubmenu === item.href && "text-foreground"
                     )}
                   >
@@ -99,16 +91,16 @@ export const NavDropdown = ({ label, items, hasSubmenus = false }: NavDropdownPr
             })}
           </div>
 
-          {/* Submenu panel - continues the same language */}
+          {/* Submenu - continues as vertical text */}
           {hasSubmenus && activeSubmenu && (
-            <div className="flex flex-col gap-1 py-2 pl-6 border-l border-border/20">
+            <div className="flex flex-col gap-3">
               {(items as Collection[])
                 .find(c => c.href === activeSubmenu)
                 ?.products?.map((product) => (
                   <Link
                     key={product.href}
                     to={product.href}
-                    className="nav-link relative block py-1.5 text-foreground/70 hover:text-foreground whitespace-nowrap"
+                    className="nav-link text-foreground/60 hover:text-foreground"
                   >
                     {product.name}
                   </Link>
