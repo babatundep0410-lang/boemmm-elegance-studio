@@ -89,12 +89,19 @@ export const NavDropdown = ({ label, items, hasSubmenus = false }: NavDropdownPr
                   <Link
                     to={item.href}
                     className={cn(
-                      "flex items-center justify-between px-5 py-2 text-sm",
+                      "group relative flex items-center justify-between px-5 py-2 text-sm",
                       "text-foreground/70 hover:text-foreground transition-colors duration-150",
                       activeSubmenu === item.href && "text-foreground"
                     )}
                   >
-                    <span className="tracking-wide">{item.name}</span>
+                    <span className="relative tracking-wide">
+                      {item.name}
+                      <span className={cn(
+                        "absolute -bottom-0.5 left-0 h-px bg-foreground transition-all duration-200",
+                        "w-0 group-hover:w-full",
+                        activeSubmenu === item.href && "w-full"
+                      )} />
+                    </span>
                     {hasProducts && (
                       <ChevronRight className="w-3 h-3 ml-3 opacity-40" />
                     )}
@@ -113,9 +120,12 @@ export const NavDropdown = ({ label, items, hasSubmenus = false }: NavDropdownPr
                   <Link
                     key={product.href}
                     to={product.href}
-                    className="block px-5 py-2 text-sm text-foreground/70 hover:text-foreground transition-colors duration-150"
+                    className="group relative block px-5 py-2 text-sm text-foreground/70 hover:text-foreground transition-colors duration-150"
                   >
-                    {product.name}
+                    <span className="relative">
+                      {product.name}
+                      <span className="absolute -bottom-0.5 left-0 h-px bg-foreground transition-all duration-200 w-0 group-hover:w-full" />
+                    </span>
                   </Link>
                 ))}
             </div>
