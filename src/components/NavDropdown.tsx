@@ -1,6 +1,5 @@
 import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface Product {
@@ -39,7 +38,7 @@ export const NavDropdown = ({ label, items, hasSubmenus = false }: NavDropdownPr
     timeoutRef.current = setTimeout(() => {
       setIsOpen(false);
       setActiveSubmenu(null);
-    }, 100);
+    }, 80);
   };
 
   const handleSubmenuEnter = (href: string) => {
@@ -52,32 +51,31 @@ export const NavDropdown = ({ label, items, hasSubmenus = false }: NavDropdownPr
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
+      {/* Trigger - matches nav-link exactly */}
       <button 
         className={cn(
-          "nav-link py-2 transition-colors duration-200",
-          isOpen ? "text-foreground" : "text-foreground/90 hover:text-foreground"
+          "nav-link py-2 text-foreground/90 hover:text-foreground transition-colors duration-200"
         )}
       >
         {label}
       </button>
 
-      {/* Dropdown Panel */}
+      {/* Dropdown - unfolds seamlessly from trigger */}
       <div 
         className={cn(
-          "absolute top-full left-0 pt-2 z-[100]",
-          "transition-opacity duration-150",
+          "absolute top-full left-0 pt-1 z-[100]",
+          "transition-all duration-200 ease-out origin-top",
           isOpen 
-            ? "opacity-100 pointer-events-auto" 
-            : "opacity-0 pointer-events-none"
+            ? "opacity-100 scale-y-100 pointer-events-auto" 
+            : "opacity-0 scale-y-95 pointer-events-none"
         )}
       >
         <div className={cn(
-          "bg-background border border-border/60",
-          "min-w-[160px]",
+          "bg-background/95 backdrop-blur-sm",
           hasSubmenus && activeSubmenu && "flex"
         )}>
-          {/* Main menu items */}
-          <div className="py-3">
+          {/* Main menu items - same style as nav-link */}
+          <div className="flex flex-col gap-1 py-2">
             {items.map((item) => {
               const hasProducts = hasSubmenus && 'products' in item && item.products && item.products.length > 0;
               
@@ -89,43 +87,30 @@ export const NavDropdown = ({ label, items, hasSubmenus = false }: NavDropdownPr
                   <Link
                     to={item.href}
                     className={cn(
-                      "group relative flex items-center justify-between px-5 py-2 text-sm",
-                      "text-foreground/70 hover:text-foreground transition-colors duration-150",
+                      "nav-link relative block py-1.5 text-foreground/70 hover:text-foreground",
+                      "whitespace-nowrap",
                       activeSubmenu === item.href && "text-foreground"
                     )}
                   >
-                    <span className="relative tracking-wide">
-                      {item.name}
-                      <span className={cn(
-                        "absolute -bottom-0.5 left-0 h-px bg-foreground transition-all duration-200",
-                        "w-0 group-hover:w-full",
-                        activeSubmenu === item.href && "w-full"
-                      )} />
-                    </span>
-                    {hasProducts && (
-                      <ChevronRight className="w-3 h-3 ml-3 opacity-40" />
-                    )}
+                    {item.name}
                   </Link>
                 </div>
               );
             })}
           </div>
 
-          {/* Submenu panel */}
+          {/* Submenu panel - continues the same language */}
           {hasSubmenus && activeSubmenu && (
-            <div className="border-l border-border/40 py-3 min-w-[140px]">
+            <div className="flex flex-col gap-1 py-2 pl-6 border-l border-border/20">
               {(items as Collection[])
                 .find(c => c.href === activeSubmenu)
                 ?.products?.map((product) => (
                   <Link
                     key={product.href}
                     to={product.href}
-                    className="group relative block px-5 py-2 text-sm text-foreground/70 hover:text-foreground transition-colors duration-150"
+                    className="nav-link relative block py-1.5 text-foreground/70 hover:text-foreground whitespace-nowrap"
                   >
-                    <span className="relative">
-                      {product.name}
-                      <span className="absolute -bottom-0.5 left-0 h-px bg-foreground transition-all duration-200 w-0 group-hover:w-full" />
-                    </span>
+                    {product.name}
                   </Link>
                 ))}
             </div>
