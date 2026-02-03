@@ -35,7 +35,7 @@ const slides: Slide[] = [
     id: 3,
     image: slideLounge,
     title: "Timeless",
-    subtitle: "Timeless Comfort, Refined Elegance",
+    subtitle: "MEASURED DESIGN, ENDURING APPEAL",
     collection: "Signature Pieces",
   },
   {
