@@ -53,7 +53,7 @@ export const SlideContent = ({ slide, isActive, className }: SlideContentProps) 
             {slide.collection}
           </p>
         )}
-        <h2 className="slide-title text-primary-foreground mb-6">
+        <h2 className="slide-title text-primary-foreground mb-6 whitespace-pre-line">
           {slide.title}
         </h2>
         <p className="slide-subtitle text-primary-foreground/70">
