@@ -20,7 +20,7 @@ const slides: Slide[] = [
   {
     id: 1,
     image: slideDining,
-    title: "The Accra Collection",
+    title: "The Wrought L'émeute Collection",
     subtitle: "Where Modern Design Meets African Heritage",
     collection: "New Arrival",
   },
