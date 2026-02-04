@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
 
 export interface Slide {
   id: number;
@@ -6,6 +7,7 @@ export interface Slide {
   title: string;
   subtitle: string;
   collection?: string;
+  link?: string;
 }
 
 interface SlideContentProps {
@@ -15,14 +17,8 @@ interface SlideContentProps {
 }
 
 export const SlideContent = ({ slide, isActive, className }: SlideContentProps) => {
-  return (
-    <div
-      className={cn(
-        "absolute inset-0 w-full h-full transition-opacity duration-slow",
-        isActive ? "opacity-100 z-10" : "opacity-0 z-0",
-        className
-      )}
-    >
+  const content = (
+    <>
       {/* Background Image */}
       <div className="absolute inset-0 overflow-hidden">
         <img
@@ -60,6 +56,30 @@ export const SlideContent = ({ slide, isActive, className }: SlideContentProps) 
           {slide.subtitle}
         </p>
       </div>
+    </>
+  );
+
+  const baseClasses = cn(
+    "absolute inset-0 w-full h-full transition-opacity duration-slow",
+    isActive ? "opacity-100 z-10" : "opacity-0 z-0",
+    className
+  );
+
+  if (slide.link) {
+    return (
+      <Link
+        to={slide.link}
+        className={cn(baseClasses, "block cursor-pointer")}
+        aria-label={`View ${slide.title}`}
+      >
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div className={baseClasses}>
+      {content}
     </div>
   );
 };
