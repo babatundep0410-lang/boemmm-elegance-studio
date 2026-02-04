@@ -15,7 +15,7 @@ const ARExperience = () => {
               AR Experience
             </h1>
             <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-              Visualize BOEMMM furniture in your space before you buy. Our augmented 
+              Visualize BÖEMMM furniture in your space before you buy. Our augmented 
               reality experience lets you see how each piece will look and fit in 
               your home, at true scale.
             </p>
@@ -104,7 +104,7 @@ const ARExperience = () => {
               <div>
                 <h3 className="font-serif text-lg mb-2">Style Match</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">
-                  Evaluate how BOEMMM pieces complement your interior design, 
+                  Evaluate how BÖEMMM pieces complement your interior design, 
                   color palette, and overall aesthetic.
                 </p>
               </div>

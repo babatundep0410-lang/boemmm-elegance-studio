@@ -8,7 +8,7 @@ export const Footer = () => {
           {/* Brand */}
           <div className="md:col-span-1">
             <Link to="/" className="font-serif text-xl tracking-[0.3em]">
-              BOEMMM
+              BÖEMMM
             </Link>
             <p className="mt-4 text-sm text-background/70 leading-relaxed">
               Timeless furniture design emerging from Accra, West Africa. 
@@ -63,7 +63,7 @@ export const Footer = () => {
 
         <div className="border-t border-background/20 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-xs text-background/50">
-            © {new Date().getFullYear()} BOEMMM. All rights reserved.
+            © {new Date().getFullYear()} BÖEMMM. All rights reserved.
           </p>
           <div className="flex gap-6">
             <a href="#" className="text-xs text-background/50 hover:text-background transition-colors">

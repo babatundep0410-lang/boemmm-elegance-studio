@@ -8,7 +8,7 @@ const About = () => {
       <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16 lg:py-24">
         <div className="max-w-3xl">
           <h1 className="font-serif text-4xl md:text-5xl lg:text-6xl mb-8">
-            About BOEMMM
+            About BÖEMMM
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed">
             We create furniture for those who believe that exceptional design 
@@ -28,7 +28,7 @@ const About = () => {
             <h2 className="font-serif text-3xl md:text-4xl mb-8">Our Philosophy</h2>
             <div className="space-y-6 text-muted-foreground leading-relaxed">
               <p>
-                BOEMMM was founded on a simple conviction: the world does not need 
+                BÖEMMM was founded on a simple conviction: the world does not need 
                 more furniture. It needs better furniture—pieces designed with 
                 intention, crafted with care, built to last generations.
               </p>
@@ -129,7 +129,7 @@ const About = () => {
                 <p>
                   In our Accra workshop, traditional techniques meet modern precision. 
                   Here, master craftsmen who have dedicated their lives to their trade 
-                  bring BOEMMM designs to life.
+                  bring BÖEMMM designs to life.
                 </p>
                 <p>
                   Every piece passes through many hands before it reaches yours—each 
@@ -160,7 +160,7 @@ const About = () => {
           Explore Our Thinking
         </h2>
         <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-          Dive deeper into the ideas, craft, and culture that shape BOEMMM through 
+          Dive deeper into the ideas, craft, and culture that shape BÖEMMM through 
           our editorial articles.
         </p>
         <Link

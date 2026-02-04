@@ -24,7 +24,7 @@ const Articles = () => {
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
             Explorations of craft, design philosophy, and the culture that shapes 
-            BOEMMM. Our editorial pieces offer deeper insight into the thinking 
+            BÖEMMM. Our editorial pieces offer deeper insight into the thinking 
             behind our work.
           </p>
         </div>
@@ -86,7 +86,7 @@ const Articles = () => {
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto mb-8">
             Subscribe to receive new articles, collection announcements, and 
-            insights from BOEMMM.
+            insights from BÖEMMM.
           </p>
           
           <form className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">

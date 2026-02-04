@@ -71,7 +71,7 @@ export const Header = () => {
         {/* Logo */}
         <div className="flex items-center justify-center py-6">
           <Link to="/" className="logo-text text-foreground tracking-[0.35em]">
-            BOEMMM
+            BÖEMMM
           </Link>
         </div>
 

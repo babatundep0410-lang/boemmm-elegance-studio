@@ -11,7 +11,7 @@ const Collections = () => {
             Collections
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed mb-6">
-            Each BOEMMM collection tells a story of craft, heritage, and contemporary vision. 
+            Each BÖEMMM collection tells a story of craft, heritage, and contemporary vision. 
             Our pieces are designed not for trends, but for lifetimes—furniture that grows 
             more beautiful with age and use.
           </p>
@@ -65,7 +65,7 @@ const Collections = () => {
                 Design Philosophy
               </h2>
               <p className="text-muted-foreground leading-relaxed mb-4">
-                BOEMMM furniture is designed to transcend time. We reject the cycle of 
+                BÖEMMM furniture is designed to transcend time. We reject the cycle of 
                 disposable design, creating pieces meant to be passed between generations.
               </p>
               <p className="text-muted-foreground leading-relaxed mb-4">
