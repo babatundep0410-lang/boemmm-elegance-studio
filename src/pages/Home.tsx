@@ -15,31 +15,39 @@ import slideDining from "@/assets/slide-dining.png";
 import slideOcean from "@/assets/slide-ocean.png";
 import slideLounge from "@/assets/slide-lounge.png";
 import slideMirror from "@/assets/slide-mirror.png";
+import articleFounders from "@/assets/article-founders.png";
 
 const slides: Slide[] = [
   {
     id: 1,
+    image: articleFounders,
+    title: "From Founders\nto Patrons",
+    subtitle: "A Personal Letter Introducing Our Vision",
+    collection: "Letter",
+  },
+  {
+    id: 2,
     image: slideDining,
     title: "The Wrought L'émeute\nCollection",
     subtitle: "Where Modern Design Meets African Heritage",
     collection: "New Arrival",
   },
   {
-    id: 2,
+    id: 3,
     image: slideOcean,
     title: "Serenity Table",
     subtitle: "Sculpted Metal & Glass",
     collection: "Living Collection",
   },
   {
-    id: 3,
+    id: 4,
     image: slideLounge,
     title: "Timeless",
     subtitle: "MEASURED DESIGN, ENDURING APPEAL",
     collection: "Signature Pieces",
   },
   {
-    id: 4,
+    id: 5,
     image: slideMirror,
     title: "Heritage Mirror",
     subtitle: "Artisanal Ironwork from West Africa",
