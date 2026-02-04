@@ -24,6 +24,7 @@ const slides: Slide[] = [
     title: "From Founders\nto Patrons",
     subtitle: "A Personal Letter Introducing Our Vision",
     collection: "Letter",
+    link: "/about/articles/from-founders-to-patrons",
   },
   {
     id: 2,
@@ -31,6 +32,7 @@ const slides: Slide[] = [
     title: "The Wrought L'émeute\nCollection",
     subtitle: "Where Modern Design Meets African Heritage",
     collection: "New Arrival",
+    link: "/collections/wrought-lemute",
   },
   {
     id: 3,
@@ -38,6 +40,7 @@ const slides: Slide[] = [
     title: "Serenity Table",
     subtitle: "Sculpted Metal & Glass",
     collection: "Living Collection",
+    link: "/collections/wrought-lemute/centre-table",
   },
   {
     id: 4,
@@ -45,6 +48,7 @@ const slides: Slide[] = [
     title: "Timeless",
     subtitle: "MEASURED DESIGN, ENDURING APPEAL",
     collection: "Signature Pieces",
+    link: "/collections/wrought-lemute",
   },
   {
     id: 5,
@@ -52,6 +56,7 @@ const slides: Slide[] = [
     title: "Heritage Mirror",
     subtitle: "Artisanal Ironwork from West Africa",
     collection: "Décor",
+    link: "/collections/wrought-lemute/mirror",
   },
 ];
 
