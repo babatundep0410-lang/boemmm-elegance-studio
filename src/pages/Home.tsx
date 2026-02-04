@@ -92,7 +92,7 @@ const Home = () => {
       <header className="absolute top-0 left-0 right-0 z-50 pt-8 pb-4">
         <div className="flex items-center justify-center mb-6">
           <Link to="/" className="logo-text text-foreground tracking-[0.35em]">
-            BOEMMM
+            BÖEMMM
           </Link>
         </div>
         

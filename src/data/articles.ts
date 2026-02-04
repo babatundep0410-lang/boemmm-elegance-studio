@@ -49,7 +49,7 @@ export const articles: Article[] = [
       
       <p>Warm regards,<br/>Founders,<br/>BÖEMMM</p>
     `,
-    author: 'BOEMMM Founders',
+    author: 'BÖEMMM Founders',
     date: '2024-04-01',
     image: articleFounders,
     category: 'Letter',
@@ -84,7 +84,7 @@ export const articles: Article[] = [
       
       <p>Warm regards,<br/>Founders,<br/>BÖEMMM</p>
     `,
-    author: 'BOEMMM Founders',
+    author: 'BÖEMMM Founders',
     date: '2024-03-20',
     image: articleGivingBack,
     category: 'Community',
@@ -111,7 +111,7 @@ export const articles: Article[] = [
       
       <p>Join us in making a difference, one piece of furniture at a time.</p>
     `,
-    author: 'BOEMMM Editorial',
+    author: 'BÖEMMM Editorial',
     date: '2024-03-15',
     image: articleSustainability,
     category: 'Sustainability',

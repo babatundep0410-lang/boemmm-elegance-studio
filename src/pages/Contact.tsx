@@ -177,7 +177,7 @@ const Contact = () => {
                 <div>
                   <h3 className="font-serif text-lg mb-2">Showroom & Workshop</h3>
                   <address className="not-italic text-muted-foreground text-sm leading-relaxed">
-                    BOEMMM Studio<br />
+                    BÖEMMM Studio<br />
                     East Legon, Accra<br />
                     Ghana, West Africa
                   </address>
