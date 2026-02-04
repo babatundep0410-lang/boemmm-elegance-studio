@@ -24,7 +24,7 @@ const slides: Slide[] = [
     title: "From Founders\nto Patrons",
     subtitle: "A Personal Letter Introducing Our Vision",
     collection: "Letter",
-    link: "/about/articles/from-founders-to-patrons",
+    link: "/about/articles/letter-from-founders",
   },
   {
     id: 2,
@@ -48,7 +48,7 @@ const slides: Slide[] = [
     title: "Timeless",
     subtitle: "MEASURED DESIGN, ENDURING APPEAL",
     collection: "Signature Pieces",
-    link: "/collections/wrought-lemute",
+    link: "/collections/wrought-lemute/side-table",
   },
   {
     id: 5,
