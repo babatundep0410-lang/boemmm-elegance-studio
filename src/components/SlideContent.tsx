@@ -24,10 +24,17 @@ export const SlideContent = ({ slide, isActive, className }: SlideContentProps) 
         <img
           src={slide.image}
           alt={slide.title}
+          loading="eager"
+          decoding="sync"
+          fetchPriority="high"
           className={cn(
-            "w-full h-full object-cover",
+            "w-full h-full object-cover image-sharp",
             isActive && "ken-burns"
           )}
+          style={{
+            imageRendering: 'auto',
+            WebkitFontSmoothing: 'antialiased',
+          }}
         />
         {/* Subtle gradient overlay for text readability */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/10" />
