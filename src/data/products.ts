@@ -1,3 +1,8 @@
+import slideDining from '@/assets/slide-dining.png';
+import slideOcean from '@/assets/slide-ocean.png';
+import slideLounge from '@/assets/slide-lounge.png';
+import slideMirror from '@/assets/slide-mirror.png';
+
 export interface Product {
   id: string;
   slug: string;
@@ -39,7 +44,7 @@ export const products: Product[] = [
       weight: '85 kg',
       finish: 'Powder-coated matte',
     },
-    images: [],
+    images: [slideDining],
     featured: true,
   },
   {
@@ -60,7 +65,7 @@ export const products: Product[] = [
       weight: '45 kg',
       finish: 'Hand-forged, matte black',
     },
-    images: [],
+    images: [slideOcean],
     featured: true,
   },
   {
@@ -81,7 +86,7 @@ export const products: Product[] = [
       weight: '18 kg',
       finish: 'Hand-forged, satin black',
     },
-    images: [],
+    images: [slideLounge],
     featured: false,
   },
   {
@@ -102,7 +107,7 @@ export const products: Product[] = [
       weight: '22 kg',
       finish: 'Hand-forged, antiqued black',
     },
-    images: [],
+    images: [slideMirror],
     featured: true,
   },
 ];
