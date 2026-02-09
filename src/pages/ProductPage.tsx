@@ -4,7 +4,7 @@ import { getProductBySlug } from '@/data/products';
 import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { Minus, Plus } from 'lucide-react';
-import { ThinScrollArea } from '@/components/ui/scroll-area';
+import ProductImageGallery from '@/components/ProductImageGallery';
 import {
   Accordion,
   AccordionContent,
@@ -52,62 +52,14 @@ const ProductPage = () => {
     }).format(price);
   };
 
-  // Placeholder images - in production these would come from product.images
-  const placeholderImages = [
-    { id: 1, label: 'Technical drawing - Top view' },
-    { id: 2, label: 'Technical drawing - Side view' },
-  ];
-
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background overflow-y-auto scrollbar-none">
       {/* Main Product Section - Two Column Layout */}
       <section className="max-w-[1600px] mx-auto">
         <div className="grid lg:grid-cols-[1fr,420px] xl:grid-cols-[1fr,480px] min-h-screen">
           
-          {/* Left Column - Scrollable Product Images Gallery */}
-          <ThinScrollArea className="lg:h-screen">
-            <div>
-              {/* Primary Image */}
-              <div className="border-b border-border">
-                <div className="aspect-[4/3] lg:aspect-[16/12] flex items-center justify-center p-8 lg:p-16">
-                  {product.images[0] ? (
-                    <img
-                      src={product.images[0]}
-                      alt={product.name}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  ) : (
-                    <div className="w-[85%] h-[85%] flex items-center justify-center border border-border">
-                      <div className="text-center text-muted-foreground">
-                        <p className="text-sm">{placeholderImages[0].label}</p>
-                        <p className="text-xs mt-1 opacity-60">Product imagery coming soon</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Secondary Image */}
-              <div>
-                <div className="aspect-[4/3] lg:aspect-[16/10] flex items-center justify-center p-8 lg:p-16">
-                  {product.images[1] ? (
-                    <img
-                      src={product.images[1]}
-                      alt={`${product.name} - alternate view`}
-                      className="max-w-full max-h-full object-contain"
-                    />
-                  ) : (
-                    <div className="w-[85%] h-[85%] flex items-center justify-center border border-border">
-                      <div className="text-center text-muted-foreground">
-                        <p className="text-sm">{placeholderImages[1].label}</p>
-                        <p className="text-xs mt-1 opacity-60">Product imagery coming soon</p>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          </ThinScrollArea>
+          {/* Left Column - Product Image Gallery with segmented index */}
+          <ProductImageGallery images={product.images} productName={product.name} />
 
           {/* Right Column - Product Information */}
           <div className="px-8 lg:px-12 py-12 lg:py-16 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto border-l border-border">
