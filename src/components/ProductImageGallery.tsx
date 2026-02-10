@@ -37,10 +37,10 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
     <div className="relative lg:h-screen flex">
       {/* Single image container with adjacent scrollbar */}
       <div className="flex-1 flex items-center justify-center p-8 lg:p-16">
-        <div className="relative flex items-stretch max-w-[85%] max-h-[85%]">
-          {/* Scrollbar — tap-only, finger-width gap from image */}
+    <div className="relative flex items-start max-w-[85%]" style={{ height: '70vh' }}>
+          {/* Scrollbar — fixed height, tap-only, finger-width gap from image */}
           {showScrollBar && (
-            <div className="w-[3px] flex flex-col mr-6 shrink-0">
+            <div className="w-[3px] flex flex-col mr-6 shrink-0" style={{ height: '70vh' }}>
               {Array.from({ length: totalImages }).map((_, index) => (
                 <button
                   key={index}
@@ -57,14 +57,19 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
             </div>
           )}
 
-          {/* Image — wheel/trackpad scrolling only inside this area */}
-          <div ref={imageAreaRef} onWheel={handleImageAreaWheel}>
+          {/* Image — fixed container, wheel/trackpad scrolling only inside */}
+          <div
+            ref={imageAreaRef}
+            onWheel={handleImageAreaWheel}
+            className="flex items-center justify-center"
+            style={{ height: '70vh' }}
+          >
             {hasImages ? (
               <img
                 key={activeIndex}
                 src={images[activeIndex]}
                 alt={`${productName}${totalImages > 1 ? ` - view ${activeIndex + 1}` : ''}`}
-                className="w-full h-full object-contain image-sharp border border-foreground/80 transition-opacity duration-300"
+                className="max-w-full max-h-full object-contain image-sharp border border-foreground/80 transition-opacity duration-300"
                 loading="eager"
                 decoding="sync"
                 fetchPriority="high"
