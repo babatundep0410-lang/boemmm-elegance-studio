@@ -56,40 +56,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Origin Section */}
-      <section className="bg-secondary/30 py-24">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-            <div className="order-2 lg:order-1">
-              <h2 className="font-serif text-3xl md:text-4xl mb-8">
-                Rooted in Accra
-              </h2>
-              <div className="space-y-6 text-muted-foreground leading-relaxed">
-                <p>
-                  We are based in Accra, Ghana—not as a statement of exoticism, but 
-                  because this is where we belong. This is where our craftsmen live. 
-                  This is where our story begins.
-                </p>
-                <p>
-                  Ghana has a rich tradition of metalwork and woodcraft that stretches 
-                  back centuries. Our artisans carry this heritage in their hands. When 
-                  they shape iron or join wood, they draw on knowledge passed through 
-                  generations.
-                </p>
-                <p>
-                  Yet we are not bound by tradition. We honor it by pushing it forward—
-                  creating designs that speak to contemporary life while carrying the 
-                  weight of history.
-                </p>
-              </div>
-            </div>
-            
-            <div className="aspect-[4/5] bg-muted flex items-center justify-center order-1 lg:order-2">
-              <span className="text-muted-foreground text-sm">Workshop image placeholder</span>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Values Section */}
       <section className="max-w-7xl mx-auto px-6 lg:px-12 py-24">
