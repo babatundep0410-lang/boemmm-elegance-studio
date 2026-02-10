@@ -91,43 +91,6 @@ const About = () => {
         </div>
       </section>
 
-      {/* Team/Workshop Section */}
-      <section className="bg-foreground text-background py-24">
-        <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-            <div>
-              <h2 className="font-serif text-3xl md:text-4xl mb-8">
-                Our Workshop
-              </h2>
-              <div className="space-y-6 text-background/70 leading-relaxed">
-                <p>
-                  In our Accra workshop, traditional techniques meet modern precision. 
-                  Here, master craftsmen who have dedicated their lives to their trade 
-                  bring BÖEMMM designs to life.
-                </p>
-                <p>
-                  Every piece passes through many hands before it reaches yours—each 
-                  artisan contributing their expertise, each step subject to rigorous 
-                  quality control. The result is furniture that meets the highest 
-                  standards of excellence.
-                </p>
-              </div>
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 mt-8 text-background hover:gap-4 transition-all"
-              >
-                Visit Our Workshop
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
-            
-            <div className="aspect-video bg-background/10 flex items-center justify-center">
-              <span className="text-background/50 text-sm">Workshop video placeholder</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Articles CTA */}
       <section className="max-w-7xl mx-auto px-6 lg:px-12 py-24 text-center">
         <h2 className="font-serif text-2xl md:text-3xl mb-6">
