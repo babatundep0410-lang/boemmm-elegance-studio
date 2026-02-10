@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import storyVideo from '@/assets/boemmm-story.mp4';
 
 const About = () => {
   return (
@@ -20,8 +21,15 @@ const About = () => {
       {/* Philosophy Grid */}
       <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-24">
-          <div className="aspect-[4/5] bg-muted flex items-center justify-center">
-            <span className="text-muted-foreground text-sm">Image placeholder</span>
+          <div className="flex items-center justify-center">
+            <video
+              src={storyVideo}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full max-h-[65vh] object-cover"
+            />
           </div>
           
           <div className="flex flex-col justify-center">
