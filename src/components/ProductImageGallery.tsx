@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -18,6 +18,15 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
   const hasImages = images.length > 0;
   const totalImages = hasImages ? images.length : 1;
   const showScrollBar = totalImages > 1;
+
+  // Preload all images on mount for instant transitions
+  useEffect(() => {
+    if (!hasImages) return;
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [images, hasImages]);
 
   const handleImageAreaWheel = useCallback((e: React.WheelEvent) => {
     if (!showScrollBar) return;
