@@ -62,7 +62,7 @@ const ProductPage = () => {
           <ProductImageGallery images={product.images} productName={product.name} />
 
           {/* Right Column - Product Information */}
-          <div className="px-8 lg:px-12 py-12 lg:py-16 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto border-l border-border">
+          <div className="px-6 lg:px-12 py-8 lg:py-16 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:border-l border-border">
             {/* Product Name */}
             <h1 className="font-serif text-2xl lg:text-3xl text-foreground mb-6 leading-tight">
               {product.name}
