@@ -76,7 +76,7 @@ export const Header = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center justify-center gap-12 pb-4">
+        <nav className="hidden md:flex items-center justify-center gap-12 pb-4 text-center">
           <Link to="/" className="nav-link text-foreground/90 hover:text-foreground py-2">
             Home
           </Link>
