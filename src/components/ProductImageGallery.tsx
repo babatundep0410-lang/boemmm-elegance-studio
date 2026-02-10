@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 
 interface ProductImageGalleryProps {
@@ -8,15 +8,31 @@ interface ProductImageGalleryProps {
 
 const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  // Use images array or fallback to placeholder
   const hasImages = images.length > 0;
   const totalImages = hasImages ? images.length : 1;
+  const showScrollBar = totalImages > 1;
+
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    if (!showScrollBar) return;
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.deltaY > 0) {
+      setActiveIndex(prev => Math.min(prev + 1, totalImages - 1));
+    } else if (e.deltaY < 0) {
+      setActiveIndex(prev => Math.max(prev - 1, 0));
+    }
+  }, [showScrollBar, totalImages]);
 
   return (
-    <div className="relative lg:h-screen flex">
-      {/* Left-side segmented scrollbar / photo index */}
-      {totalImages > 1 && (
+    <div
+      ref={containerRef}
+      className="relative lg:h-screen flex"
+      onWheel={handleWheel}
+    >
+      {/* Left-edge segmented scrollbar — flush with image window */}
+      {showScrollBar && (
         <div className="absolute left-0 top-0 bottom-0 z-10 w-[3px] flex flex-col">
           {Array.from({ length: totalImages }).map((_, index) => (
             <button
