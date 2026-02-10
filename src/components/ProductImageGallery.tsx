@@ -37,10 +37,10 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
     <div className="relative lg:h-screen flex">
       {/* Single image container with adjacent scrollbar */}
       <div className="flex-1 flex items-center justify-center p-8 lg:p-16">
-    <div className="relative flex items-start max-w-[85%]" style={{ height: '70vh' }}>
-          {/* Scrollbar — fixed height, tap-only, finger-width gap from image */}
+    <div className="relative flex items-start max-w-[85%] gap-[2cm]" style={{ height: '70vh' }}>
+          {/* Scrollbar — fixed height, tap-only, 2cm gap from image */}
           {showScrollBar && (
-            <div className="w-[3px] flex flex-col mr-6 shrink-0" style={{ height: '70vh' }}>
+            <div className="w-[3px] flex flex-col shrink-0" style={{ height: '70vh' }}>
               {Array.from({ length: totalImages }).map((_, index) => (
                 <button
                   key={index}
