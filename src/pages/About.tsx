@@ -36,20 +36,48 @@ const About = () => {
             <h2 className="font-serif text-3xl md:text-4xl mb-8">Our Philosophy</h2>
             <div className="space-y-6 text-muted-foreground leading-relaxed">
               <p>
-                BÖEMMM was founded on a simple conviction: the world does not need 
-                more furniture. It needs better furniture—pieces designed with 
-                intention, crafted with care, built to last generations.
+                At BÖEMMM, we believe that furniture should be more than just a functional object; it 
+                should be a meaningful extension of your life and values. Our approach to design is rooted in 
+                three core pillars:
               </p>
-              <p>
-                We reject the cycle of disposable design. Our furniture is not 
-                meant for seasons or trends. It is meant for lifetimes—to be 
-                used, loved, and eventually passed on.
-              </p>
-              <p>
-                Every piece we create embodies this philosophy. We choose materials 
-                for their durability and beauty. We employ craftsmen who understand 
-                their trade at the deepest level. We design forms that will feel 
-                as fresh in fifty years as they do today.
+
+              <div>
+                <h4 className="font-serif text-lg text-foreground mb-2">Artistry with Intention</h4>
+                <p>
+                  We view every piece as a "legacy reimagined". Drawing from generations of artistic 
+                  influence, we blend contemporary aesthetics with classic sensibilities to create designs that 
+                  are both enduring and inspiring.
+                </p>
+                <p className="mt-2">
+                  For us, quality is uncompromising, and every detail serves a purpose in telling a larger story.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-serif text-lg text-foreground mb-2">Conscious Craftsmanship</h4>
+                <p>
+                  Design transcends utility when it is paired with integrity. We are committed to a process that 
+                  respects both the creator and the environment through:
+                </p>
+                <ul className="list-disc pl-6 mt-3 space-y-2">
+                  <li><strong>Ethical Sourcing</strong>: Ensuring every material is chosen with care and responsibility.</li>
+                  <li><strong>Sustainability</strong>: Prioritizing eco-friendly practices to protect the planet for future generations.</li>
+                  <li><strong>Local Artistry</strong>: Partnering with skilled artisans to keep traditional craftsmanship alive in a modern world.</li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 className="font-serif text-lg text-foreground mb-2">Impact Through Design</h4>
+                <p>
+                  A home should reflect a commitment to a better world. We believe in the power of collective 
+                  change, which is why a portion of every purchase is dedicated to social and environmental 
+                  initiatives. When you choose BÖEMMM, you aren't just furnishing a room—you are making 
+                  a choice that makes a difference.
+                </p>
+              </div>
+
+              <p className="italic">
+                "Our goal is to create pieces that grow with you, becoming timeless additions to your story."
               </p>
             </div>
           </div>
