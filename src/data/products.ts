@@ -2,6 +2,14 @@ import slideDining from '@/assets/slide-dining.png';
 import slideOcean from '@/assets/slide-ocean.png';
 import slideLounge from '@/assets/slide-lounge.png';
 import slideMirror from '@/assets/slide-mirror.png';
+import dining1 from '@/assets/dining-1.jpg';
+import dining2 from '@/assets/dining-2.png';
+import centre1 from '@/assets/centre-1.png';
+import centre2 from '@/assets/centre-2.png';
+import side1 from '@/assets/side-1.png';
+import side2 from '@/assets/side-2.png';
+import mirror1 from '@/assets/mirror-1.png';
+import mirror2 from '@/assets/mirror-2.png';
 
 export interface Product {
   id: string;
@@ -44,7 +52,7 @@ export const products: Product[] = [
       weight: '85 kg',
       finish: 'Powder-coated matte',
     },
-    images: [slideDining],
+    images: [slideDining, dining1, dining2],
     featured: true,
   },
   {
@@ -65,7 +73,7 @@ export const products: Product[] = [
       weight: '45 kg',
       finish: 'Hand-forged, matte black',
     },
-    images: [slideOcean],
+    images: [slideOcean, centre1, centre2],
     featured: true,
   },
   {
@@ -86,7 +94,7 @@ export const products: Product[] = [
       weight: '18 kg',
       finish: 'Hand-forged, satin black',
     },
-    images: [slideLounge],
+    images: [slideLounge, side1, side2],
     featured: false,
   },
   {
@@ -107,7 +115,7 @@ export const products: Product[] = [
       weight: '22 kg',
       finish: 'Hand-forged, antiqued black',
     },
-    images: [slideMirror],
+    images: [slideMirror, mirror1, mirror2],
     featured: true,
   },
 ];
