@@ -17,6 +17,8 @@ import About from "./pages/About";
 import Articles from "./pages/Articles";
 import ArticleDetail from "./pages/ArticleDetail";
 import Contact from "./pages/Contact";
+import AdminLogin from "./pages/AdminLogin";
+import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -43,6 +45,10 @@ const App = () => (
               <Route path="/about/articles/:articleSlug" element={<ArticleDetail />} />
               <Route path="/contact" element={<Contact />} />
             </Route>
+            
+            {/* Admin */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<AdminDashboard />} />
             
             {/* Catch-all */}
             <Route path="*" element={<NotFound />} />
