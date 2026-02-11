@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 import { Mail, MapPin, Phone } from 'lucide-react';
 
 const Contact = () => {
@@ -11,15 +13,26 @@ const Contact = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    
+
+    const { error } = await supabase.from('inquiries').insert({
+      name: formData.name,
+      email: formData.email,
+      subject: formData.subject,
+      message: formData.message,
+    });
+
     setIsSubmitting(false);
+
+    if (error) {
+      toast({ title: 'Error', description: 'Failed to send message. Please try again.', variant: 'destructive' });
+      return;
+    }
+
     setSubmitted(true);
     setFormData({ name: '', email: '', subject: '', message: '' });
   };
