@@ -218,7 +218,7 @@
     -webkit-backface-visibility: hidden;
     transform-style: preserve-3d;
     image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
+    image-rendering: high-quality;
   }
 
   @keyframes kenBurns {
@@ -230,14 +230,26 @@
     }
   }
 
-  /* High-resolution image rendering */
+  /* High-resolution image rendering - no quality loss */
   .image-sharp {
     image-rendering: -webkit-optimize-contrast;
-    image-rendering: crisp-edges;
+    image-rendering: high-quality;
     -webkit-font-smoothing: antialiased;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     transform: translateZ(0);
+    will-change: transform;
+  }
+
+  /* Global media quality preservation */
+  img {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: high-quality;
+  }
+
+  video {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: high-quality;
   }
 
   /* Fade in animation */
