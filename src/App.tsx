@@ -19,6 +19,8 @@ import ArticleDetail from "./pages/ArticleDetail";
 import Contact from "./pages/Contact";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import Checkout from "./pages/Checkout";
+import CheckoutSuccess from "./pages/CheckoutSuccess";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -45,6 +47,10 @@ const App = () => (
               <Route path="/about/articles/:articleSlug" element={<ArticleDetail />} />
               <Route path="/contact" element={<Contact />} />
             </Route>
+            
+            {/* Checkout */}
+            <Route path="/checkout" element={<><Checkout /><CartDrawer /></>} />
+            <Route path="/checkout/success" element={<CheckoutSuccess />} />
             
             {/* Admin */}
             <Route path="/admin/login" element={<AdminLogin />} />

@@ -1,11 +1,13 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
+import { useNavigate } from 'react-router-dom';
 import { Minus, Plus, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export const CartDrawer = () => {
   const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalPrice, clearCart } = useCart();
+  const navigate = useNavigate();
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -94,7 +96,10 @@ export const CartDrawer = () => {
               <p className="text-xs text-muted-foreground">
                 Shipping and taxes calculated at checkout.
               </p>
-              <Button className="w-full bg-foreground text-background hover:bg-foreground/90">
+              <Button
+                className="w-full bg-foreground text-background hover:bg-foreground/90"
+                onClick={() => { setIsOpen(false); navigate('/checkout'); }}
+              >
                 Proceed to Checkout
               </Button>
               <button
