@@ -4,14 +4,16 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+  Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
-import { LogOut, RefreshCw } from "lucide-react";
+import {
+  AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
+  AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { LogOut, RefreshCw, Plus, Pencil, Trash2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { useProducts, type DBProduct } from "@/hooks/useProducts";
+import AdminProductForm from "@/components/AdminProductForm";
 
 interface Order {
   id: string;
@@ -39,7 +41,12 @@ const AdminDashboard = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
+  const [editingProduct, setEditingProduct] = useState<DBProduct | null | undefined>(undefined);
+  const [deleteTarget, setDeleteTarget] = useState<DBProduct | null>(null);
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const { data: products = [], refetch: refetchProducts } = useProducts();
 
   const fetchData = async () => {
     setLoading(true);
@@ -56,7 +63,6 @@ const AdminDashboard = () => {
     supabase.auth.onAuthStateChange((event, session) => {
       if (!session) navigate("/admin/login");
     });
-
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
         navigate("/admin/login");
@@ -71,38 +77,122 @@ const AdminDashboard = () => {
     navigate("/admin/login");
   };
 
+  const handleDeleteProduct = async () => {
+    if (!deleteTarget) return;
+    const { error } = await supabase.from("products").delete().eq("id", deleteTarget.id);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: "Product deleted" });
+      refetchProducts();
+    }
+    setDeleteTarget(null);
+  };
+
   const formatDate = (d: string) =>
     new Date(d).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
+      year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
     });
+
+  // Show product form
+  if (editingProduct !== undefined) {
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="border-b px-6 py-4 flex items-center justify-between">
+          <h1 className="text-xl font-bold tracking-tight">
+            {editingProduct ? "Edit Product" : "New Product"}
+          </h1>
+        </header>
+        <main className="p-6 max-w-7xl mx-auto">
+          <AdminProductForm
+            product={editingProduct}
+            onSaved={() => { setEditingProduct(undefined); refetchProducts(); }}
+            onCancel={() => setEditingProduct(undefined)}
+          />
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
       <header className="border-b px-6 py-4 flex items-center justify-between">
         <h1 className="text-xl font-bold tracking-tight">Admin Dashboard</h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={fetchData} disabled={loading}>
-            <RefreshCw className={`h-4 w-4 mr-1 ${loading ? "animate-spin" : ""}`} />
-            Refresh
+          <Button variant="outline" size="sm" onClick={() => { fetchData(); refetchProducts(); }} disabled={loading}>
+            <RefreshCw className={`h-4 w-4 mr-1 ${loading ? "animate-spin" : ""}`} /> Refresh
           </Button>
           <Button variant="ghost" size="sm" onClick={handleLogout}>
-            <LogOut className="h-4 w-4 mr-1" />
-            Logout
+            <LogOut className="h-4 w-4 mr-1" /> Logout
           </Button>
         </div>
       </header>
 
       <main className="p-6 max-w-7xl mx-auto">
-        <Tabs defaultValue="orders">
+        <Tabs defaultValue="products">
           <TabsList>
+            <TabsTrigger value="products">Products ({products.length})</TabsTrigger>
             <TabsTrigger value="orders">Orders ({orders.length})</TabsTrigger>
             <TabsTrigger value="inquiries">Inquiries ({inquiries.length})</TabsTrigger>
           </TabsList>
 
+          {/* Products Tab */}
+          <TabsContent value="products" className="mt-4">
+            <div className="flex justify-end mb-4">
+              <Button size="sm" onClick={() => setEditingProduct(null)}>
+                <Plus className="h-4 w-4 mr-1" /> Add Product
+              </Button>
+            </div>
+            {products.length === 0 ? (
+              <p className="text-muted-foreground text-sm py-8 text-center">No products yet.</p>
+            ) : (
+              <div className="border rounded-lg overflow-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Image</TableHead>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Collection</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead className="text-right">Price</TableHead>
+                      <TableHead>Featured</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {products.map((p) => (
+                      <TableRow key={p.id}>
+                        <TableCell>
+                          {p.images?.[0] ? (
+                            <img src={p.images[0]} alt={p.name} className="w-12 h-12 object-cover rounded" />
+                          ) : (
+                            <div className="w-12 h-12 bg-muted rounded" />
+                          )}
+                        </TableCell>
+                        <TableCell className="font-medium">{p.name}</TableCell>
+                        <TableCell>{p.collection}</TableCell>
+                        <TableCell>{p.category}</TableCell>
+                        <TableCell className="text-right">${Number(p.price).toFixed(2)}</TableCell>
+                        <TableCell>{p.featured ? "✓" : ""}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            <Button variant="ghost" size="icon" onClick={() => setEditingProduct(p)}>
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(p)}>
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Orders Tab */}
           <TabsContent value="orders" className="mt-4">
             {orders.length === 0 ? (
               <p className="text-muted-foreground text-sm py-8 text-center">No orders yet.</p>
@@ -136,6 +226,7 @@ const AdminDashboard = () => {
             )}
           </TabsContent>
 
+          {/* Inquiries Tab */}
           <TabsContent value="inquiries" className="mt-4">
             {inquiries.length === 0 ? (
               <p className="text-muted-foreground text-sm py-8 text-center">No inquiries yet.</p>
@@ -170,6 +261,22 @@ const AdminDashboard = () => {
           </TabsContent>
         </Tabs>
       </main>
+
+      {/* Delete Confirmation */}
+      <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete "{deleteTarget?.name}"?</AlertDialogTitle>
+            <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteProduct} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
