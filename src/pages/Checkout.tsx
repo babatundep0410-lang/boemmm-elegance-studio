@@ -59,6 +59,16 @@ const Checkout = () => {
       return;
     }
 
+    // Send confirmation email (fire-and-forget)
+    supabase.functions.invoke('send-order-confirmation', {
+      body: {
+        customerName: formData.name,
+        customerEmail: formData.email,
+        items: orderItems,
+        totalPrice,
+      },
+    }).catch(console.error);
+
     clearCart();
     navigate('/checkout/success');
   };
