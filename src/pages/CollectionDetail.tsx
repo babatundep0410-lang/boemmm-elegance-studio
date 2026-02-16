@@ -104,7 +104,7 @@ const CollectionDetail = () => {
         </div>
       </section>
 
-      {/* CTA */}
+      {/* CTA - temporarily hidden, preserved for future restoration
       <section className="max-w-7xl mx-auto px-6 lg:px-12 py-24 text-center">
         <h2 className="font-serif text-2xl md:text-3xl mb-6">Experience in Person</h2>
         <p className="text-muted-foreground max-w-xl mx-auto mb-8">
@@ -114,6 +114,7 @@ const CollectionDetail = () => {
           Schedule a Visit <ArrowRight className="w-4 h-4" />
         </Link>
       </section>
+      */}
     </div>
   );
 };
