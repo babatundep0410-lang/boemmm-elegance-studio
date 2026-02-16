@@ -52,11 +52,22 @@ const CollectionDetail = () => {
           <div>
             <h2 className="font-serif text-2xl md:text-3xl mb-6">The Story</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              "L'émeute" speaks to emergence—the rising of new forms from ancient traditions.
+              L'émeute means riot.
+              <br />
+              Not chaos, but an uprising of form, craft, and intention.
             </p>
-            <p className="text-muted-foreground leading-relaxed">
-              The answer is furniture that commands attention through restraint. Bold geometric
-              forms executed with precision.
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              This inaugural collection is crafted from wrought iron, drawing on centuries-old techniques refined for contemporary living. Each piece is formed by hand, guided by restraint. The geometry is deliberate. The surfaces carry the quiet imprint of the maker.
+            </p>
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              These pieces do not chase trends. They anchor rooms. They hold space. They are built to outlast moments and move easily between generations.
+            </p>
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              Wrought L'émeute is the quiet rebellion against the disposable.
+              <br />
+              A return to weight, craft, and permanence.
+              <br />
+              Furniture forged to endure, and designed to be lived with.
             </p>
           </div>
           <div>
