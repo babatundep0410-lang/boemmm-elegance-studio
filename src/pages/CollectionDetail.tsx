@@ -70,6 +70,7 @@ const CollectionDetail = () => {
               Furniture forged to endure, and designed to be lived with.
             </p>
           </div>
+          {/* The Craft section - temporarily hidden, preserved for future restoration
           <div>
             <h2 className="font-serif text-2xl md:text-3xl mb-6">The Craft</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
@@ -79,6 +80,7 @@ const CollectionDetail = () => {
               This is not industrial production—it is craft. Every curve bears the intentional marks of human hands.
             </p>
           </div>
+          */}
         </div>
       </section>
 
