@@ -317,3 +317,28 @@
     }
   }
 }
+
+/* Article content spacing */
+.article-content p {
+  color: hsl(var(--muted-foreground));
+  line-height: 1.8;
+  margin-bottom: 1.5em;
+}
+
+.article-content h2 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin-top: 2.5em;
+  margin-bottom: 1em;
+  color: hsl(var(--foreground));
+}
+
+.article-content a {
+  color: hsl(var(--accent));
+  text-decoration: none;
+}
+
+.article-content a:hover {
+  text-decoration: underline;
+}
