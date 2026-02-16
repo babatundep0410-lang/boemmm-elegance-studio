@@ -80,11 +80,7 @@ const ArticleDetail = () => {
       {/* Article Content */}
       <article className="max-w-3xl mx-auto px-6 lg:px-12 pb-24">
         <div
-          className="prose prose-lg max-w-none
-            prose-headings:font-serif prose-headings:font-normal
-            prose-p:text-muted-foreground prose-p:leading-relaxed
-            prose-a:text-accent prose-a:no-underline hover:prose-a:underline
-          "
+          className="article-content"
           dangerouslySetInnerHTML={{ __html: article.content }}
         />
       </article>
