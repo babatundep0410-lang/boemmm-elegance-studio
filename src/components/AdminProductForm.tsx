@@ -9,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { useToast } from '@/hooks/use-toast';
 import { X, Upload, Loader2, Plus } from 'lucide-react';
 import type { DBProduct } from '@/hooks/useProducts';
-import { useProducts } from '@/hooks/useProducts';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 interface Props {
   product?: DBProduct | null;
@@ -40,7 +40,7 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
 const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
   const { toast } = useToast();
-  const { data: allProducts } = useProducts();
+  const queryClient = useQueryClient();
   const [form, setForm] = useState(emptyForm);
   const [images, setImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -49,28 +49,38 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
   const [addingNewCategory, setAddingNewCategory] = useState(false);
   const [newCollection, setNewCollection] = useState('');
   const [newCategory, setNewCategory] = useState('');
-  const [customCollections, setCustomCollections] = useState<{ slug: string; name: string }[]>([]);
-  const [customCategories, setCustomCategories] = useState<{ slug: string; name: string }[]>([]);
+
+  const { data: dbCollections } = useQuery({
+    queryKey: ['collections'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('collections').select('name, slug').order('name');
+      if (error) throw error;
+      return (data as { name: string; slug: string }[]) || [];
+    },
+  });
+
+  const { data: dbCategories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: async () => {
+      const { data, error } = await supabase.from('categories').select('name, slug').order('name');
+      if (error) throw error;
+      return (data as { name: string; slug: string }[]) || [];
+    },
+  });
 
   const existingCollections = useMemo(() => {
     const map = new Map<string, string>();
     if (form.collection && form.collection_slug) map.set(form.collection_slug, form.collection);
-    customCollections.forEach(c => map.set(c.slug, c.name));
-    if (allProducts) {
-      allProducts.forEach(p => { if (p.collection) map.set(p.collection_slug, p.collection); });
-    }
+    (dbCollections || []).forEach(c => map.set(c.slug, c.name));
     return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
-  }, [allProducts, form.collection, form.collection_slug, customCollections]);
+  }, [dbCollections, form.collection, form.collection_slug]);
 
   const existingCategories = useMemo(() => {
     const map = new Map<string, string>();
     if (form.category && form.category_slug) map.set(form.category_slug, form.category);
-    customCategories.forEach(c => map.set(c.slug, c.name));
-    if (allProducts) {
-      allProducts.forEach(p => { if (p.category) map.set(p.category_slug, p.category); });
-    }
+    (dbCategories || []).forEach(c => map.set(c.slug, c.name));
     return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
-  }, [allProducts, form.category, form.category_slug, customCategories]);
+  }, [dbCategories, form.category, form.category_slug]);
 
   useEffect(() => {
     if (product) {
@@ -210,11 +220,16 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
                 onChange={(e) => setNewCollection(e.target.value)}
                 autoFocus
               />
-              <Button type="button" size="sm" onClick={() => {
+              <Button type="button" size="sm" onClick={async () => {
                 if (newCollection.trim()) {
                   const name = newCollection.trim();
                   const slug = autoSlug(name);
-                  setCustomCollections(prev => [...prev, { slug, name }]);
+                  const { error } = await supabase.from('collections').insert({ name, slug });
+                  if (error && !error.message.includes('duplicate')) {
+                    toast({ title: 'Error saving collection', description: error.message, variant: 'destructive' });
+                    return;
+                  }
+                  queryClient.invalidateQueries({ queryKey: ['collections'] });
                   setForm(prev => ({ ...prev, collection: name, collection_slug: slug }));
                   setNewCollection('');
                   setAddingNewCollection(false);
@@ -261,11 +276,16 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
                 onChange={(e) => setNewCategory(e.target.value)}
                 autoFocus
               />
-              <Button type="button" size="sm" onClick={() => {
+              <Button type="button" size="sm" onClick={async () => {
                 if (newCategory.trim()) {
                   const name = newCategory.trim();
                   const slug = autoSlug(name);
-                  setCustomCategories(prev => [...prev, { slug, name }]);
+                  const { error } = await supabase.from('categories').insert({ name, slug });
+                  if (error && !error.message.includes('duplicate')) {
+                    toast({ title: 'Error saving category', description: error.message, variant: 'destructive' });
+                    return;
+                  }
+                  queryClient.invalidateQueries({ queryKey: ['categories'] });
                   setForm(prev => ({ ...prev, category: name, category_slug: slug }));
                   setNewCategory('');
                   setAddingNewCategory(false);
