@@ -72,7 +72,7 @@ export const Header = () => {
         {/* Logo */}
         <div className="flex items-center justify-center py-6">
           <Link to="/">
-            <img src={boemmLogo} alt="BÖEMMM" className={cn("h-6 transition-all duration-500", isHome && "brightness-0 invert")} />
+            <img src={boemmLogo} alt="BÖEMMM" className="h-12 transition-all duration-500" />
           </Link>
         </div>
 
