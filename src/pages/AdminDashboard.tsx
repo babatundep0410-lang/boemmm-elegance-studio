@@ -13,6 +13,7 @@ import {
 import { LogOut, RefreshCw, Plus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useProducts, type DBProduct } from "@/hooks/useProducts";
+import { useCollections, useCategories } from "@/hooks/useCollectionsCategories";
 import AdminProductForm from "@/components/AdminProductForm";
 
 interface Order {
@@ -42,11 +43,13 @@ const AdminDashboard = () => {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingProduct, setEditingProduct] = useState<DBProduct | null | undefined>(undefined);
-  const [deleteTarget, setDeleteTarget] = useState<DBProduct | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<{ type: 'product' | 'collection' | 'category'; id: string; name: string } | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const { data: products = [], refetch: refetchProducts } = useProducts();
+  const { data: collections = [], refetch: refetchCollections } = useCollections();
+  const { data: categories = [], refetch: refetchCategories } = useCategories();
 
   const fetchData = async () => {
     setLoading(true);
@@ -77,14 +80,23 @@ const AdminDashboard = () => {
     navigate("/admin/login");
   };
 
-  const handleDeleteProduct = async () => {
+  const handleDelete = async () => {
     if (!deleteTarget) return;
-    const { error } = await supabase.from("products").delete().eq("id", deleteTarget.id);
+    let error;
+    if (deleteTarget.type === 'product') {
+      ({ error } = await supabase.from("products").delete().eq("id", deleteTarget.id));
+      if (!error) refetchProducts();
+    } else if (deleteTarget.type === 'collection') {
+      ({ error } = await supabase.from("collections").delete().eq("id", deleteTarget.id));
+      if (!error) refetchCollections();
+    } else if (deleteTarget.type === 'category') {
+      ({ error } = await supabase.from("categories").delete().eq("id", deleteTarget.id));
+      if (!error) refetchCategories();
+    }
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
     } else {
-      toast({ title: "Product deleted" });
-      refetchProducts();
+      toast({ title: `${deleteTarget.type.charAt(0).toUpperCase() + deleteTarget.type.slice(1)} deleted` });
     }
     setDeleteTarget(null);
   };
@@ -94,7 +106,6 @@ const AdminDashboard = () => {
       year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
     });
 
-  // Show product form
   if (editingProduct !== undefined) {
     return (
       <div className="min-h-screen bg-background">
@@ -119,7 +130,7 @@ const AdminDashboard = () => {
       <header className="border-b px-6 py-4 flex items-center justify-between">
         <h1 className="text-xl font-bold tracking-tight">Admin Dashboard</h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => { fetchData(); refetchProducts(); }} disabled={loading}>
+          <Button variant="outline" size="sm" onClick={() => { fetchData(); refetchProducts(); refetchCollections(); refetchCategories(); }} disabled={loading}>
             <RefreshCw className={`h-4 w-4 mr-1 ${loading ? "animate-spin" : ""}`} /> Refresh
           </Button>
           <Button variant="ghost" size="sm" onClick={handleLogout}>
@@ -132,6 +143,8 @@ const AdminDashboard = () => {
         <Tabs defaultValue="products">
           <TabsList>
             <TabsTrigger value="products">Products ({products.length})</TabsTrigger>
+            <TabsTrigger value="collections">Collections ({collections.length})</TabsTrigger>
+            <TabsTrigger value="categories">Categories ({categories.length})</TabsTrigger>
             <TabsTrigger value="orders">Orders ({orders.length})</TabsTrigger>
             <TabsTrigger value="inquiries">Inquiries ({inquiries.length})</TabsTrigger>
           </TabsList>
@@ -179,10 +192,78 @@ const AdminDashboard = () => {
                             <Button variant="ghost" size="icon" onClick={() => setEditingProduct(p)}>
                               <Pencil className="h-4 w-4" />
                             </Button>
-                            <Button variant="ghost" size="icon" onClick={() => setDeleteTarget(p)}>
+                            <Button variant="ghost" size="icon" onClick={() => setDeleteTarget({ type: 'product', id: p.id, name: p.name })}>
                               <Trash2 className="h-4 w-4 text-destructive" />
                             </Button>
                           </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Collections Tab */}
+          <TabsContent value="collections" className="mt-4">
+            {collections.length === 0 ? (
+              <p className="text-muted-foreground text-sm py-8 text-center">No collections yet.</p>
+            ) : (
+              <div className="border rounded-lg overflow-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Slug</TableHead>
+                      <TableHead>Created</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {collections.map((c) => (
+                      <TableRow key={c.id}>
+                        <TableCell className="font-medium">{c.name}</TableCell>
+                        <TableCell className="text-muted-foreground">{c.slug}</TableCell>
+                        <TableCell className="whitespace-nowrap">{formatDate(c.created_at)}</TableCell>
+                        <TableCell className="text-right">
+                          <Button variant="ghost" size="icon" onClick={() => setDeleteTarget({ type: 'collection', id: c.id, name: c.name })}>
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Categories Tab */}
+          <TabsContent value="categories" className="mt-4">
+            {categories.length === 0 ? (
+              <p className="text-muted-foreground text-sm py-8 text-center">No categories yet.</p>
+            ) : (
+              <div className="border rounded-lg overflow-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Slug</TableHead>
+                      <TableHead>Created</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {categories.map((c) => (
+                      <TableRow key={c.id}>
+                        <TableCell className="font-medium">{c.name}</TableCell>
+                        <TableCell className="text-muted-foreground">{c.slug}</TableCell>
+                        <TableCell className="whitespace-nowrap">{formatDate(c.created_at)}</TableCell>
+                        <TableCell className="text-right">
+                          <Button variant="ghost" size="icon" onClick={() => setDeleteTarget({ type: 'category', id: c.id, name: c.name })}>
+                            <Trash2 className="h-4 w-4 text-destructive" />
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -262,7 +343,6 @@ const AdminDashboard = () => {
         </Tabs>
       </main>
 
-      {/* Delete Confirmation */}
       <AlertDialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -271,7 +351,7 @@ const AdminDashboard = () => {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteProduct} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+            <AlertDialogAction onClick={handleDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
