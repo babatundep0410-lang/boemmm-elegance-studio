@@ -90,6 +90,7 @@ export type Database = {
           created_at: string
           description: string
           dimensions: string | null
+          exchange_rate: number
           featured: boolean
           finish: string | null
           id: string
@@ -111,6 +112,7 @@ export type Database = {
           created_at?: string
           description?: string
           dimensions?: string | null
+          exchange_rate?: number
           featured?: boolean
           finish?: string | null
           id?: string
@@ -132,6 +134,7 @@ export type Database = {
           created_at?: string
           description?: string
           dimensions?: string | null
+          exchange_rate?: number
           featured?: boolean
           finish?: string | null
           id?: string

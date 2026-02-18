@@ -21,6 +21,7 @@ export interface DBProduct {
   featured: boolean;
   created_at: string;
   updated_at: string;
+  exchange_rate: number;
 }
 
 // Adapts DB product to the shape components expect
@@ -33,6 +34,7 @@ export const toProductView = (p: DBProduct) => ({
   category: p.category,
   categorySlug: p.category_slug,
   price: p.price,
+  exchangeRate: p.exchange_rate,
   description: p.description,
   longDescription: p.long_description,
   specifications: {

@@ -1,11 +1,14 @@
 import { Link, useParams } from 'react-router-dom';
 import { useProductsByCollection, toProductView } from '@/hooks/useProducts';
+import { useCurrency } from '@/contexts/CurrencyContext';
 import { ArrowRight } from 'lucide-react';
+import CurrencyToggle from '@/components/CurrencyToggle';
 
 const CollectionDetail = () => {
   const { collectionSlug } = useParams();
   const { data: dbProducts = [], isLoading } = useProductsByCollection(collectionSlug || '');
   const products = dbProducts.map(toProductView);
+  const { formatPrice } = useCurrency();
 
   if (isLoading) {
     return (
@@ -87,7 +90,10 @@ const CollectionDetail = () => {
       {/* Products Grid */}
       <section className="bg-secondary/30 py-24">
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
-          <h2 className="font-serif text-3xl md:text-4xl mb-12 text-center">The Pieces</h2>
+          <div className="flex items-center justify-between mb-12">
+            <h2 className="font-serif text-3xl md:text-4xl text-center flex-1">The Pieces</h2>
+            <CurrencyToggle />
+          </div>
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
             {products.map((product) => (
               <Link
@@ -106,7 +112,7 @@ const CollectionDetail = () => {
                 <h3 className="font-serif text-xl mb-2">{product.name}</h3>
                 <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{product.description}</p>
                 <div className="flex items-center justify-between">
-                  <span className="font-serif text-lg">${product.price.toLocaleString()}</span>
+                  <span className="font-serif text-lg">{formatPrice(product.price, product.exchangeRate)}</span>
                   <span className="inline-flex items-center gap-2 text-sm text-accent group-hover:gap-4 transition-all">
                     View Details <ArrowRight className="w-4 h-4" />
                   </span>
