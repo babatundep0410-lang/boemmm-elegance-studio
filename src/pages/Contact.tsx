@@ -56,8 +56,7 @@ const Contact = () => {
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed">
             We'd love to hear from you. Whether you have questions about our 
-            collections, need assistance with an order, or want to schedule a 
-            showroom visit, our team is here to help.
+            collections or need assistance with an order, our team is here to help.
           </p>
         </div>
       </section>
@@ -142,7 +141,6 @@ const Contact = () => {
                     <option value="">Select a subject</option>
                     <option value="general">General Inquiry</option>
                     <option value="orders">Order Support</option>
-                    <option value="showroom">Showroom Visit</option>
                     <option value="trade">Trade & Wholesale</option>
                     <option value="press">Press & Media</option>
                   </select>
@@ -188,11 +186,10 @@ const Contact = () => {
                   <MapPin className="w-5 h-5 text-accent" />
                 </div>
                 <div>
-                  <h3 className="font-serif text-lg mb-2">Showroom & Workshop</h3>
+                  <h3 className="font-serif text-lg mb-2">Location</h3>
                   <address className="not-italic text-muted-foreground text-sm leading-relaxed">
-                    BÖEMMM Studio<br />
-                    East Legon, Accra<br />
-                    Ghana, West Africa
+                    Accra, Ghana<br />
+                    West Africa
                   </address>
                 </div>
               </div>
@@ -229,37 +226,10 @@ const Contact = () => {
               </div>
             </div>
 
-            {/* Hours */}
-            <div className="border-t border-border pt-8">
-              <h3 className="font-serif text-lg mb-4">Showroom Hours</h3>
-              <div className="text-sm text-muted-foreground space-y-2">
-                <div className="flex justify-between">
-                  <span>Monday - Friday</span>
-                  <span>10:00 - 18:00</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Saturday</span>
-                  <span>11:00 - 16:00</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Sunday</span>
-                  <span>By appointment</span>
-                </div>
-              </div>
-              <p className="text-xs text-muted-foreground mt-4">
-                Private appointments available outside regular hours.
-              </p>
-            </div>
           </div>
         </div>
       </section>
 
-      {/* Map Placeholder */}
-      <section className="h-[400px] bg-muted flex items-center justify-center">
-        <span className="text-muted-foreground text-sm">
-          Map integration placeholder
-        </span>
-      </section>
     </div>
   );
 };
