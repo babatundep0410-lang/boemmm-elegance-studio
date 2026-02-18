@@ -275,7 +275,7 @@ const Home = () => {
       {/* Subtle corner branding */}
       <div className="absolute bottom-8 right-8 z-40 hidden lg:block">
         <p className="text-xs tracking-[0.2em] uppercase text-primary-foreground/40 font-sans">
-          Accra, West Africa
+          West Africa
         </p>
       </div>
     </div>
