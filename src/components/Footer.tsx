@@ -9,7 +9,7 @@ export const Footer = () => {
           {/* Brand */}
           <div className="md:col-span-1">
             <Link to="/">
-              <img src={boemmLogo} alt="BÖEMMM" className="h-10 invert" />
+              <img src={boemmLogo} alt="BÖEMMM" className="h-2 invert" />
             </Link>
             <p className="mt-4 text-sm text-background/70 leading-relaxed">
               Timeless furniture design emerging from West Africa. 
