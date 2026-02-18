@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ShoppingBag, ChevronDown } from 'lucide-react';
-import boemmLogo from '@/assets/Boemm_logo-2.svg';
+import boemmLogo from '@/assets/Boemm_logoo.png';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/contexts/CartContext';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';

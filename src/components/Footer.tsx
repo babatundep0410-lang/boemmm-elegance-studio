@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import boemmLogo from '@/assets/Boemm_logo-2.svg';
+import boemmLogo from '@/assets/Boemm_logoo.png';
 
 export const Footer = () => {
   return (
