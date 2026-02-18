@@ -51,18 +51,24 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
   const [newCategory, setNewCategory] = useState('');
 
   const existingCollections = useMemo(() => {
-    if (!allProducts) return [];
     const map = new Map<string, string>();
-    allProducts.forEach(p => { if (p.collection) map.set(p.collection_slug, p.collection); });
+    // Include current product's collection so it always appears in the dropdown
+    if (form.collection && form.collection_slug) map.set(form.collection_slug, form.collection);
+    if (allProducts) {
+      allProducts.forEach(p => { if (p.collection) map.set(p.collection_slug, p.collection); });
+    }
     return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
-  }, [allProducts]);
+  }, [allProducts, form.collection, form.collection_slug]);
 
   const existingCategories = useMemo(() => {
-    if (!allProducts) return [];
     const map = new Map<string, string>();
-    allProducts.forEach(p => { if (p.category) map.set(p.category_slug, p.category); });
+    // Include current product's category so it always appears in the dropdown
+    if (form.category && form.category_slug) map.set(form.category_slug, form.category);
+    if (allProducts) {
+      allProducts.forEach(p => { if (p.category) map.set(p.category_slug, p.category); });
+    }
     return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
-  }, [allProducts]);
+  }, [allProducts, form.category, form.category_slug]);
 
   useEffect(() => {
     if (product) {
