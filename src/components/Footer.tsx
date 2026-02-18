@@ -11,7 +11,7 @@ export const Footer = () => {
               BÖEMMM
             </Link>
             <p className="mt-4 text-sm text-background/70 leading-relaxed">
-              Timeless furniture design emerging from Accra, West Africa. 
+              Timeless furniture design emerging from West Africa. 
               Where modern elegance meets heritage craft.
             </p>
           </div>
@@ -52,7 +52,6 @@ export const Footer = () => {
           <div>
             <h4 className="text-sm uppercase tracking-wider mb-4">Get in Touch</h4>
             <address className="not-italic text-sm text-background/70 space-y-2">
-              <p>Accra, Ghana</p>
               <p>West Africa</p>
               <a href="mailto:hello@boemmm.com" className="block hover:text-background transition-colors">
                 hello@boemmm.com

@@ -101,7 +101,7 @@ const ProductPage = () => {
                 <AccordionTrigger className="py-4 text-sm font-medium text-foreground hover:no-underline">Product Details</AccordionTrigger>
                 <AccordionContent className="pb-4 text-sm text-muted-foreground leading-relaxed">
                   <p className="mb-3">{product.description}</p>
-                  <p className="mb-3">Each piece is hand-forged in Accra, ensuring unique character and exceptional quality.</p>
+                  <p className="mb-3">Each piece is hand-forged in West Africa, ensuring unique character and exceptional quality.</p>
                   <ul className="space-y-1 mt-4">
                     <li><span className="font-medium text-foreground">Material:</span> {product.specifications.material}</li>
                     <li><span className="font-medium text-foreground">Dimensions:</span> {product.specifications.dimensions}</li>
