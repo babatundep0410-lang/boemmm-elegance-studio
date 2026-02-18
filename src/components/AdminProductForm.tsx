@@ -49,26 +49,28 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
   const [addingNewCategory, setAddingNewCategory] = useState(false);
   const [newCollection, setNewCollection] = useState('');
   const [newCategory, setNewCategory] = useState('');
+  const [customCollections, setCustomCollections] = useState<{ slug: string; name: string }[]>([]);
+  const [customCategories, setCustomCategories] = useState<{ slug: string; name: string }[]>([]);
 
   const existingCollections = useMemo(() => {
     const map = new Map<string, string>();
-    // Include current product's collection so it always appears in the dropdown
     if (form.collection && form.collection_slug) map.set(form.collection_slug, form.collection);
+    customCollections.forEach(c => map.set(c.slug, c.name));
     if (allProducts) {
       allProducts.forEach(p => { if (p.collection) map.set(p.collection_slug, p.collection); });
     }
     return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
-  }, [allProducts, form.collection, form.collection_slug]);
+  }, [allProducts, form.collection, form.collection_slug, customCollections]);
 
   const existingCategories = useMemo(() => {
     const map = new Map<string, string>();
-    // Include current product's category so it always appears in the dropdown
     if (form.category && form.category_slug) map.set(form.category_slug, form.category);
+    customCategories.forEach(c => map.set(c.slug, c.name));
     if (allProducts) {
       allProducts.forEach(p => { if (p.category) map.set(p.category_slug, p.category); });
     }
     return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
-  }, [allProducts, form.category, form.category_slug]);
+  }, [allProducts, form.category, form.category_slug, customCategories]);
 
   useEffect(() => {
     if (product) {
@@ -210,7 +212,10 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
               />
               <Button type="button" size="sm" onClick={() => {
                 if (newCollection.trim()) {
-                  setForm(prev => ({ ...prev, collection: newCollection.trim(), collection_slug: autoSlug(newCollection.trim()) }));
+                  const name = newCollection.trim();
+                  const slug = autoSlug(name);
+                  setCustomCollections(prev => [...prev, { slug, name }]);
+                  setForm(prev => ({ ...prev, collection: name, collection_slug: slug }));
                   setNewCollection('');
                   setAddingNewCollection(false);
                 }
@@ -258,7 +263,10 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
               />
               <Button type="button" size="sm" onClick={() => {
                 if (newCategory.trim()) {
-                  setForm(prev => ({ ...prev, category: newCategory.trim(), category_slug: autoSlug(newCategory.trim()) }));
+                  const name = newCategory.trim();
+                  const slug = autoSlug(name);
+                  setCustomCategories(prev => [...prev, { slug, name }]);
+                  setForm(prev => ({ ...prev, category: name, category_slug: slug }));
                   setNewCategory('');
                   setAddingNewCategory(false);
                 }
