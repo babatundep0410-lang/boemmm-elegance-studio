@@ -63,19 +63,19 @@ const slides: Slide[] = [
 const collections = [
   {
     name: "Wrought L'émeute",
-    href: '/collections/wrought-lemute',
+    href: "/collections/wrought-lemute",
     products: [
-      { name: 'Dining Tables', href: '/collections/wrought-lemute/dining-table' },
-      { name: 'Centre Tables', href: '/collections/wrought-lemute/centre-table' },
-      { name: 'Side Tables', href: '/collections/wrought-lemute/side-table' },
-      { name: 'Mirrors', href: '/collections/wrought-lemute/mirror' },
+      { name: "Dining Tables", href: "/collections/wrought-lemute/dining-table" },
+      { name: "Centre Tables", href: "/collections/wrought-lemute/centre-table" },
+      { name: "Side Tables", href: "/collections/wrought-lemute/side-table" },
+      { name: "Mirrors", href: "/collections/wrought-lemute/mirror" },
     ],
   },
 ];
 
 const aboutLinks = [
-  { name: 'Our Story', href: '/about' },
-  { name: 'Articles', href: '/about/articles' },
+  { name: "Our Story", href: "/about" },
+  { name: "Articles", href: "/about/articles" },
 ];
 
 const Home = () => {
@@ -92,36 +92,29 @@ const Home = () => {
       <header className="absolute top-0 left-0 right-0 z-50 pt-8 pb-4">
         <div className="flex items-center justify-center mb-6">
           <Link to="/" className="logo-text text-foreground tracking-[0.35em]">
-            BÖEMMM
+            BÖEMMMMMM
           </Link>
         </div>
-        
+
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center justify-center gap-12">
           <Link to="/" className="nav-link text-foreground/90 hover:text-foreground py-2">
             Home
           </Link>
 
-          <NavDropdown 
-            label="Collections" 
-            items={collections} 
-            hasSubmenus 
-          />
+          <NavDropdown label="Collections" items={collections} hasSubmenus />
 
           <Link to="/ar-experience" className="nav-link text-foreground/90 hover:text-foreground py-2">
             AR Experience
           </Link>
 
-          <NavDropdown 
-            label="About us" 
-            items={aboutLinks} 
-          />
+          <NavDropdown label="About us" items={aboutLinks} />
 
           <Link to="/contact" className="nav-link text-foreground/90 hover:text-foreground py-2">
             Contact us
           </Link>
         </nav>
-        
+
         {/* Mobile Navigation */}
         <div className="md:hidden flex justify-between items-center px-6">
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -136,7 +129,7 @@ const Home = () => {
                 <Link to="/" className="text-lg font-serif" onClick={() => setMobileMenuOpen(false)}>
                   Home
                 </Link>
-                
+
                 <div>
                   <Link to="/collections" className="text-lg font-serif" onClick={() => setMobileMenuOpen(false)}>
                     Collections
@@ -196,7 +189,7 @@ const Home = () => {
               </nav>
             </SheetContent>
           </Sheet>
-          
+
           <button onClick={() => openCart(true)} className="p-2 text-foreground relative">
             <ShoppingBag className="w-5 h-5" />
             {totalItems > 0 && (
@@ -224,11 +217,7 @@ const Home = () => {
       {/* Slides */}
       <div className="relative w-full h-full">
         {slides.map((slide, index) => (
-          <SlideContent
-            key={slide.id}
-            slide={slide}
-            isActive={currentSlide === index}
-          />
+          <SlideContent key={slide.id} slide={slide} isActive={currentSlide === index} />
         ))}
       </div>
 
@@ -241,7 +230,7 @@ const Home = () => {
           "w-12 h-12 flex items-center justify-center",
           "text-primary-foreground/60 hover:text-primary-foreground",
           "transition-all duration-medium hover:scale-110",
-          "disabled:opacity-50 disabled:cursor-not-allowed"
+          "disabled:opacity-50 disabled:cursor-not-allowed",
         )}
         aria-label="Previous slide"
       >
@@ -256,7 +245,7 @@ const Home = () => {
           "w-12 h-12 flex items-center justify-center",
           "text-primary-foreground/60 hover:text-primary-foreground",
           "transition-all duration-medium hover:scale-110",
-          "disabled:opacity-50 disabled:cursor-not-allowed"
+          "disabled:opacity-50 disabled:cursor-not-allowed",
         )}
         aria-label="Next slide"
       >
@@ -265,18 +254,12 @@ const Home = () => {
 
       {/* Slide Indicators */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-40">
-        <SlideIndicators
-          total={slides.length}
-          current={currentSlide}
-          onSelect={goToSlide}
-        />
+        <SlideIndicators total={slides.length} current={currentSlide} onSelect={goToSlide} />
       </div>
 
       {/* Subtle corner branding */}
       <div className="absolute bottom-8 right-8 z-40 hidden lg:block">
-        <p className="text-xs tracking-[0.2em] uppercase text-primary-foreground/40 font-sans">
-          West Africa
-        </p>
+        <p className="text-xs tracking-[0.2em] uppercase text-primary-foreground/40 font-sans">West Africa</p>
       </div>
     </div>
   );
