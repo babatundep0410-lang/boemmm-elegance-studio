@@ -96,7 +96,7 @@ const Home = () => {
             <img
               src={boemmLogo}
               alt="BÖEMMM"
-              className="h-12 transition-all duration-500"
+              className="h-10 transition-all duration-500"
             />
           </Link>
         </div>
