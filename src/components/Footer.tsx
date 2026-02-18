@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import boemmLogo from '@/assets/Boemm_logo.svg';
 
 export const Footer = () => {
   return (
@@ -7,8 +8,8 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Brand */}
           <div className="md:col-span-1">
-            <Link to="/" className="font-serif text-xl tracking-[0.3em]">
-              BÖEMMM
+            <Link to="/">
+              <img src={boemmLogo} alt="BÖEMMM" className="h-5 invert" />
             </Link>
             <p className="mt-4 text-sm text-background/70 leading-relaxed">
               Timeless furniture design emerging from West Africa. 
