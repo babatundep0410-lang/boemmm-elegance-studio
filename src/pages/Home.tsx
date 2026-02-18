@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { ShoppingBag, Menu } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
-import boemmLogo from "@/assets/Boemm_logo.png";
+import boemmLogo from "@/assets/Boemm_logo-2.svg";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 // Import images
