@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { X, Upload, Loader2 } from 'lucide-react';
+import { X, Upload, Loader2, Plus } from 'lucide-react';
 import type { DBProduct } from '@/hooks/useProducts';
+import { useProducts } from '@/hooks/useProducts';
 
 interface Props {
   product?: DBProduct | null;
@@ -38,10 +40,29 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 
 const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
   const { toast } = useToast();
+  const { data: allProducts } = useProducts();
   const [form, setForm] = useState(emptyForm);
   const [images, setImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [addingNewCollection, setAddingNewCollection] = useState(false);
+  const [addingNewCategory, setAddingNewCategory] = useState(false);
+  const [newCollection, setNewCollection] = useState('');
+  const [newCategory, setNewCategory] = useState('');
+
+  const existingCollections = useMemo(() => {
+    if (!allProducts) return [];
+    const map = new Map<string, string>();
+    allProducts.forEach(p => { if (p.collection) map.set(p.collection_slug, p.collection); });
+    return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
+  }, [allProducts]);
+
+  const existingCategories = useMemo(() => {
+    if (!allProducts) return [];
+    const map = new Map<string, string>();
+    allProducts.forEach(p => { if (p.category) map.set(p.category_slug, p.category); });
+    return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
+  }, [allProducts]);
 
   useEffect(() => {
     if (product) {
@@ -173,10 +194,44 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <Label>Collection</Label>
-          <Input name="collection" value={form.collection} onChange={(e) => {
-            handleChange(e);
-            setForm(prev => ({ ...prev, collection_slug: autoSlug(e.target.value) }));
-          }} />
+          {addingNewCollection ? (
+            <div className="flex gap-2">
+              <Input
+                placeholder="New collection name"
+                value={newCollection}
+                onChange={(e) => setNewCollection(e.target.value)}
+                autoFocus
+              />
+              <Button type="button" size="sm" onClick={() => {
+                if (newCollection.trim()) {
+                  setForm(prev => ({ ...prev, collection: newCollection.trim(), collection_slug: autoSlug(newCollection.trim()) }));
+                  setNewCollection('');
+                  setAddingNewCollection(false);
+                }
+              }}>Add</Button>
+              <Button type="button" size="sm" variant="outline" onClick={() => { setAddingNewCollection(false); setNewCollection(''); }}>Cancel</Button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <Select
+                value={form.collection_slug}
+                onValueChange={(val) => {
+                  const found = existingCollections.find(c => c.slug === val);
+                  if (found) setForm(prev => ({ ...prev, collection: found.name, collection_slug: found.slug }));
+                }}
+              >
+                <SelectTrigger className="bg-background"><SelectValue placeholder="Select collection" /></SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  {existingCollections.map(c => (
+                    <SelectItem key={c.slug} value={c.slug}>{c.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button type="button" size="icon" variant="outline" onClick={() => setAddingNewCollection(true)} title="Add new collection">
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
         </div>
         <div className="space-y-1.5">
           <Label>Collection Slug</Label>
@@ -187,10 +242,44 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">
           <Label>Category</Label>
-          <Input name="category" value={form.category} onChange={(e) => {
-            handleChange(e);
-            setForm(prev => ({ ...prev, category_slug: autoSlug(e.target.value) }));
-          }} />
+          {addingNewCategory ? (
+            <div className="flex gap-2">
+              <Input
+                placeholder="New category name"
+                value={newCategory}
+                onChange={(e) => setNewCategory(e.target.value)}
+                autoFocus
+              />
+              <Button type="button" size="sm" onClick={() => {
+                if (newCategory.trim()) {
+                  setForm(prev => ({ ...prev, category: newCategory.trim(), category_slug: autoSlug(newCategory.trim()) }));
+                  setNewCategory('');
+                  setAddingNewCategory(false);
+                }
+              }}>Add</Button>
+              <Button type="button" size="sm" variant="outline" onClick={() => { setAddingNewCategory(false); setNewCategory(''); }}>Cancel</Button>
+            </div>
+          ) : (
+            <div className="flex gap-2">
+              <Select
+                value={form.category_slug}
+                onValueChange={(val) => {
+                  const found = existingCategories.find(c => c.slug === val);
+                  if (found) setForm(prev => ({ ...prev, category: found.name, category_slug: found.slug }));
+                }}
+              >
+                <SelectTrigger className="bg-background"><SelectValue placeholder="Select category" /></SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  {existingCategories.map(c => (
+                    <SelectItem key={c.slug} value={c.slug}>{c.name}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button type="button" size="icon" variant="outline" onClick={() => setAddingNewCategory(true)} title="Add new category">
+                <Plus className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
         </div>
         <div className="space-y-1.5">
           <Label>Category Slug</Label>
