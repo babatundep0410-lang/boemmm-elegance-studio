@@ -77,11 +77,22 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
     if (!files?.length) return;
     setUploading(true);
 
+    // Verify session before uploading
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      toast({ title: 'Upload failed', description: 'You must be logged in to upload images.', variant: 'destructive' });
+      setUploading(false);
+      return;
+    }
+
     const newUrls: string[] = [];
     for (const file of Array.from(files)) {
       const ext = file.name.split('.').pop();
       const path = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-      const { error } = await supabase.storage.from('product-images').upload(path, file);
+      const { error } = await supabase.storage.from('product-images').upload(path, file, {
+        cacheControl: '3600',
+        upsert: false,
+      });
       if (error) {
         toast({ title: 'Upload failed', description: error.message, variant: 'destructive' });
         continue;
