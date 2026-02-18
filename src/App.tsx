@@ -30,39 +30,39 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <CurrencyProvider>
-      <CartProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            {/* Home - Special layout without header/footer */}
-            <Route path="/" element={<><Home /><CartDrawer /></>} />
-            
-            {/* All other pages use Layout with header/footer */}
-            <Route element={<Layout />}>
-              <Route path="/collections" element={<Collections />} />
-              <Route path="/collections/:collectionSlug" element={<CollectionDetail />} />
-              <Route path="/collections/:collectionSlug/:categorySlug" element={<ProductPage />} />
-              <Route path="/ar-experience" element={<ARExperience />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/about/articles" element={<Articles />} />
-              <Route path="/about/articles/:articleSlug" element={<ArticleDetail />} />
-              <Route path="/contact" element={<Contact />} />
-            </Route>
-            
-            {/* Checkout */}
-            <Route path="/checkout" element={<><Checkout /><CartDrawer /></>} />
-            <Route path="/checkout/success" element={<CheckoutSuccess />} />
-            
-            {/* Admin */}
-            <Route path="/admin/login" element={<AdminLogin />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            
-            {/* Catch-all */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </CartProvider>
+        <CartProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              {/* Home - Special layout without header/footer */}
+              <Route path="/" element={<><Home /><CartDrawer /></>} />
+              
+              {/* All other pages use Layout with header/footer */}
+              <Route element={<Layout />}>
+                <Route path="/collections" element={<Collections />} />
+                <Route path="/collections/:collectionSlug" element={<CollectionDetail />} />
+                <Route path="/collections/:collectionSlug/:categorySlug" element={<ProductPage />} />
+                <Route path="/ar-experience" element={<ARExperience />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/about/articles" element={<Articles />} />
+                <Route path="/about/articles/:articleSlug" element={<ArticleDetail />} />
+                <Route path="/contact" element={<Contact />} />
+              </Route>
+              
+              {/* Checkout */}
+              <Route path="/checkout" element={<><Checkout /><CartDrawer /></>} />
+              <Route path="/checkout/success" element={<CheckoutSuccess />} />
+              
+              {/* Admin */}
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              
+              {/* Catch-all */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </CartProvider>
       </CurrencyProvider>
     </TooltipProvider>
   </QueryClientProvider>
