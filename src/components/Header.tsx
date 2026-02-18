@@ -1,23 +1,12 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ShoppingBag, ChevronDown } from 'lucide-react';
 import boemmLogo from '@/assets/Boemm_logoo.png';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/contexts/CartContext';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
-
-const collections = [
-  {
-    name: "Wrought L'émeute",
-    href: '/collections/wrought-lemute',
-    products: [
-      { name: 'Dining Tables', href: '/collections/wrought-lemute/dining-table' },
-      { name: 'Centre Tables', href: '/collections/wrought-lemute/centre-table' },
-      { name: 'Side Tables', href: '/collections/wrought-lemute/side-table' },
-      { name: 'Mirrors', href: '/collections/wrought-lemute/mirror' },
-    ],
-  },
-];
+import { useCollections } from '@/hooks/useCollectionsCategories';
+import { useProducts } from '@/hooks/useProducts';
 
 const aboutLinks = [
   { name: 'Our Story', href: '/about' },
@@ -61,7 +50,27 @@ export const Header = () => {
   const [hoveredCollection, setHoveredCollection] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const { data: dbCollections = [] } = useCollections();
+  const { data: dbProducts = [] } = useProducts();
+
   const isHome = location.pathname === '/';
+
+  // Build collections with their categories (products) from DB
+  const collections = useMemo(() => {
+    return dbCollections.map(col => ({
+      name: col.name,
+      href: `/collections/${col.slug}`,
+      products: dbProducts
+        .filter(p => p.collection_slug === col.slug)
+        .reduce((acc, p) => {
+          // Deduplicate by category_slug
+          if (!acc.find(item => item.href === `/collections/${col.slug}/${p.category_slug}`)) {
+            acc.push({ name: p.category, href: `/collections/${col.slug}/${p.category_slug}` });
+          }
+          return acc;
+        }, [] as { name: string; href: string }[]),
+    }));
+  }, [dbCollections, dbProducts]);
 
   return (
     <header className={cn(
@@ -92,24 +101,30 @@ export const Header = () => {
             <div className="bg-background border border-border shadow-lg min-w-[200px] flex">
               {/* Collections list */}
               <div className="p-4">
-                {collections.map((collection) => (
-                  <div 
-                    key={collection.href}
-                    className="relative"
-                    onMouseEnter={() => setHoveredCollection(collection.href)}
-                  >
-                    <Link
-                      to={collection.href}
-                      className="block py-2 text-sm font-serif text-foreground/80 hover:text-foreground transition-colors flex items-center gap-2"
+                {collections.length === 0 ? (
+                  <p className="text-sm text-muted-foreground py-2">No collections yet</p>
+                ) : (
+                  collections.map((collection) => (
+                    <div 
+                      key={collection.href}
+                      className="relative"
+                      onMouseEnter={() => setHoveredCollection(collection.href)}
                     >
-                      {collection.name}
-                      <ChevronDown className="w-3 h-3 -rotate-90" />
-                    </Link>
-                  </div>
-                ))}
+                      <Link
+                        to={collection.href}
+                        className="block py-2 text-sm font-serif text-foreground/80 hover:text-foreground transition-colors flex items-center gap-2"
+                      >
+                        {collection.name}
+                        {collection.products.length > 0 && (
+                          <ChevronDown className="w-3 h-3 -rotate-90" />
+                        )}
+                      </Link>
+                    </div>
+                  ))
+                )}
               </div>
               {/* Products list - only show when collection is hovered */}
-              {hoveredCollection && (
+              {hoveredCollection && collections.find(c => c.href === hoveredCollection)?.products.length ? (
                 <div className="p-4 border-l border-border bg-background min-w-[160px]">
                   {collections.find(c => c.href === hoveredCollection)?.products.map((product) => (
                     <Link
@@ -121,7 +136,7 @@ export const Header = () => {
                     </Link>
                   ))}
                 </div>
-              )}
+              ) : null}
             </div>
           </NavDropdown>
 
