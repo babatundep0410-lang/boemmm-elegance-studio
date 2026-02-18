@@ -1,0 +1,1 @@
+ALTER TABLE public.products ADD COLUMN exchange_rate numeric NOT NULL DEFAULT 15.0;

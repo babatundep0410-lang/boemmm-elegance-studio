@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useProductBySlug, toProductView } from '@/hooks/useProducts';
 import { useCart } from '@/contexts/CartContext';
+import { useCurrency } from '@/contexts/CurrencyContext';
 import { Button } from '@/components/ui/button';
 import { Minus, Plus } from 'lucide-react';
 import ProductImageGallery from '@/components/ProductImageGallery';
+import CurrencyToggle from '@/components/CurrencyToggle';
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from '@/components/ui/accordion';
@@ -14,6 +16,7 @@ const ProductPage = () => {
   const { data: dbProduct, isLoading } = useProductBySlug(collectionSlug || '', categorySlug || '');
   const product = dbProduct ? toProductView(dbProduct) : null;
   const { addItem } = useCart();
+  const { formatPrice } = useCurrency();
   const [quantity, setQuantity] = useState(1);
 
   if (isLoading) {
@@ -43,15 +46,13 @@ const ProductPage = () => {
         id: product.id,
         name: product.name,
         price: product.price,
+        exchangeRate: product.exchangeRate,
         image: product.images[0] || '',
         collection: product.collection,
       });
     }
     setQuantity(1);
   };
-
-  const formatPrice = (price: number) =>
-    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 }).format(price);
 
   return (
     <div className="min-h-screen bg-background overflow-y-auto scrollbar-none">
@@ -67,9 +68,12 @@ const ProductPage = () => {
               <p className="text-muted-foreground leading-relaxed text-sm">{product.longDescription}</p>
             </div>
 
-            <div className="mb-6">
-              <p className="text-sm font-semibold text-foreground mb-1">Price</p>
-              <p className="text-foreground">{formatPrice(product.price)}</p>
+            <div className="mb-6 flex items-center justify-between">
+              <div>
+                <p className="text-sm font-semibold text-foreground mb-1">Price</p>
+                <p className="text-foreground">{formatPrice(product.price, product.exchangeRate)}</p>
+              </div>
+              <CurrencyToggle />
             </div>
 
             <div className="mb-6">

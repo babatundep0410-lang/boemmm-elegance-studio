@@ -23,6 +23,7 @@ const emptyForm = {
   category: '',
   category_slug: '',
   price: '',
+  exchange_rate: '15',
   description: '',
   long_description: '',
   material: '',
@@ -52,6 +53,7 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
         category: product.category,
         category_slug: product.category_slug,
         price: String(product.price),
+        exchange_rate: String(product.exchange_rate ?? 15),
         description: product.description,
         long_description: product.long_description,
         material: product.material || '',
@@ -123,6 +125,7 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
       category: form.category,
       category_slug: form.category_slug,
       price: parseFloat(form.price) || 0,
+      exchange_rate: parseFloat(form.exchange_rate) || 15,
       description: form.description,
       long_description: form.long_description,
       material: form.material || null,
@@ -195,10 +198,14 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-3 gap-4">
         <div className="space-y-1.5">
           <Label>Price (USD)</Label>
           <Input name="price" type="number" step="0.01" value={form.price} onChange={handleChange} />
+        </div>
+        <div className="space-y-1.5">
+          <Label>Exchange Rate (USD→GHS)</Label>
+          <Input name="exchange_rate" type="number" step="0.01" value={form.exchange_rate} onChange={handleChange} />
         </div>
         <div className="flex items-center gap-3 pt-6">
           <Switch checked={form.featured} onCheckedChange={(v) => setForm(prev => ({ ...prev, featured: v }))} />
