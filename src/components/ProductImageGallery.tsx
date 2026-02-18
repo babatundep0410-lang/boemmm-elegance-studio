@@ -119,9 +119,9 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
   return (
     <div className="relative lg:h-screen flex">
       <div className="flex-1 flex items-center justify-center p-8 lg:p-16">
-        <div className="relative flex items-start max-w-[85%] gap-[2cm]" style={{ height: '70vh' }}>
+        <div className="relative max-w-[85%]" style={{ height: '70vh' }}>
           {showScrollBar && (
-            <div className="w-[3px] flex flex-col shrink-0" style={{ height: '70vh' }}>
+            <div className="absolute left-0 top-0 w-[3px] flex flex-col" style={{ height: '70vh' }}>
               {Array.from({ length: totalImages }).map((_, index) => (
                 <button
                   key={index}
@@ -141,7 +141,7 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
             ref={imageAreaRef}
             onWheel={handleImageAreaWheel}
             className="flex items-center justify-center"
-            style={{ height: '70vh' }}
+            style={{ height: '70vh', paddingLeft: showScrollBar ? 'calc(3px + 2cm)' : '0' }}
           >
             {hasImages ? (
               <img
