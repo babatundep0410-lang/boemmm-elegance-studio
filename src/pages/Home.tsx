@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { ShoppingBag, Menu } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
+import boemmLogo from "@/assets/Boemm_logo.png";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 
 // Import images
@@ -92,7 +93,11 @@ const Home = () => {
       <header className="absolute top-0 left-0 right-0 z-50 pt-8 pb-4">
         <div className="flex items-center justify-center mb-6">
           <Link to="/" className="logo-text text-foreground tracking-[0.35em]">
-            BÖEMMMMMM
+            <img
+              src={boemmLogo}
+              alt="BÖEMMM"
+              className={cn("h-6 transition-all duration-500", isHome && "brightness-0 invert")}
+            />
           </Link>
         </div>
 
