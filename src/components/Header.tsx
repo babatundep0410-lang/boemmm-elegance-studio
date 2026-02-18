@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ShoppingBag, ChevronDown } from 'lucide-react';
+import boemmLogo from '@/assets/Boemm_logo.svg';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/contexts/CartContext';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
@@ -70,8 +71,8 @@ export const Header = () => {
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         {/* Logo */}
         <div className="flex items-center justify-center py-6">
-          <Link to="/" className="logo-text text-foreground tracking-[0.35em]">
-            BÖEMMM
+          <Link to="/">
+            <img src={boemmLogo} alt="BÖEMMM" className="h-6" />
           </Link>
         </div>
 
