@@ -54,7 +54,7 @@ const slides: Slide[] = [
   {
     id: 5,
     image: slideMirror,
-    title: "Heritage Mirror",
+    title: "Vitage Mirror",
     subtitle: "Artisanal Ironwork from West Africa",
     collection: "Décor",
     link: "/collections/wrought-lemute/mirror",
