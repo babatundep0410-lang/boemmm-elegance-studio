@@ -1,15 +1,15 @@
+import { useMemo, useState } from "react";
 import { SlideContent, Slide } from "@/components/SlideContent";
 import { SlideIndicators } from "@/components/SlideIndicators";
 import { NavDropdown } from "@/components/NavDropdown";
 import { useSlider } from "@/hooks/useSlider";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ShoppingBag, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
-import { useState } from "react";
-import { ShoppingBag, Menu } from "lucide-react";
 import { useCart } from "@/contexts/CartContext";
 import boemmLogo from "@/assets/Boemm_logoo.png";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
+import { useCollections, useCategories } from "@/hooks/useCollectionsCategories";
 
 // Import images
 import slideDining from "@/assets/slide-dining.png";
@@ -61,19 +61,6 @@ const slides: Slide[] = [
   },
 ];
 
-const collections = [
-  {
-    name: "Wrought L'émeute",
-    href: "/collections/wrought-lemute",
-    products: [
-      { name: "Dining Tables", href: "/collections/wrought-lemute/dining-table" },
-      { name: "Centre Tables", href: "/collections/wrought-lemute/centre-table" },
-      { name: "Side Tables", href: "/collections/wrought-lemute/side-table" },
-      { name: "Mirrors", href: "/collections/wrought-lemute/mirror" },
-    ],
-  },
-];
-
 const aboutLinks = [
   { name: "Our Story", href: "/about" },
   { name: "Articles", href: "/about/articles" },
@@ -86,6 +73,18 @@ const Home = () => {
   });
   const { totalItems, setIsOpen: openCart } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { data: dbCollections = [] } = useCollections();
+  const { data: dbCategories = [] } = useCategories();
+
+  const collections = useMemo(() => {
+    return dbCollections.map(col => ({
+      name: col.name,
+      href: `/collections/${col.slug}`,
+      categories: dbCategories
+        .filter(cat => cat.collection_id === col.id)
+        .map(cat => ({ name: cat.name, href: `/collections/${col.slug}/${cat.slug}` })),
+    }));
+  }, [dbCollections, dbCategories]);
 
   return (
     <div className="relative w-full h-screen overflow-hidden bg-background">
@@ -150,14 +149,14 @@ const Home = () => {
                           {collection.name}
                         </Link>
                         <div className="pl-4 mt-1 flex flex-col gap-1">
-                          {collection.products.map((product) => (
+                          {collection.categories.map((cat) => (
                             <Link
-                              key={product.href}
-                              to={product.href}
+                              key={cat.href}
+                              to={cat.href}
                               className="text-xs text-muted-foreground hover:text-foreground"
                               onClick={() => setMobileMenuOpen(false)}
                             >
-                              {product.name}
+                              {cat.name}
                             </Link>
                           ))}
                         </div>

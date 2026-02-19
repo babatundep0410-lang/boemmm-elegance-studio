@@ -2,7 +2,7 @@ import { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
-interface Product {
+interface SubItem {
   name: string;
   href: string;
 }
@@ -10,7 +10,8 @@ interface Product {
 interface Collection {
   name: string;
   href: string;
-  products?: Product[];
+  products?: SubItem[];
+  categories?: SubItem[];
 }
 
 interface SimpleLink {
@@ -70,7 +71,8 @@ export const NavDropdown = ({ label, items, hasSubmenus = false }: NavDropdownPr
           {/* Primary items - same nav-link styling */}
           <div className="flex flex-col gap-3">
             {items.map((item) => {
-              const hasProducts = hasSubmenus && 'products' in item && item.products && item.products.length > 0;
+              const subItems = hasSubmenus && 'categories' in item ? item.categories : ('products' in item ? item.products : undefined);
+              const hasProducts = hasSubmenus && subItems && subItems.length > 0;
               
               return (
                 <div
@@ -94,17 +96,19 @@ export const NavDropdown = ({ label, items, hasSubmenus = false }: NavDropdownPr
           {/* Submenu - continues as vertical text */}
           {hasSubmenus && activeSubmenu && (
             <div className="flex flex-col gap-3">
-              {(items as Collection[])
-                .find(c => c.href === activeSubmenu)
-                ?.products?.map((product) => (
+              {(() => {
+                const col = (items as Collection[]).find(c => c.href === activeSubmenu);
+                const subs = col?.categories || col?.products || [];
+                return subs.map((sub) => (
                   <Link
-                    key={product.href}
-                    to={product.href}
+                    key={sub.href}
+                    to={sub.href}
                     className="nav-link text-foreground/60 hover:text-foreground"
                   >
-                    {product.name}
+                    {sub.name}
                   </Link>
-                ))}
+                ));
+              })()}
             </div>
           )}
         </div>
