@@ -53,18 +53,18 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
   const { data: dbCollections } = useQuery({
     queryKey: ['collections'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('collections').select('name, slug').order('name');
+      const { data, error } = await supabase.from('collections').select('id, name, slug').order('name');
       if (error) throw error;
-      return (data as { name: string; slug: string }[]) || [];
+      return (data as { id: string; name: string; slug: string }[]) || [];
     },
   });
 
   const { data: dbCategories } = useQuery({
     queryKey: ['categories'],
     queryFn: async () => {
-      const { data, error } = await supabase.from('categories').select('name, slug').order('name');
+      const { data, error } = await supabase.from('categories').select('id, name, slug, collection_id').order('name');
       if (error) throw error;
-      return (data as { name: string; slug: string }[]) || [];
+      return (data as { id: string; name: string; slug: string; collection_id: string | null }[]) || [];
     },
   });
 
@@ -75,12 +75,20 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
     return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
   }, [dbCollections, form.collection, form.collection_slug]);
 
+  // Filter categories to only those belonging to the selected collection
+  const selectedCollection = useMemo(() => {
+    return (dbCollections || []).find(c => c.slug === form.collection_slug);
+  }, [dbCollections, form.collection_slug]);
+
   const existingCategories = useMemo(() => {
+    const filtered = (dbCategories || []).filter(c => 
+      selectedCollection ? c.collection_id === selectedCollection.id : true
+    );
     const map = new Map<string, string>();
     if (form.category && form.category_slug) map.set(form.category_slug, form.category);
-    (dbCategories || []).forEach(c => map.set(c.slug, c.name));
+    filtered.forEach(c => map.set(c.slug, c.name));
     return Array.from(map.entries()).map(([slug, name]) => ({ slug, name }));
-  }, [dbCategories, form.category, form.category_slug]);
+  }, [dbCategories, form.category, form.category_slug, selectedCollection]);
 
   useEffect(() => {
     if (product) {
@@ -278,9 +286,13 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
               />
               <Button type="button" size="sm" onClick={async () => {
                 if (newCategory.trim()) {
+                  if (!selectedCollection) {
+                    toast({ title: 'Select a collection first', variant: 'destructive' });
+                    return;
+                  }
                   const name = newCategory.trim();
                   const slug = autoSlug(name);
-                  const { error } = await supabase.from('categories').insert({ name, slug });
+                  const { error } = await supabase.from('categories').insert({ name, slug, collection_id: selectedCollection.id });
                   if (error && !error.message.includes('duplicate')) {
                     toast({ title: 'Error saving category', description: error.message, variant: 'destructive' });
                     return;

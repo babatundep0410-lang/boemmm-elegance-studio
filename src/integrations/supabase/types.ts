@@ -16,24 +16,35 @@ export type Database = {
     Tables: {
       categories: {
         Row: {
+          collection_id: string | null
           created_at: string
           id: string
           name: string
           slug: string
         }
         Insert: {
+          collection_id?: string | null
           created_at?: string
           id?: string
           name: string
           slug: string
         }
         Update: {
+          collection_id?: string | null
           created_at?: string
           id?: string
           name?: string
           slug?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "categories_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "collections"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       collections: {
         Row: {

@@ -249,6 +249,7 @@ const AdminDashboard = () => {
                   <TableHeader>
                     <TableRow>
                       <TableHead>Name</TableHead>
+                      <TableHead>Collection</TableHead>
                       <TableHead>Slug</TableHead>
                       <TableHead>Created</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
@@ -258,6 +259,9 @@ const AdminDashboard = () => {
                     {categories.map((c) => (
                       <TableRow key={c.id}>
                         <TableCell className="font-medium">{c.name}</TableCell>
+                        <TableCell className="text-muted-foreground">
+                          {collections.find(col => col.id === c.collection_id)?.name || '—'}
+                        </TableCell>
                         <TableCell className="text-muted-foreground">{c.slug}</TableCell>
                         <TableCell className="whitespace-nowrap">{formatDate(c.created_at)}</TableCell>
                         <TableCell className="text-right">
