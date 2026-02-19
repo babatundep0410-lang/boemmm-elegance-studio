@@ -57,7 +57,7 @@ export const NavDropdown = ({ label, items, hasSubmenus = false }: NavDropdownPr
         {label}
       </button>
 
-      {/* Dropdown - pure vertical text extension, no container */}
+      {/* Dropdown */}
       <div 
         className={cn(
           "absolute top-full left-0 pt-4 z-[100]",
@@ -67,7 +67,10 @@ export const NavDropdown = ({ label, items, hasSubmenus = false }: NavDropdownPr
             : "opacity-0 pointer-events-none"
         )}
       >
-        <div className={cn(hasSubmenus && activeSubmenu && "flex gap-8")}>
+        <div className={cn(
+          "bg-background/95 backdrop-blur-sm border border-border/50 rounded-lg shadow-lg p-4 min-w-[180px]",
+          hasSubmenus && activeSubmenu && "flex gap-8"
+        )}>
           {/* Primary items - same nav-link styling */}
           <div className="flex flex-col gap-3">
             {items.map((item) => {
