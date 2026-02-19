@@ -5,8 +5,7 @@ import boemmLogo from '@/assets/Boemm_logoo.png';
 import { cn } from '@/lib/utils';
 import { useCart } from '@/contexts/CartContext';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from '@/components/ui/sheet';
-import { useCollections } from '@/hooks/useCollectionsCategories';
-import { useProducts } from '@/hooks/useProducts';
+import { useCollections, useCategories } from '@/hooks/useCollectionsCategories';
 
 const aboutLinks = [
   { name: 'Our Story', href: '/about' },
@@ -51,26 +50,20 @@ export const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const { data: dbCollections = [] } = useCollections();
-  const { data: dbProducts = [] } = useProducts();
+  const { data: dbCategories = [] } = useCategories();
 
   const isHome = location.pathname === '/';
 
-  // Build collections with their categories (products) from DB
+  // Build collections with their child categories from DB
   const collections = useMemo(() => {
     return dbCollections.map(col => ({
       name: col.name,
       href: `/collections/${col.slug}`,
-      products: dbProducts
-        .filter(p => p.collection_slug === col.slug)
-        .reduce((acc, p) => {
-          // Deduplicate by category_slug
-          if (!acc.find(item => item.href === `/collections/${col.slug}/${p.category_slug}`)) {
-            acc.push({ name: p.category, href: `/collections/${col.slug}/${p.category_slug}` });
-          }
-          return acc;
-        }, [] as { name: string; href: string }[]),
+      categories: dbCategories
+        .filter(cat => cat.collection_id === col.id)
+        .map(cat => ({ name: cat.name, href: `/collections/${col.slug}/${cat.slug}` })),
     }));
-  }, [dbCollections, dbProducts]);
+  }, [dbCollections, dbCategories]);
 
   return (
     <header className={cn(
@@ -115,7 +108,7 @@ export const Header = () => {
                         className="block py-2 text-sm font-serif text-foreground/80 hover:text-foreground transition-colors flex items-center gap-2"
                       >
                         {collection.name}
-                        {collection.products.length > 0 && (
+                        {collection.categories.length > 0 && (
                           <ChevronDown className="w-3 h-3 -rotate-90" />
                         )}
                       </Link>
@@ -123,16 +116,16 @@ export const Header = () => {
                   ))
                 )}
               </div>
-              {/* Products list - only show when collection is hovered */}
-              {hoveredCollection && collections.find(c => c.href === hoveredCollection)?.products.length ? (
+              {/* Categories list - only show when collection is hovered */}
+              {hoveredCollection && collections.find(c => c.href === hoveredCollection)?.categories.length ? (
                 <div className="p-4 border-l border-border bg-background min-w-[160px]">
-                  {collections.find(c => c.href === hoveredCollection)?.products.map((product) => (
+                  {collections.find(c => c.href === hoveredCollection)?.categories.map((cat) => (
                     <Link
-                      key={product.href}
-                      to={product.href}
+                      key={cat.href}
+                      to={cat.href}
                       className="block py-2 text-sm text-foreground/80 hover:text-foreground transition-colors"
                     >
-                      {product.name}
+                      {cat.name}
                     </Link>
                   ))}
                 </div>
@@ -199,14 +192,14 @@ export const Header = () => {
                           {collection.name}
                         </Link>
                         <div className="pl-4 mt-1 flex flex-col gap-1">
-                          {collection.products.map((product) => (
+                          {collection.categories.map((cat) => (
                             <Link
-                              key={product.href}
-                              to={product.href}
+                              key={cat.href}
+                              to={cat.href}
                               className="text-xs text-muted-foreground hover:text-foreground"
                               onClick={() => setMobileMenuOpen(false)}
                             >
-                              {product.name}
+                              {cat.name}
                             </Link>
                           ))}
                         </div>

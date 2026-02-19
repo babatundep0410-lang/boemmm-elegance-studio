@@ -12,6 +12,7 @@ export interface CategoryRow {
   id: string;
   name: string;
   slug: string;
+  collection_id: string | null;
   created_at: string;
 }
 
