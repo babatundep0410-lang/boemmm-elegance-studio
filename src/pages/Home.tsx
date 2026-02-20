@@ -10,56 +10,17 @@ import { useCart } from "@/contexts/CartContext";
 import boemmLogo from "@/assets/Boemm_logoo.png";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { useCollections, useCategories } from "@/hooks/useCollectionsCategories";
-
-// Import images
-import slideDining from "@/assets/slide-dining.png";
-import slideOcean from "@/assets/slide-ocean.png";
-import slideLounge from "@/assets/slide-lounge.png";
-import slideMirror from "@/assets/slide-mirror.png";
+import { useProducts } from "@/hooks/useProducts";
 import articleFounders from "@/assets/article-founders.png";
 
-const slides: Slide[] = [
-  {
-    id: 1,
-    image: articleFounders,
-    title: "From Founders\nto Patrons",
-    subtitle: "A Personal Letter Introducing Our Vision",
-    collection: "Letter",
-    link: "/about/articles/letter-from-founders",
-  },
-  {
-    id: 2,
-    image: slideDining,
-    title: "The Wrought L'émeute\nCollection",
-    subtitle: "Where Modern Design Meets African Heritage",
-    collection: "New Arrival",
-    link: "/collections/wrought-lemute",
-  },
-  {
-    id: 3,
-    image: slideOcean,
-    title: "Serenity Table",
-    subtitle: "Sculpted Metal & Glass",
-    collection: "Living Collection",
-    link: "/collections/wrought-lemute/centre-table",
-  },
-  {
-    id: 4,
-    image: slideLounge,
-    title: "Timeless",
-    subtitle: "MEASURED DESIGN, ENDURING APPEAL",
-    collection: "Signature Pieces",
-    link: "/collections/wrought-lemute/side-table",
-  },
-  {
-    id: 5,
-    image: slideMirror,
-    title: "Vitage Mirror",
-    subtitle: "Artisanal Ironwork from West Africa",
-    collection: "Décor",
-    link: "/collections/wrought-lemute/mirror",
-  },
-];
+const staticSlide: Slide = {
+  id: 0,
+  image: articleFounders,
+  title: "From Founders\nto Patrons",
+  subtitle: "A Personal Letter Introducing Our Vision",
+  collection: "Letter",
+  link: "/about/articles/letter-from-founders",
+};
 
 const aboutLinks = [
   { name: "Our Story", href: "/about" },
@@ -67,12 +28,27 @@ const aboutLinks = [
 ];
 
 const Home = () => {
+  const { data: products = [] } = useProducts();
+  const featuredProducts = products.filter(p => p.featured);
+
+  const slides: Slide[] = useMemo(() => {
+    const productSlides: Slide[] = featuredProducts.map((p, i) => ({
+      id: i + 1,
+      image: p.images[0] || "",
+      title: p.name,
+      subtitle: p.description,
+      collection: p.collection,
+      link: `/collections/${p.collection_slug}/${p.category_slug}`,
+    }));
+    return [staticSlide, ...productSlides];
+  }, [featuredProducts]);
+
+  const { totalItems, setIsOpen: openCart } = useCart();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { currentSlide, goToSlide, nextSlide, prevSlide, isTransitioning } = useSlider({
     totalSlides: slides.length,
     autoPlayInterval: 6000,
   });
-  const { totalItems, setIsOpen: openCart } = useCart();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { data: dbCollections = [] } = useCollections();
   const { data: dbCategories = [] } = useCategories();
 
