@@ -2,6 +2,22 @@ import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useArticles, useArticleBySlug } from '@/hooks/useArticles';
 
+/** Convert plain text or HTML content to display-ready HTML */
+const formatContent = (raw: string): string => {
+  const trimmed = raw.trim();
+  // If content already contains HTML tags, return as-is
+  if (/<[a-z][\s\S]*>/i.test(trimmed)) return trimmed;
+  // Otherwise treat as plain text with markdown-style ## headings
+  return trimmed
+    .split(/\n\s*\n/) // split on blank lines → paragraphs
+    .map((block) => {
+      const b = block.trim();
+      if (b.startsWith('## ')) return `<h2>${b.slice(3)}</h2>`;
+      return `<p>${b.replace(/\n/g, '<br/>')}</p>`;
+    })
+    .join('\n');
+};
+
 const ArticleDetail = () => {
   const { articleSlug } = useParams();
   const { data: article, isLoading } = useArticleBySlug(articleSlug || '');
@@ -90,7 +106,7 @@ const ArticleDetail = () => {
       <article className="max-w-3xl mx-auto px-6 lg:px-12 pb-24">
         <div
           className="article-content"
-          dangerouslySetInnerHTML={{ __html: article.content }}
+          dangerouslySetInnerHTML={{ __html: formatContent(article.content) }}
         />
       </article>
 

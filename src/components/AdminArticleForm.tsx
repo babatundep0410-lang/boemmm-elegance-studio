@@ -130,8 +130,8 @@ const AdminArticleForm = ({ article, onSaved, onCancel }: Props) => {
       </div>
 
       <div className="space-y-2">
-        <Label>Content (HTML)</Label>
-        <Textarea value={content} onChange={(e) => setContent(e.target.value)} rows={12} className="font-mono text-sm" />
+        <Label>Content</Label>
+        <Textarea value={content} onChange={(e) => setContent(e.target.value)} rows={16} placeholder="Write your article content here. Use blank lines to separate paragraphs. Lines starting with ## become section headings." />
       </div>
     </form>
   );
