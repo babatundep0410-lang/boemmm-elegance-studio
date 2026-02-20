@@ -28,15 +28,6 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
     });
   }, [images, hasImages]);
 
-  // Auto-scroll through images
-  useEffect(() => {
-    if (totalImages <= 1) return;
-    const interval = setInterval(() => {
-      setActiveIndex(prev => (prev + 1) % totalImages);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [totalImages]);
-
   const handleImageAreaWheel = useCallback((e: React.WheelEvent) => {
     if (!showScrollBar) return;
     e.preventDefault();
