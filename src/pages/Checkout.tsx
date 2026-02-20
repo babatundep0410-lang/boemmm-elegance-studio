@@ -2,17 +2,15 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useCart } from '@/contexts/CartContext';
-import { useCurrency } from '@/contexts/CurrencyContext';
+import { formatPrice } from '@/lib/formatPrice';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft } from 'lucide-react';
-import CurrencyToggle from '@/components/CurrencyToggle';
 
 const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
-  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -23,8 +21,6 @@ const Checkout = () => {
     address: '',
     notes: '',
   });
-
-  const avgRate = items.length > 0 ? items[0].exchangeRate : 15;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
@@ -95,10 +91,7 @@ const Checkout = () => {
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
 
-        <div className="flex items-center justify-between mb-10">
-          <h1 className="font-serif text-3xl">Checkout</h1>
-          <CurrencyToggle />
-        </div>
+        <h1 className="font-serif text-3xl mb-10">Checkout</h1>
 
         <div className="grid md:grid-cols-5 gap-12">
           {/* Form */}
@@ -128,7 +121,7 @@ const Checkout = () => {
               disabled={isSubmitting}
               className="w-full bg-foreground text-background hover:bg-foreground/90 h-12"
             >
-              {isSubmitting ? 'Placing Order...' : `Place Order — ${formatPrice(totalPrice, avgRate)}`}
+              {isSubmitting ? 'Placing Order...' : `Place Order — ${formatPrice(totalPrice)}`}
             </Button>
           </form>
 
@@ -141,13 +134,13 @@ const Checkout = () => {
                   <span>
                     {item.name} <span className="text-muted-foreground">× {item.quantity}</span>
                   </span>
-                  <span>{formatPrice(item.price * item.quantity, item.exchangeRate)}</span>
+                  <span>{formatPrice(item.price * item.quantity)}</span>
                 </div>
               ))}
             </div>
             <div className="border-t border-border mt-4 pt-4 flex justify-between font-serif text-lg">
               <span>Total</span>
-              <span>{formatPrice(totalPrice, avgRate)}</span>
+              <span>{formatPrice(totalPrice)}</span>
             </div>
           </div>
         </div>

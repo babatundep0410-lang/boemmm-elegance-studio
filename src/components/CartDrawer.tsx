@@ -1,18 +1,13 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/contexts/CartContext';
-import { useCurrency } from '@/contexts/CurrencyContext';
+import { formatPrice } from '@/lib/formatPrice';
 import { useNavigate } from 'react-router-dom';
 import { Minus, Plus, X } from 'lucide-react';
-import CurrencyToggle from '@/components/CurrencyToggle';
 
 export const CartDrawer = () => {
   const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalPrice, clearCart } = useCart();
-  const { formatPrice } = useCurrency();
   const navigate = useNavigate();
-
-  // Use the first item's exchange rate as a representative rate for total
-  const avgRate = items.length > 0 ? items[0].exchangeRate : 15;
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -20,7 +15,6 @@ export const CartDrawer = () => {
         <SheetHeader className="border-b border-border pb-4">
           <div className="flex items-center justify-between">
             <SheetTitle className="font-serif text-xl tracking-wide">Your Cart</SheetTitle>
-            {items.length > 0 && <CurrencyToggle />}
           </div>
         </SheetHeader>
 
@@ -63,7 +57,7 @@ export const CartDrawer = () => {
                           <Plus className="w-3 h-3" />
                         </button>
                       </div>
-                      <p className="text-sm">{formatPrice(item.price * item.quantity, item.exchangeRate)}</p>
+                      <p className="text-sm">{formatPrice(item.price * item.quantity)}</p>
                     </div>
                   </div>
                 </div>
@@ -73,7 +67,7 @@ export const CartDrawer = () => {
             <div className="border-t border-border pt-6 pb-8 space-y-4">
               <div className="flex justify-between text-lg">
                 <span>Subtotal</span>
-                <span className="font-serif">{formatPrice(totalPrice, avgRate)}</span>
+                <span className="font-serif">{formatPrice(totalPrice)}</span>
               </div>
               <p className="text-xs text-muted-foreground">Shipping and taxes calculated at checkout.</p>
               <Button
