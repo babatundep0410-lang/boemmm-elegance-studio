@@ -1,7 +1,12 @@
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { useCollections } from '@/hooks/useCollectionsCategories';
 
 const Collections = () => {
+  const { data: collections = [] } = useCollections();
+  const featuredCollections = collections.filter(c => c.featured);
+  const otherCollections = collections.filter(c => !c.featured);
+
   return (
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
@@ -22,39 +27,60 @@ const Collections = () => {
         </div>
       </section>
 
-      {/* Collections Grid */}
-      <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16">
-        <div className="grid gap-12">
-          {/* Wrought L'émeute Collection */}
-          <Link
-            to="/collections/wrought-lemute"
-            className="group relative bg-muted/50 min-h-[400px] md:min-h-[500px] flex items-end p-8 md:p-12 overflow-hidden"
-          >
-            {/* Background placeholder */}
-            <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 to-transparent z-10" />
-            <div className="absolute inset-0 bg-muted" />
-            
-            {/* Content */}
-            <div className="relative z-20 max-w-xl">
-              <p className="text-sm uppercase tracking-[0.2em] text-background/80 mb-4">
-                Current Collection
-              </p>
-              <h2 className="font-serif text-3xl md:text-4xl text-background mb-4">
-                Wrought L'émeute
-              </h2>
-              <p className="text-background/80 leading-relaxed mb-6">
-                A collection that celebrates the art of wrought iron, reimagined for 
-                contemporary living. Each piece is hand-forged by master artisans, 
-                blending West African craft tradition with modern design sensibility.
-              </p>
-              <span className="inline-flex items-center gap-2 text-sm uppercase tracking-wider text-background group-hover:gap-4 transition-all">
-                Explore Collection
-                <ArrowRight className="w-4 h-4" />
-              </span>
-            </div>
-          </Link>
-        </div>
-      </section>
+      {/* Featured Collections */}
+      {featuredCollections.length > 0 && (
+        <section className="max-w-7xl mx-auto px-6 lg:px-12 py-16">
+          <div className="grid gap-12">
+            {featuredCollections.map((col) => (
+              <Link
+                key={col.id}
+                to={`/collections/${col.slug}`}
+                className="group relative bg-muted/50 min-h-[400px] md:min-h-[500px] flex items-end p-8 md:p-12 overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 to-transparent z-10" />
+                <div className="absolute inset-0 bg-muted" />
+                <div className="relative z-20 max-w-xl">
+                  <p className="text-sm uppercase tracking-[0.2em] text-background/80 mb-4">
+                    Featured Collection
+                  </p>
+                  <h2 className="font-serif text-3xl md:text-4xl text-background mb-4">
+                    {col.name}
+                  </h2>
+                  <span className="inline-flex items-center gap-2 text-sm uppercase tracking-wider text-background group-hover:gap-4 transition-all">
+                    Explore Collection
+                    <ArrowRight className="w-4 h-4" />
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* Other Collections */}
+      {otherCollections.length > 0 && (
+        <section className="max-w-7xl mx-auto px-6 lg:px-12 py-8">
+          <h2 className="font-serif text-2xl md:text-3xl mb-8">All Collections</h2>
+          <div className="grid md:grid-cols-2 gap-8">
+            {otherCollections.map((col) => (
+              <Link
+                key={col.id}
+                to={`/collections/${col.slug}`}
+                className="group relative bg-muted/50 min-h-[250px] flex items-end p-6 md:p-8 overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/30 to-transparent z-10" />
+                <div className="absolute inset-0 bg-muted" />
+                <div className="relative z-20">
+                  <h3 className="font-serif text-2xl text-background mb-2">{col.name}</h3>
+                  <span className="inline-flex items-center gap-2 text-sm uppercase tracking-wider text-background/80 group-hover:gap-4 transition-all">
+                    View <ArrowRight className="w-4 h-4" />
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Philosophy Section */}
       <section className="bg-secondary/30 py-24">
@@ -82,19 +108,6 @@ const Collections = () => {
             </div>
           </div>
         </div>
-      </section>
-
-      {/* Future Collections Teaser */}
-      <section className="max-w-7xl mx-auto px-6 lg:px-12 py-24 text-center">
-        <p className="text-sm uppercase tracking-[0.2em] text-muted-foreground mb-4">
-          Coming Soon
-        </p>
-        <h2 className="font-serif text-2xl md:text-3xl mb-6">
-          New collections in development
-        </h2>
-        <p className="text-muted-foreground max-w-xl mx-auto">
-          Join our mailing list to be the first to know when new collections launch.
-        </p>
       </section>
     </div>
   );

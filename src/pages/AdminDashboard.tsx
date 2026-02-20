@@ -216,6 +216,7 @@ const AdminDashboard = () => {
                     <TableRow>
                       <TableHead>Name</TableHead>
                       <TableHead>Slug</TableHead>
+                      <TableHead>Featured</TableHead>
                       <TableHead>Created</TableHead>
                       <TableHead className="text-right">Actions</TableHead>
                     </TableRow>
@@ -225,6 +226,25 @@ const AdminDashboard = () => {
                       <TableRow key={c.id}>
                         <TableCell className="font-medium">{c.name}</TableCell>
                         <TableCell className="text-muted-foreground">{c.slug}</TableCell>
+                        <TableCell>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={async () => {
+                              const { error } = await supabase
+                                .from("collections")
+                                .update({ featured: !c.featured })
+                                .eq("id", c.id);
+                              if (error) {
+                                toast({ title: "Error", description: error.message, variant: "destructive" });
+                              } else {
+                                refetchCollections();
+                              }
+                            }}
+                          >
+                            {c.featured ? "✓" : "—"}
+                          </Button>
+                        </TableCell>
                         <TableCell className="whitespace-nowrap">{formatDate(c.created_at)}</TableCell>
                         <TableCell className="text-right">
                           <Button variant="ghost" size="icon" onClick={() => setDeleteTarget({ type: 'collection', id: c.id, name: c.name })}>
