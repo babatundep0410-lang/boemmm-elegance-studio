@@ -1,8 +1,10 @@
 import { Link } from 'react-router-dom';
-import { articles } from '@/data/articles';
 import { ArrowRight } from 'lucide-react';
+import { useArticles } from '@/hooks/useArticles';
 
 const Articles = () => {
+  const { data: articles = [], isLoading } = useArticles();
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -32,50 +34,54 @@ const Articles = () => {
 
       {/* Articles Grid */}
       <section className="max-w-7xl mx-auto px-6 lg:px-12 py-8 pb-24">
-        <div className="grid gap-16">
-          {articles.map((article, index) => (
-            <Link
-              key={article.id}
-              to={`/about/articles/${article.slug}`}
-              className="group grid md:grid-cols-2 gap-8 items-center"
-            >
-              <div className={`aspect-[4/3] bg-muted flex items-center justify-center ${index % 2 === 1 ? 'md:order-2' : ''}`}>
-                {article.image ? (
-                  <img
-                    src={article.image}
-                    alt={article.title}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <span className="text-muted-foreground text-sm">
-                    Article image placeholder
-                  </span>
-                )}
-              </div>
-              
-              <div className={index % 2 === 1 ? 'md:order-1' : ''}>
-                <p className="text-xs uppercase tracking-[0.2em] text-accent mb-3">
-                  {article.category}
-                </p>
-                <h2 className="font-serif text-2xl md:text-3xl mb-4 group-hover:text-accent transition-colors">
-                  {article.title}
-                </h2>
-                <p className="text-muted-foreground leading-relaxed mb-4">
-                  {article.excerpt}
-                </p>
-                <div className="flex items-center justify-between">
-                  <p className="text-xs text-muted-foreground">
-                    {formatDate(article.date)}
-                  </p>
-                  <span className="inline-flex items-center gap-2 text-sm text-accent group-hover:gap-4 transition-all">
-                    Read Article
-                    <ArrowRight className="w-4 h-4" />
-                  </span>
+        {isLoading ? (
+          <p className="text-muted-foreground text-center py-12">Loading…</p>
+        ) : (
+          <div className="grid gap-16">
+            {articles.map((article, index) => (
+              <Link
+                key={article.id}
+                to={`/about/articles/${article.slug}`}
+                className="group grid md:grid-cols-2 gap-8 items-center"
+              >
+                <div className={`aspect-[4/3] bg-muted flex items-center justify-center ${index % 2 === 1 ? 'md:order-2' : ''}`}>
+                  {article.image_url ? (
+                    <img
+                      src={article.image_url}
+                      alt={article.title}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <span className="text-muted-foreground text-sm">
+                      Article image placeholder
+                    </span>
+                  )}
                 </div>
-              </div>
-            </Link>
-          ))}
-        </div>
+                
+                <div className={index % 2 === 1 ? 'md:order-1' : ''}>
+                  <p className="text-xs uppercase tracking-[0.2em] text-accent mb-3">
+                    {article.category}
+                  </p>
+                  <h2 className="font-serif text-2xl md:text-3xl mb-4 group-hover:text-accent transition-colors">
+                    {article.title}
+                  </h2>
+                  <p className="text-muted-foreground leading-relaxed mb-4">
+                    {article.excerpt}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <p className="text-xs text-muted-foreground">
+                      {formatDate(article.published_at)}
+                    </p>
+                    <span className="inline-flex items-center gap-2 text-sm text-accent group-hover:gap-4 transition-all">
+                      Read Article
+                      <ArrowRight className="w-4 h-4" />
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Newsletter CTA */}

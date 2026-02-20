@@ -1,10 +1,27 @@
 import { useParams, Link } from 'react-router-dom';
-import { getArticleBySlug, articles } from '@/data/articles';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { useArticles, useArticleBySlug } from '@/hooks/useArticles';
 
 const ArticleDetail = () => {
   const { articleSlug } = useParams();
-  const article = getArticleBySlug(articleSlug || '');
+  const { data: article, isLoading } = useArticleBySlug(articleSlug || '');
+  const { data: articles = [] } = useArticles();
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <p className="text-muted-foreground">Loading…</p>
+      </div>
+    );
+  }
 
   if (!article) {
     return (
@@ -18,14 +35,6 @@ const ArticleDetail = () => {
       </div>
     );
   }
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
 
   // Find next and previous articles
   const currentIndex = articles.findIndex((a) => a.slug === article.slug);
@@ -56,16 +65,16 @@ const ArticleDetail = () => {
         <div className="flex items-center justify-center gap-4 text-sm text-muted-foreground">
           <span>{article.author}</span>
           <span>•</span>
-          <span>{formatDate(article.date)}</span>
+          <span>{formatDate(article.published_at)}</span>
         </div>
       </header>
 
       {/* Featured Image */}
       <div className="max-w-5xl mx-auto px-6 lg:px-12 mb-16">
         <div className="aspect-[16/9] bg-muted flex items-center justify-center">
-          {article.image ? (
+          {article.image_url ? (
             <img
-              src={article.image}
+              src={article.image_url}
               alt={article.title}
               className="w-full h-full object-cover"
             />

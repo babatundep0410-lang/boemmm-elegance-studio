@@ -14,7 +14,9 @@ import { LogOut, RefreshCw, Plus, Pencil, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useProducts, type DBProduct } from "@/hooks/useProducts";
 import { useCollections, useCategories } from "@/hooks/useCollectionsCategories";
+import { useArticles, type DBArticle } from "@/hooks/useArticles";
 import AdminProductForm from "@/components/AdminProductForm";
+import AdminArticleForm from "@/components/AdminArticleForm";
 
 interface Order {
   id: string;
@@ -43,13 +45,15 @@ const AdminDashboard = () => {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [editingProduct, setEditingProduct] = useState<DBProduct | null | undefined>(undefined);
-  const [deleteTarget, setDeleteTarget] = useState<{ type: 'product' | 'collection' | 'category'; id: string; name: string } | null>(null);
+  const [editingArticle, setEditingArticle] = useState<DBArticle | null | undefined>(undefined);
+  const [deleteTarget, setDeleteTarget] = useState<{ type: 'product' | 'collection' | 'category' | 'article'; id: string; name: string } | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
   const { data: products = [], refetch: refetchProducts } = useProducts();
   const { data: collections = [], refetch: refetchCollections } = useCollections();
   const { data: categories = [], refetch: refetchCategories } = useCategories();
+  const { data: articlesList = [], refetch: refetchArticles } = useArticles();
 
   const fetchData = async () => {
     setLoading(true);
@@ -92,6 +96,9 @@ const AdminDashboard = () => {
     } else if (deleteTarget.type === 'category') {
       ({ error } = await supabase.from("categories").delete().eq("id", deleteTarget.id));
       if (!error) refetchCategories();
+    } else if (deleteTarget.type === 'article') {
+      ({ error } = await supabase.from("articles").delete().eq("id", deleteTarget.id));
+      if (!error) refetchArticles();
     }
     if (error) {
       toast({ title: "Error", description: error.message, variant: "destructive" });
@@ -105,6 +112,25 @@ const AdminDashboard = () => {
     new Date(d).toLocaleDateString("en-US", {
       year: "numeric", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit",
     });
+
+  if (editingArticle !== undefined) {
+    return (
+      <div className="min-h-screen bg-background">
+        <header className="border-b px-6 py-4 flex items-center justify-between">
+          <h1 className="text-xl font-bold tracking-tight">
+            {editingArticle ? "Edit Article" : "New Article"}
+          </h1>
+        </header>
+        <main className="p-6 max-w-7xl mx-auto">
+          <AdminArticleForm
+            article={editingArticle}
+            onSaved={() => { setEditingArticle(undefined); refetchArticles(); }}
+            onCancel={() => setEditingArticle(undefined)}
+          />
+        </main>
+      </div>
+    );
+  }
 
   if (editingProduct !== undefined) {
     return (
@@ -130,7 +156,7 @@ const AdminDashboard = () => {
       <header className="border-b px-6 py-4 flex items-center justify-between">
         <h1 className="text-xl font-bold tracking-tight">Admin Dashboard</h1>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" onClick={() => { fetchData(); refetchProducts(); refetchCollections(); refetchCategories(); }} disabled={loading}>
+          <Button variant="outline" size="sm" onClick={() => { fetchData(); refetchProducts(); refetchCollections(); refetchCategories(); refetchArticles(); }} disabled={loading}>
             <RefreshCw className={`h-4 w-4 mr-1 ${loading ? "animate-spin" : ""}`} /> Refresh
           </Button>
           <Button variant="ghost" size="sm" onClick={handleLogout}>
@@ -147,6 +173,7 @@ const AdminDashboard = () => {
             <TabsTrigger value="categories">Categories ({categories.length})</TabsTrigger>
             <TabsTrigger value="orders">Orders ({orders.length})</TabsTrigger>
             <TabsTrigger value="inquiries">Inquiries ({inquiries.length})</TabsTrigger>
+            <TabsTrigger value="articles">Articles ({articlesList.length})</TabsTrigger>
           </TabsList>
 
           {/* Products Tab */}
@@ -357,6 +384,60 @@ const AdminDashboard = () => {
                         <TableCell>{inq.phone || "—"}</TableCell>
                         <TableCell>{inq.subject || "—"}</TableCell>
                         <TableCell className="max-w-[300px] truncate">{inq.message}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Articles Tab */}
+          <TabsContent value="articles" className="mt-4">
+            <div className="flex justify-end mb-4">
+              <Button size="sm" onClick={() => setEditingArticle(null)}>
+                <Plus className="h-4 w-4 mr-1" /> Add Article
+              </Button>
+            </div>
+            {articlesList.length === 0 ? (
+              <p className="text-muted-foreground text-sm py-8 text-center">No articles yet.</p>
+            ) : (
+              <div className="border rounded-lg overflow-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Image</TableHead>
+                      <TableHead>Title</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Author</TableHead>
+                      <TableHead>Published</TableHead>
+                      <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {articlesList.map((a) => (
+                      <TableRow key={a.id}>
+                        <TableCell>
+                          {a.image_url ? (
+                            <img src={a.image_url} alt={a.title} className="w-12 h-12 object-cover rounded" />
+                          ) : (
+                            <div className="w-12 h-12 bg-muted rounded" />
+                          )}
+                        </TableCell>
+                        <TableCell className="font-medium">{a.title}</TableCell>
+                        <TableCell>{a.category}</TableCell>
+                        <TableCell>{a.author}</TableCell>
+                        <TableCell className="whitespace-nowrap">{a.published_at}</TableCell>
+                        <TableCell className="text-right">
+                          <div className="flex justify-end gap-1">
+                            <Button variant="ghost" size="icon" onClick={() => setEditingArticle(a)}>
+                              <Pencil className="h-4 w-4" />
+                            </Button>
+                            <Button variant="ghost" size="icon" onClick={() => setDeleteTarget({ type: 'article', id: a.id, name: a.title })}>
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
