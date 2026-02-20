@@ -105,19 +105,19 @@ const Checkout = () => {
           <form onSubmit={handleSubmit} className="md:col-span-3 space-y-6">
             <div>
               <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Full Name *</label>
-              <Input name="name" value={formData.name} onChange={handleChange} required />
+              <Input name="name" autoComplete="name" value={formData.name} onChange={handleChange} required />
             </div>
             <div>
               <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Email *</label>
-              <Input name="email" type="email" value={formData.email} onChange={handleChange} required />
+              <Input name="email" type="email" autoComplete="email" value={formData.email} onChange={handleChange} required />
             </div>
             <div>
               <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Phone</label>
-              <Input name="phone" value={formData.phone} onChange={handleChange} />
+              <Input name="phone" type="tel" autoComplete="tel" value={formData.phone} onChange={handleChange} />
             </div>
             <div>
               <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Shipping Address</label>
-              <Textarea name="address" value={formData.address} onChange={handleChange} rows={3} />
+              <Textarea name="address" autoComplete="street-address" value={formData.address} onChange={handleChange} rows={3} />
             </div>
             <div>
               <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Order Notes</label>
