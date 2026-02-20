@@ -1,14 +1,12 @@
 import { Link, useParams } from 'react-router-dom';
 import { useProductsByCollection, toProductView } from '@/hooks/useProducts';
-import { useCurrency } from '@/contexts/CurrencyContext';
+import { formatPrice } from '@/lib/formatPrice';
 import { ArrowRight } from 'lucide-react';
-import CurrencyToggle from '@/components/CurrencyToggle';
 
 const CollectionDetail = () => {
   const { collectionSlug } = useParams();
   const { data: dbProducts = [], isLoading } = useProductsByCollection(collectionSlug || '');
   const products = dbProducts.map(toProductView);
-  const { formatPrice } = useCurrency();
 
   if (isLoading) {
     return (
@@ -73,17 +71,6 @@ const CollectionDetail = () => {
               Furniture forged to endure, and designed to be lived with.
             </p>
           </div>
-          {/* The Craft section - temporarily hidden, preserved for future restoration
-          <div>
-            <h2 className="font-serif text-2xl md:text-3xl mb-6">The Craft</h2>
-            <p className="text-muted-foreground leading-relaxed mb-4">
-              Each piece is forged by master artisans in our Accra workshop.
-            </p>
-            <p className="text-muted-foreground leading-relaxed">
-              This is not industrial production—it is craft. Every curve bears the intentional marks of human hands.
-            </p>
-          </div>
-          */}
         </div>
       </section>
 
@@ -92,7 +79,6 @@ const CollectionDetail = () => {
         <div className="max-w-7xl mx-auto px-6 lg:px-12">
           <div className="flex items-center justify-between mb-12">
             <h2 className="font-serif text-3xl md:text-4xl text-center flex-1">The Pieces</h2>
-            <CurrencyToggle />
           </div>
           <div className="grid md:grid-cols-2 gap-8 lg:gap-12">
             {products.map((product) => (
@@ -112,7 +98,7 @@ const CollectionDetail = () => {
                 <h3 className="font-serif text-xl mb-2">{product.name}</h3>
                 <p className="text-muted-foreground text-sm mb-4 line-clamp-2">{product.description}</p>
                 <div className="flex items-center justify-between">
-                  <span className="font-serif text-lg">{formatPrice(product.price, product.exchangeRate)}</span>
+                  <span className="font-serif text-lg">{formatPrice(product.price)}</span>
                   <span className="inline-flex items-center gap-2 text-sm text-accent group-hover:gap-4 transition-all">
                     View Details <ArrowRight className="w-4 h-4" />
                   </span>
@@ -122,18 +108,6 @@ const CollectionDetail = () => {
           </div>
         </div>
       </section>
-
-      {/* CTA - temporarily hidden, preserved for future restoration
-      <section className="max-w-7xl mx-auto px-6 lg:px-12 py-24 text-center">
-        <h2 className="font-serif text-2xl md:text-3xl mb-6">Experience in Person</h2>
-        <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-          Visit our showroom in Accra or schedule a virtual consultation.
-        </p>
-        <Link to="/contact" className="inline-flex items-center gap-2 bg-foreground text-background px-8 py-3 text-sm uppercase tracking-wider hover:bg-foreground/90 transition-colors">
-          Schedule a Visit <ArrowRight className="w-4 h-4" />
-        </Link>
-      </section>
-      */}
     </div>
   );
 };

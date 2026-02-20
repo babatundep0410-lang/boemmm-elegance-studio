@@ -34,7 +34,6 @@ export const toProductView = (p: DBProduct) => ({
   category: p.category,
   categorySlug: p.category_slug,
   price: p.price,
-  exchangeRate: p.exchange_rate,
   description: p.description,
   longDescription: p.long_description,
   specifications: {

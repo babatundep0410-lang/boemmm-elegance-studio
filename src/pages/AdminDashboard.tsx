@@ -212,7 +212,7 @@ const AdminDashboard = () => {
                         <TableCell className="font-medium">{p.name}</TableCell>
                         <TableCell>{p.collection}</TableCell>
                         <TableCell>{p.category}</TableCell>
-                        <TableCell className="text-right">${Number(p.price).toFixed(2)}</TableCell>
+                        <TableCell className="text-right">GH₵{Number(p.price).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
                         <TableCell>{p.featured ? "✓" : ""}</TableCell>
                         <TableCell className="text-right">
                           <div className="flex justify-end gap-1">
@@ -349,7 +349,7 @@ const AdminDashboard = () => {
                         <TableCell>{order.customer_email}</TableCell>
                         <TableCell>{order.customer_phone || "—"}</TableCell>
                         <TableCell className="max-w-[200px] truncate">{order.shipping_address || "—"}</TableCell>
-                        <TableCell className="text-right font-medium">€{order.total_price.toFixed(2)}</TableCell>
+                        <TableCell className="text-right font-medium">GH₵{order.total_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
