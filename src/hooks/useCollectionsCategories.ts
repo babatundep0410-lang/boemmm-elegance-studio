@@ -5,6 +5,7 @@ export interface CollectionRow {
   id: string;
   name: string;
   slug: string;
+  featured: boolean;
   created_at: string;
 }
 
