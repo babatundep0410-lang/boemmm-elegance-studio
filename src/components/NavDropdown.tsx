@@ -68,7 +68,7 @@ export const NavDropdown = ({ label, items, hasSubmenus = false }: NavDropdownPr
         )}
       >
         <div className={cn(
-          "bg-background/95 backdrop-blur-sm border border-border/50 rounded-lg shadow-lg p-4 min-w-[180px]",
+          "p-4 min-w-[180px]",
           hasSubmenus && activeSubmenu && "flex gap-8"
         )}>
           {/* Primary items - same nav-link styling */}
