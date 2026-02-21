@@ -33,6 +33,9 @@ const emptyForm = {
   weight: '',
   finish: '',
   featured: false,
+  product_details: '',
+  shipping_info: '',
+  returns_info: '',
 };
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
@@ -107,6 +110,9 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
         weight: product.weight || '',
         finish: product.finish || '',
         featured: product.featured,
+        product_details: product.product_details || '',
+        shipping_info: product.shipping_info || '',
+        returns_info: product.returns_info || '',
       });
       setImages(product.images || []);
     }
@@ -179,6 +185,9 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
       finish: form.finish || null,
       images,
       featured: form.featured,
+      product_details: form.product_details || null,
+      shipping_info: form.shipping_info || null,
+      returns_info: form.returns_info || null,
     };
 
     let error;
@@ -349,6 +358,21 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
       <div className="space-y-1.5">
         <Label>Long Description</Label>
         <Textarea name="long_description" value={form.long_description} onChange={handleChange} rows={4} />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label>Product Details</Label>
+        <Textarea name="product_details" value={form.product_details} onChange={handleChange} rows={4} placeholder="Detailed product information shown in the accordion..." />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label>Shipping Info</Label>
+        <Textarea name="shipping_info" value={form.shipping_info} onChange={handleChange} rows={3} placeholder="Shipping details and delivery timelines..." />
+      </div>
+
+      <div className="space-y-1.5">
+        <Label>Returns Info</Label>
+        <Textarea name="returns_info" value={form.returns_info} onChange={handleChange} rows={3} placeholder="Returns policy for this product..." />
       </div>
 
       <div className="grid grid-cols-3 gap-4">

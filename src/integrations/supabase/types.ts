@@ -197,6 +197,9 @@ export type Database = {
           material: string | null
           name: string
           price: number
+          product_details: string | null
+          returns_info: string | null
+          shipping_info: string | null
           slug: string
           updated_at: string
           weight: string | null
@@ -219,6 +222,9 @@ export type Database = {
           material?: string | null
           name: string
           price?: number
+          product_details?: string | null
+          returns_info?: string | null
+          shipping_info?: string | null
           slug: string
           updated_at?: string
           weight?: string | null
@@ -241,6 +247,9 @@ export type Database = {
           material?: string | null
           name?: string
           price?: number
+          product_details?: string | null
+          returns_info?: string | null
+          shipping_info?: string | null
           slug?: string
           updated_at?: string
           weight?: string | null

@@ -22,6 +22,9 @@ export interface DBProduct {
   created_at: string;
   updated_at: string;
   exchange_rate: number;
+  product_details: string | null;
+  shipping_info: string | null;
+  returns_info: string | null;
 }
 
 // Adapts DB product to the shape components expect
@@ -45,6 +48,9 @@ export const toProductView = (p: DBProduct) => ({
   },
   images: p.images,
   featured: p.featured,
+  productDetails: p.product_details || '',
+  shippingInfo: p.shipping_info || '',
+  returnsInfo: p.returns_info || '',
 });
 
 export type ProductView = ReturnType<typeof toProductView>;

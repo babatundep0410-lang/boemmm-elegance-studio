@@ -98,34 +98,49 @@ const ProductPage = () => {
               <AccordionItem value="details" className="border-b border-border py-0">
                 <AccordionTrigger className="py-4 text-sm font-medium text-foreground hover:no-underline">Product Details</AccordionTrigger>
                 <AccordionContent className="pb-4 text-sm text-muted-foreground leading-relaxed">
-                  <p className="mb-3">{product.description}</p>
-                  <p className="mb-3">Each piece is hand-forged in West Africa, ensuring unique character and exceptional quality.</p>
-                  <ul className="space-y-1 mt-4">
-                    <li><span className="font-medium text-foreground">Material:</span> {product.specifications.material}</li>
-                    <li><span className="font-medium text-foreground">Dimensions:</span> {product.specifications.dimensions}</li>
-                    {product.specifications.weight && <li><span className="font-medium text-foreground">Weight:</span> {product.specifications.weight}</li>}
-                    {product.specifications.finish && <li><span className="font-medium text-foreground">Finish:</span> {product.specifications.finish}</li>}
-                  </ul>
+                  {product.productDetails ? (
+                    <div className="whitespace-pre-line">{product.productDetails}</div>
+                  ) : (
+                    <>
+                      <p className="mb-3">{product.description}</p>
+                      <ul className="space-y-1 mt-4">
+                        <li><span className="font-medium text-foreground">Material:</span> {product.specifications.material}</li>
+                        <li><span className="font-medium text-foreground">Dimensions:</span> {product.specifications.dimensions}</li>
+                        {product.specifications.weight && <li><span className="font-medium text-foreground">Weight:</span> {product.specifications.weight}</li>}
+                        {product.specifications.finish && <li><span className="font-medium text-foreground">Finish:</span> {product.specifications.finish}</li>}
+                      </ul>
+                    </>
+                  )}
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="shipping" className="border-b border-border py-0">
                 <AccordionTrigger className="py-4 text-sm font-medium text-foreground hover:no-underline">Shipping</AccordionTrigger>
                 <AccordionContent className="pb-4 text-sm text-muted-foreground leading-relaxed">
-                  <p className="mb-3">We offer worldwide shipping on all orders.</p>
-                  <ul className="space-y-1">
-                    <li>• Ghana: 5-7 business days</li>
-                    <li>• West Africa: 7-14 business days</li>
-                    <li>• International: 14-28 business days</li>
-                  </ul>
-                  <p className="mt-3">White glove delivery available for select locations.</p>
+                  {product.shippingInfo ? (
+                    <div className="whitespace-pre-line">{product.shippingInfo}</div>
+                  ) : (
+                    <>
+                      <p className="mb-3">We offer worldwide shipping on all orders.</p>
+                      <ul className="space-y-1">
+                        <li>• Ghana: 5-7 business days</li>
+                        <li>• West Africa: 7-14 business days</li>
+                        <li>• International: 14-28 business days</li>
+                      </ul>
+                      <p className="mt-3">White glove delivery available for select locations.</p>
+                    </>
+                  )}
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="returns" className="border-b border-border py-0">
                 <AccordionTrigger className="py-4 text-sm font-medium text-foreground hover:no-underline">Returns</AccordionTrigger>
                 <AccordionContent className="pb-4 text-sm text-muted-foreground leading-relaxed">
-                  <p>We accept returns within 30 days of delivery for items in original condition. Custom orders are final sale.</p>
+                  {product.returnsInfo ? (
+                    <div className="whitespace-pre-line">{product.returnsInfo}</div>
+                  ) : (
+                    <p>We accept returns within 30 days of delivery for items in original condition. Custom orders are final sale.</p>
+                  )}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
