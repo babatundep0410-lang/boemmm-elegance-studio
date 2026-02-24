@@ -35,8 +35,8 @@ const Home = () => {
     const productSlides: Slide[] = featuredProducts.map((p, i) => ({
       id: i + 1,
       image: p.images[0] || "",
-      title: p.name,
-      subtitle: p.description,
+      title: (p as any).homepage_title || p.name,
+      subtitle: (p as any).homepage_subtitle || p.description,
       collection: p.collection,
       link: `/collections/${p.collection_slug}/${p.category_slug}`,
     }));
