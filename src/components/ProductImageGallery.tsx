@@ -37,7 +37,10 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
   }, [totalImages]);
 
   // Wheel handler: scroll images when over image area, allow page scroll at boundaries
-  const handleImageAreaWheel = useCallback((e: React.WheelEvent) => {
+  // Use native wheel listener with passive:false to reliably prevent page scroll
+  const wheelHandler = useRef<((e: WheelEvent) => void) | null>(null);
+  
+  wheelHandler.current = (e: WheelEvent) => {
     if (!showScrollBar) return;
     e.preventDefault();
     e.stopPropagation();
@@ -46,7 +49,15 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
     if (e.deltaY > 0) goToNext();
     else if (e.deltaY < 0) goToPrev();
     setTimeout(() => { scrollCooldown.current = false; }, 400);
-  }, [showScrollBar, goToNext, goToPrev]);
+  };
+
+  useEffect(() => {
+    const el = imageAreaRef.current;
+    if (!el) return;
+    const handler = (e: WheelEvent) => wheelHandler.current?.(e);
+    el.addEventListener('wheel', handler, { passive: false });
+    return () => el.removeEventListener('wheel', handler);
+  }, []);
 
   // Mobile touch handlers (swipe only, no pinch zoom)
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
@@ -143,7 +154,6 @@ const ProductImageGallery = ({ images, productName }: ProductImageGalleryProps) 
           )}
           <div
             ref={imageAreaRef}
-            onWheel={handleImageAreaWheel}
             className="flex items-center justify-center relative"
             style={{ height: '70vh', paddingLeft: showScrollBar ? 'calc(3px + 2cm)' : '0' }}
           >
