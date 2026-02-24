@@ -38,6 +38,7 @@ const emptyForm = {
   returns_info: '',
   homepage_title: '',
   homepage_subtitle: '',
+  homepage_collection: '',
 };
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
@@ -117,6 +118,7 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
         returns_info: product.returns_info || '',
         homepage_title: (product as any).homepage_title || '',
         homepage_subtitle: (product as any).homepage_subtitle || '',
+        homepage_collection: (product as any).homepage_collection || '',
       });
       setImages(product.images || []);
     }
@@ -194,6 +196,7 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
       returns_info: form.returns_info || null,
       homepage_title: form.homepage_title || null,
       homepage_subtitle: form.homepage_subtitle || null,
+      homepage_collection: form.homepage_collection || null,
     };
 
     let error;
@@ -349,6 +352,10 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
       {form.featured && (
         <div className="space-y-4 p-4 border border-dashed rounded-md">
           <p className="text-sm font-medium text-muted-foreground">Homepage Slide Text (for featured products)</p>
+          <div className="space-y-1.5">
+            <Label>Homepage Collection Label</Label>
+            <Input name="homepage_collection" value={form.homepage_collection} onChange={handleChange} placeholder="e.g. NEW ARRIVAL, SIGNATURE PIECES" />
+          </div>
           <div className="space-y-1.5">
             <Label>Homepage Title</Label>
             <Input name="homepage_title" value={form.homepage_title} onChange={handleChange} placeholder="e.g. Artisan\nCraftsmanship (use \n for line breaks)" />
