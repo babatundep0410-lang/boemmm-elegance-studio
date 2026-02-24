@@ -44,6 +44,7 @@ const AdminDashboard = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
   const [expandedInquiry, setExpandedInquiry] = useState<string | null>(null);
+  const [expandedOrder, setExpandedOrder] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [editingProduct, setEditingProduct] = useState<DBProduct | null | undefined>(undefined);
   const [editingArticle, setEditingArticle] = useState<DBArticle | null | undefined>(undefined);
@@ -334,25 +335,92 @@ const AdminDashboard = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead className="w-8"></TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead>Customer</TableHead>
                       <TableHead>Email</TableHead>
-                      <TableHead>Phone</TableHead>
-                      <TableHead>Address</TableHead>
                       <TableHead className="text-right">Total</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {orders.map((order) => (
-                      <TableRow key={order.id}>
-                        <TableCell className="whitespace-nowrap">{formatDate(order.created_at)}</TableCell>
-                        <TableCell>{order.customer_name}</TableCell>
-                        <TableCell>{order.customer_email}</TableCell>
-                        <TableCell>{order.customer_phone || "—"}</TableCell>
-                        <TableCell className="max-w-[200px] truncate">{order.shipping_address || "—"}</TableCell>
-                        <TableCell className="text-right font-medium">GH₵{order.total_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
-                      </TableRow>
-                    ))}
+                    {orders.map((order) => {
+                      const isExpanded = expandedOrder === order.id;
+                      const items = Array.isArray(order.items) ? order.items : [];
+                      return (
+                        <>
+                          <TableRow
+                            key={order.id}
+                            className="cursor-pointer hover:bg-muted/50"
+                            onClick={() => setExpandedOrder(isExpanded ? null : order.id)}
+                          >
+                            <TableCell>
+                              <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                            </TableCell>
+                            <TableCell className="whitespace-nowrap">{formatDate(order.created_at)}</TableCell>
+                            <TableCell className="font-medium">{order.customer_name}</TableCell>
+                            <TableCell>{order.customer_email}</TableCell>
+                            <TableCell className="text-right font-medium">GH₵{order.total_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                          </TableRow>
+                          {isExpanded && (
+                            <TableRow key={`${order.id}-detail`}>
+                              <TableCell colSpan={5} className="bg-muted/30 p-0">
+                                <div className="px-6 py-4 space-y-4">
+                                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                    <div>
+                                      <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Customer</p>
+                                      <p className="font-medium">{order.customer_name}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Email</p>
+                                      <a href={`mailto:${order.customer_email}`} className="font-medium underline">{order.customer_email}</a>
+                                    </div>
+                                    <div>
+                                      <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Phone</p>
+                                      <p className="font-medium">{order.customer_phone || "—"}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Shipping Address</p>
+                                      <p className="font-medium whitespace-pre-line">{order.shipping_address || "—"}</p>
+                                    </div>
+                                  </div>
+                                  {order.order_notes && (
+                                    <div>
+                                      <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Order Notes</p>
+                                      <p className="text-sm whitespace-pre-line">{order.order_notes}</p>
+                                    </div>
+                                  )}
+                                  {items.length > 0 && (
+                                    <div>
+                                      <p className="text-muted-foreground text-xs uppercase tracking-wide mb-2">Items</p>
+                                      <div className="border rounded-md overflow-hidden">
+                                        <Table>
+                                          <TableHeader>
+                                            <TableRow>
+                                              <TableHead>Product</TableHead>
+                                              <TableHead className="text-right">Qty</TableHead>
+                                              <TableHead className="text-right">Price</TableHead>
+                                            </TableRow>
+                                          </TableHeader>
+                                          <TableBody>
+                                            {items.map((item: any, idx: number) => (
+                                              <TableRow key={idx}>
+                                                <TableCell className="font-medium">{item.name || item.product_name || "Item"}</TableCell>
+                                                <TableCell className="text-right">{item.quantity || 1}</TableCell>
+                                                <TableCell className="text-right">GH₵{Number(item.price || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
+                                              </TableRow>
+                                            ))}
+                                          </TableBody>
+                                        </Table>
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </div>
