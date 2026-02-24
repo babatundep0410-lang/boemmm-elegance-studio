@@ -11,6 +11,7 @@ import boemmLogo from "@/assets/Boemm_logoo.png";
 import { Sheet, SheetContent, SheetTrigger, SheetTitle } from "@/components/ui/sheet";
 import { useCollections, useCategories } from "@/hooks/useCollectionsCategories";
 import { useProducts } from "@/hooks/useProducts";
+import { useArticles } from "@/hooks/useArticles";
 import articleFounders from "@/assets/article-founders.png";
 
 const staticSlide: Slide = {
@@ -29,7 +30,9 @@ const aboutLinks = [
 
 const Home = () => {
   const { data: products = [] } = useProducts();
+  const { data: articles = [] } = useArticles();
   const featuredProducts = products.filter(p => p.featured);
+  const featuredArticles = articles.filter(a => (a as any).featured);
 
   const slides: Slide[] = useMemo(() => {
     const productSlides: Slide[] = featuredProducts.map((p, i) => ({
@@ -40,8 +43,16 @@ const Home = () => {
       collection: (p as any).homepage_collection || p.collection,
       link: `/collections/${p.collection_slug}/${p.category_slug}`,
     }));
-    return [staticSlide, ...productSlides];
-  }, [featuredProducts]);
+    const articleSlides: Slide[] = featuredArticles.map((a, i) => ({
+      id: productSlides.length + i + 1,
+      image: a.image_url || articleFounders,
+      title: (a as any).homepage_title || a.title,
+      subtitle: (a as any).homepage_subtitle || a.excerpt,
+      collection: (a as any).homepage_collection || a.category,
+      link: `/about/articles/${a.slug}`,
+    }));
+    return [staticSlide, ...productSlides, ...articleSlides];
+  }, [featuredProducts, featuredArticles]);
 
   const { totalItems, setIsOpen: openCart } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

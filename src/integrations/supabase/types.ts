@@ -21,6 +21,10 @@ export type Database = {
           content: string
           created_at: string
           excerpt: string
+          featured: boolean
+          homepage_collection: string | null
+          homepage_subtitle: string | null
+          homepage_title: string | null
           id: string
           image_url: string | null
           published_at: string
@@ -34,6 +38,10 @@ export type Database = {
           content?: string
           created_at?: string
           excerpt?: string
+          featured?: boolean
+          homepage_collection?: string | null
+          homepage_subtitle?: string | null
+          homepage_title?: string | null
           id?: string
           image_url?: string | null
           published_at?: string
@@ -47,6 +55,10 @@ export type Database = {
           content?: string
           created_at?: string
           excerpt?: string
+          featured?: boolean
+          homepage_collection?: string | null
+          homepage_subtitle?: string | null
+          homepage_title?: string | null
           id?: string
           image_url?: string | null
           published_at?: string

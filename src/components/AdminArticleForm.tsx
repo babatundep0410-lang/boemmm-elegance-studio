@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import type { DBArticle } from '@/hooks/useArticles';
 
@@ -25,6 +26,10 @@ const AdminArticleForm = ({ article, onSaved, onCancel }: Props) => {
   const [category, setCategory] = useState(article?.category || '');
   const [imageUrl, setImageUrl] = useState(article?.image_url || '');
   const [publishedAt, setPublishedAt] = useState(article?.published_at || new Date().toISOString().split('T')[0]);
+  const [featured, setFeatured] = useState(article?.featured || false);
+  const [homepageTitle, setHomepageTitle] = useState(article?.homepage_title || '');
+  const [homepageSubtitle, setHomepageSubtitle] = useState(article?.homepage_subtitle || '');
+  const [homepageCollection, setHomepageCollection] = useState(article?.homepage_collection || '');
 
   const generateSlug = (text: string) =>
     text.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -65,7 +70,11 @@ const AdminArticleForm = ({ article, onSaved, onCancel }: Props) => {
       category,
       image_url: imageUrl || null,
       published_at: publishedAt,
-    };
+      featured,
+      homepage_title: homepageTitle || null,
+      homepage_subtitle: homepageSubtitle || null,
+      homepage_collection: homepageCollection || null,
+    } as any;
 
     let error;
     if (article) {
@@ -101,7 +110,7 @@ const AdminArticleForm = ({ article, onSaved, onCancel }: Props) => {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-3 gap-4">
         <div className="space-y-2">
           <Label>Author</Label>
           <Input value={author} onChange={(e) => setAuthor(e.target.value)} />
@@ -110,7 +119,29 @@ const AdminArticleForm = ({ article, onSaved, onCancel }: Props) => {
           <Label>Category</Label>
           <Input value={category} onChange={(e) => setCategory(e.target.value)} placeholder="e.g. Letter, Community" />
         </div>
+        <div className="flex items-center gap-3 pt-6">
+          <Switch checked={featured} onCheckedChange={setFeatured} />
+          <Label>Featured on Homepage</Label>
+        </div>
       </div>
+
+      {featured && (
+        <div className="space-y-4 p-4 border border-dashed rounded-md">
+          <p className="text-sm font-medium text-muted-foreground">Homepage Slide Text (for featured articles)</p>
+          <div className="space-y-1.5">
+            <Label>Homepage Collection Label</Label>
+            <Input value={homepageCollection} onChange={(e) => setHomepageCollection(e.target.value)} placeholder="e.g. LETTER, EDITORIAL" />
+          </div>
+          <div className="space-y-1.5">
+            <Label>Homepage Title</Label>
+            <Input value={homepageTitle} onChange={(e) => setHomepageTitle(e.target.value)} placeholder="e.g. From Founders\nto Patrons (use \n for line breaks)" />
+          </div>
+          <div className="space-y-1.5">
+            <Label>Homepage Subtitle</Label>
+            <Input value={homepageSubtitle} onChange={(e) => setHomepageSubtitle(e.target.value)} placeholder="e.g. A Personal Letter Introducing Our Vision" />
+          </div>
+        </div>
+      )}
 
       <div className="grid md:grid-cols-2 gap-4">
         <div className="space-y-2">

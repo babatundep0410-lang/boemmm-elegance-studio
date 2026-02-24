@@ -13,6 +13,10 @@ export interface DBArticle {
   published_at: string;
   created_at: string;
   updated_at: string;
+  featured: boolean;
+  homepage_title: string | null;
+  homepage_subtitle: string | null;
+  homepage_collection: string | null;
 }
 
 export const useArticles = () =>
