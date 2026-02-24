@@ -9,7 +9,7 @@ import { CartDrawer } from "@/components/CartDrawer";
 
 // Pages
 import Home from "./pages/Home";
-import Collections from "./pages/Collections";
+
 import CollectionDetail from "./pages/CollectionDetail";
 import ProductPage from "./pages/ProductPage";
 import ARExperience from "./pages/ARExperience";
@@ -38,7 +38,7 @@ const App = () => (
             
             {/* All other pages use Layout with header/footer */}
             <Route element={<Layout />}>
-              <Route path="/collections" element={<Collections />} />
+              
               <Route path="/collections/:collectionSlug" element={<CollectionDetail />} />
               <Route path="/collections/:collectionSlug/:categorySlug" element={<ProductPage />} />
               <Route path="/ar-experience" element={<ARExperience />} />

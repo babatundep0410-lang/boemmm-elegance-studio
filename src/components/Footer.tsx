@@ -17,6 +17,16 @@ export const Footer = () => {
             </p>
           </div>
 
+          {/* Collections */}
+          <div>
+            <h4 className="text-sm uppercase tracking-wider mb-4">Collections</h4>
+            <nav className="flex flex-col gap-2">
+              <Link to="/collections/wrought-lemute" className="text-sm text-background/70 hover:text-background transition-colors">
+                Wrought L'émeute
+              </Link>
+            </nav>
+          </div>
+
           {/* Company */}
           <div>
             <h4 className="text-sm uppercase tracking-wider mb-4">Company</h4>
