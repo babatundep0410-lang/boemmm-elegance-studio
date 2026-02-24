@@ -674,12 +674,16 @@ const AdminDashboard = () => {
                   if (swapIdx < 0 || swapIdx >= featuredItems.length) return;
                   const other = featuredItems[swapIdx];
 
+                  // Use index-based ordering to handle cases where items share the same order value
+                  const newItemOrder = swapIdx;
+                  const newOtherOrder = idx;
+
                   const table1 = item.type === 'product' ? 'products' : 'articles';
                   const table2 = other.type === 'product' ? 'products' : 'articles';
 
                   const [r1, r2] = await Promise.all([
-                    supabase.from(table1).update({ homepage_order: other.order } as any).eq('id', item.id),
-                    supabase.from(table2).update({ homepage_order: item.order } as any).eq('id', other.id),
+                    supabase.from(table1).update({ homepage_order: newItemOrder } as any).eq('id', item.id),
+                    supabase.from(table2).update({ homepage_order: newOtherOrder } as any).eq('id', other.id),
                   ]);
 
                   if (r1.error || r2.error) {
