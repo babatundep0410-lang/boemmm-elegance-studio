@@ -37,7 +37,7 @@ const Home = () => {
       image: p.images[0] || "",
       title: (p as any).homepage_title || p.name,
       subtitle: (p as any).homepage_subtitle || p.description,
-      collection: p.collection,
+      collection: (p as any).homepage_collection || p.collection,
       link: `/collections/${p.collection_slug}/${p.category_slug}`,
     }));
     return [staticSlide, ...productSlides];
