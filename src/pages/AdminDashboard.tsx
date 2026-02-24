@@ -10,7 +10,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { LogOut, RefreshCw, Plus, Pencil, Trash2, ChevronDown } from "lucide-react";
+import { LogOut, RefreshCw, Plus, Pencil, Trash2, ChevronDown, ArrowUp, ArrowDown, GripVertical } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useProducts, type DBProduct } from "@/hooks/useProducts";
 import { useCollections, useCategories } from "@/hooks/useCollectionsCategories";
@@ -187,8 +187,9 @@ const AdminDashboard = () => {
             <TabsTrigger value="categories">Categories ({categories.length})</TabsTrigger>
             <TabsTrigger value="orders">Orders ({orders.length})</TabsTrigger>
             <TabsTrigger value="inquiries">Inquiries ({inquiries.length})</TabsTrigger>
-            <TabsTrigger value="articles">Articles ({articlesList.length})</TabsTrigger>
-          </TabsList>
+             <TabsTrigger value="articles">Articles ({articlesList.length})</TabsTrigger>
+             <TabsTrigger value="slider">Homepage Slider</TabsTrigger>
+           </TabsList>
 
           {/* Analytics Tab */}
           <TabsContent value="analytics" className="mt-4">
@@ -636,6 +637,124 @@ const AdminDashboard = () => {
                 </Table>
               </div>
             )}
+          </TabsContent>
+
+          {/* Homepage Slider Tab */}
+          <TabsContent value="slider" className="mt-4">
+            <div className="space-y-4">
+              <p className="text-sm text-muted-foreground">
+                Drag featured products and articles to set slider order. Only items marked as "Featured" appear here.
+              </p>
+              {(() => {
+                const featuredItems: { type: 'product' | 'article'; id: string; name: string; image: string; order: number }[] = [
+                  ...products.filter(p => p.featured).map(p => ({
+                    type: 'product' as const,
+                    id: p.id,
+                    name: (p as any).homepage_title || p.name,
+                    image: p.images?.[0] || '',
+                    order: (p as any).homepage_order || 0,
+                  })),
+                  ...articlesList.filter(a => (a as any).featured).map(a => ({
+                    type: 'article' as const,
+                    id: a.id,
+                    name: (a as any).homepage_title || a.title,
+                    image: a.image_url || '',
+                    order: (a as any).homepage_order || 0,
+                  })),
+                ];
+                featuredItems.sort((a, b) => a.order - b.order);
+
+                if (featuredItems.length === 0) {
+                  return <p className="text-muted-foreground text-sm py-8 text-center">No featured items. Mark products or articles as "Featured" to add them to the slider.</p>;
+                }
+
+                const handleReorder = async (item: typeof featuredItems[0], direction: 'up' | 'down') => {
+                  const idx = featuredItems.indexOf(item);
+                  const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+                  if (swapIdx < 0 || swapIdx >= featuredItems.length) return;
+                  const other = featuredItems[swapIdx];
+
+                  const table1 = item.type === 'product' ? 'products' : 'articles';
+                  const table2 = other.type === 'product' ? 'products' : 'articles';
+
+                  const [r1, r2] = await Promise.all([
+                    supabase.from(table1).update({ homepage_order: other.order } as any).eq('id', item.id),
+                    supabase.from(table2).update({ homepage_order: item.order } as any).eq('id', other.id),
+                  ]);
+
+                  if (r1.error || r2.error) {
+                    toast({ title: 'Error', description: (r1.error || r2.error)?.message, variant: 'destructive' });
+                  } else {
+                    refetchProducts();
+                    refetchArticles();
+                    toast({ title: 'Slider order updated' });
+                  }
+                };
+
+                return (
+                  <div className="border rounded-lg overflow-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-12">Order</TableHead>
+                          <TableHead className="w-16">Image</TableHead>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Type</TableHead>
+                          <TableHead className="text-right">Reorder</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {featuredItems.map((item, idx) => (
+                          <TableRow key={`${item.type}-${item.id}`}>
+                            <TableCell>
+                              <div className="flex items-center gap-1 text-muted-foreground">
+                                <GripVertical className="h-4 w-4" />
+                                <span className="text-sm font-medium">{idx + 1}</span>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              {item.image ? (
+                                <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded" />
+                              ) : (
+                                <div className="w-12 h-12 bg-muted rounded" />
+                              )}
+                            </TableCell>
+                            <TableCell className="font-medium">{item.name}</TableCell>
+                            <TableCell>
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                                item.type === 'product' ? 'bg-primary/10 text-primary' : 'bg-accent/10 text-accent-foreground'
+                              }`}>
+                                {item.type === 'product' ? 'Product' : 'Article'}
+                              </span>
+                            </TableCell>
+                            <TableCell className="text-right">
+                              <div className="flex justify-end gap-1">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  disabled={idx === 0}
+                                  onClick={() => handleReorder(item, 'up')}
+                                >
+                                  <ArrowUp className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  disabled={idx === featuredItems.length - 1}
+                                  onClick={() => handleReorder(item, 'down')}
+                                >
+                                  <ArrowDown className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                );
+              })()}
+            </div>
           </TabsContent>
         </Tabs>
       </main>

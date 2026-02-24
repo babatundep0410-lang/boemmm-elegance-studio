@@ -14,15 +14,6 @@ import { useProducts } from "@/hooks/useProducts";
 import { useArticles } from "@/hooks/useArticles";
 import articleFounders from "@/assets/article-founders.png";
 
-const staticSlide: Slide = {
-  id: 0,
-  image: articleFounders,
-  title: "From Founders\nto Patrons",
-  subtitle: "A Personal Letter Introducing Our Vision",
-  collection: "Letter",
-  link: "/about/articles/letter-from-founders",
-};
-
 const aboutLinks = [
   { name: "Our Story", href: "/about" },
   { name: "Articles", href: "/about/articles" },
@@ -35,23 +26,35 @@ const Home = () => {
   const featuredArticles = articles.filter(a => (a as any).featured);
 
   const slides: Slide[] = useMemo(() => {
-    const productSlides: Slide[] = featuredProducts.map((p, i) => ({
-      id: i + 1,
-      image: p.images[0] || "",
-      title: (p as any).homepage_title || p.name,
-      subtitle: (p as any).homepage_subtitle || p.description,
-      collection: (p as any).homepage_collection || p.collection,
-      link: `/collections/${p.collection_slug}/${p.category_slug}`,
-    }));
-    const articleSlides: Slide[] = featuredArticles.map((a, i) => ({
-      id: productSlides.length + i + 1,
-      image: a.image_url || articleFounders,
-      title: (a as any).homepage_title || a.title,
-      subtitle: (a as any).homepage_subtitle || a.excerpt,
-      collection: (a as any).homepage_collection || a.category,
-      link: `/about/articles/${a.slug}`,
-    }));
-    return [staticSlide, ...productSlides, ...articleSlides];
+    const allFeatured: { order: number; slide: Slide }[] = [];
+    featuredProducts.forEach((p, i) => {
+      allFeatured.push({
+        order: (p as any).homepage_order || 0,
+        slide: {
+          id: i,
+          image: p.images[0] || "",
+          title: (p as any).homepage_title || p.name,
+          subtitle: (p as any).homepage_subtitle || p.description,
+          collection: (p as any).homepage_collection || p.collection,
+          link: `/collections/${p.collection_slug}/${p.category_slug}`,
+        },
+      });
+    });
+    featuredArticles.forEach((a, i) => {
+      allFeatured.push({
+        order: (a as any).homepage_order || 0,
+        slide: {
+          id: 1000 + i,
+          image: a.image_url || articleFounders,
+          title: (a as any).homepage_title || a.title,
+          subtitle: (a as any).homepage_subtitle || a.excerpt,
+          collection: (a as any).homepage_collection || a.category,
+          link: `/about/articles/${a.slug}`,
+        },
+      });
+    });
+    allFeatured.sort((a, b) => a.order - b.order);
+    return allFeatured.map((f, i) => ({ ...f.slide, id: i }));
   }, [featuredProducts, featuredArticles]);
 
   const { totalItems, setIsOpen: openCart } = useCart();

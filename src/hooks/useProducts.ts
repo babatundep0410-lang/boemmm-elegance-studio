@@ -28,6 +28,7 @@ export interface DBProduct {
   homepage_title: string | null;
   homepage_subtitle: string | null;
   homepage_collection: string | null;
+  homepage_order: number;
 }
 
 // Adapts DB product to the shape components expect
