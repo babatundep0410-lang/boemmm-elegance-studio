@@ -10,7 +10,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { LogOut, RefreshCw, Plus, Pencil, Trash2 } from "lucide-react";
+import { LogOut, RefreshCw, Plus, Pencil, Trash2, ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useProducts, type DBProduct } from "@/hooks/useProducts";
 import { useCollections, useCategories } from "@/hooks/useCollectionsCategories";
@@ -43,6 +43,7 @@ interface Inquiry {
 const AdminDashboard = () => {
   const [orders, setOrders] = useState<Order[]>([]);
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
+  const [expandedInquiry, setExpandedInquiry] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [editingProduct, setEditingProduct] = useState<DBProduct | null | undefined>(undefined);
   const [editingArticle, setEditingArticle] = useState<DBArticle | null | undefined>(undefined);
@@ -367,25 +368,64 @@ const AdminDashboard = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead className="w-8"></TableHead>
                       <TableHead>Date</TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Email</TableHead>
-                      <TableHead>Phone</TableHead>
                       <TableHead>Subject</TableHead>
-                      <TableHead className="max-w-[300px]">Message</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {inquiries.map((inq) => (
-                      <TableRow key={inq.id}>
-                        <TableCell className="whitespace-nowrap">{formatDate(inq.created_at)}</TableCell>
-                        <TableCell>{inq.name}</TableCell>
-                        <TableCell>{inq.email}</TableCell>
-                        <TableCell>{inq.phone || "—"}</TableCell>
-                        <TableCell>{inq.subject || "—"}</TableCell>
-                        <TableCell className="max-w-[300px] truncate">{inq.message}</TableCell>
-                      </TableRow>
-                    ))}
+                    {inquiries.map((inq) => {
+                      const isExpanded = expandedInquiry === inq.id;
+                      return (
+                        <>
+                          <TableRow
+                            key={inq.id}
+                            className="cursor-pointer hover:bg-muted/50"
+                            onClick={() => setExpandedInquiry(isExpanded ? null : inq.id)}
+                          >
+                            <TableCell>
+                              <ChevronDown className={`h-4 w-4 transition-transform ${isExpanded ? "rotate-180" : ""}`} />
+                            </TableCell>
+                            <TableCell className="whitespace-nowrap">{formatDate(inq.created_at)}</TableCell>
+                            <TableCell className="font-medium">{inq.name}</TableCell>
+                            <TableCell>{inq.email}</TableCell>
+                            <TableCell>{inq.subject || "—"}</TableCell>
+                          </TableRow>
+                          {isExpanded && (
+                            <TableRow key={`${inq.id}-detail`}>
+                              <TableCell colSpan={5} className="bg-muted/30 p-0">
+                                <div className="px-6 py-4 space-y-3">
+                                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                                    <div>
+                                      <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Name</p>
+                                      <p className="font-medium">{inq.name}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Email</p>
+                                      <a href={`mailto:${inq.email}`} className="font-medium underline">{inq.email}</a>
+                                    </div>
+                                    <div>
+                                      <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Phone</p>
+                                      <p className="font-medium">{inq.phone || "—"}</p>
+                                    </div>
+                                    <div>
+                                      <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Subject</p>
+                                      <p className="font-medium">{inq.subject || "—"}</p>
+                                    </div>
+                                  </div>
+                                  <div>
+                                    <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Message</p>
+                                    <p className="text-sm whitespace-pre-line leading-relaxed">{inq.message}</p>
+                                  </div>
+                                </div>
+                              </TableCell>
+                            </TableRow>
+                          )}
+                        </>
+                      );
+                    })}
                   </TableBody>
                 </Table>
               </div>
