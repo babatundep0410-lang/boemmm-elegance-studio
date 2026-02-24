@@ -17,6 +17,7 @@ import { useCollections, useCategories } from "@/hooks/useCollectionsCategories"
 import { useArticles, type DBArticle } from "@/hooks/useArticles";
 import AdminProductForm from "@/components/AdminProductForm";
 import AdminArticleForm from "@/components/AdminArticleForm";
+import AdminAnalytics from "@/components/AdminAnalytics";
 
 const ORDER_STAGES = ['confirmed', 'procurement', 'production', 'shipping', 'delivered'] as const;
 const ORDER_STAGE_LABELS: Record<string, string> = {
@@ -178,8 +179,9 @@ const AdminDashboard = () => {
       </header>
 
       <main className="p-6 max-w-7xl mx-auto">
-        <Tabs defaultValue="products">
-          <TabsList>
+        <Tabs defaultValue="analytics">
+          <TabsList className="flex-wrap">
+            <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="products">Products ({products.length})</TabsTrigger>
             <TabsTrigger value="collections">Collections ({collections.length})</TabsTrigger>
             <TabsTrigger value="categories">Categories ({categories.length})</TabsTrigger>
@@ -187,6 +189,16 @@ const AdminDashboard = () => {
             <TabsTrigger value="inquiries">Inquiries ({inquiries.length})</TabsTrigger>
             <TabsTrigger value="articles">Articles ({articlesList.length})</TabsTrigger>
           </TabsList>
+
+          {/* Analytics Tab */}
+          <TabsContent value="analytics" className="mt-4">
+            <AdminAnalytics
+              orders={orders}
+              inquiries={inquiries}
+              productsCount={products.length}
+              articlesCount={articlesList.length}
+            />
+          </TabsContent>
 
           {/* Products Tab */}
           <TabsContent value="products" className="mt-4">
