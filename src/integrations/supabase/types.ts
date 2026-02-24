@@ -191,6 +191,8 @@ export type Database = {
           exchange_rate: number
           featured: boolean
           finish: string | null
+          homepage_subtitle: string | null
+          homepage_title: string | null
           id: string
           images: string[]
           long_description: string
@@ -216,6 +218,8 @@ export type Database = {
           exchange_rate?: number
           featured?: boolean
           finish?: string | null
+          homepage_subtitle?: string | null
+          homepage_title?: string | null
           id?: string
           images?: string[]
           long_description?: string
@@ -241,6 +245,8 @@ export type Database = {
           exchange_rate?: number
           featured?: boolean
           finish?: string | null
+          homepage_subtitle?: string | null
+          homepage_title?: string | null
           id?: string
           images?: string[]
           long_description?: string

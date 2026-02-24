@@ -36,6 +36,8 @@ const emptyForm = {
   product_details: '',
   shipping_info: '',
   returns_info: '',
+  homepage_title: '',
+  homepage_subtitle: '',
 };
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
@@ -113,6 +115,8 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
         product_details: product.product_details || '',
         shipping_info: product.shipping_info || '',
         returns_info: product.returns_info || '',
+        homepage_title: (product as any).homepage_title || '',
+        homepage_subtitle: (product as any).homepage_subtitle || '',
       });
       setImages(product.images || []);
     }
@@ -188,6 +192,8 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
       product_details: form.product_details || null,
       shipping_info: form.shipping_info || null,
       returns_info: form.returns_info || null,
+      homepage_title: form.homepage_title || null,
+      homepage_subtitle: form.homepage_subtitle || null,
     };
 
     let error;
@@ -338,6 +344,21 @@ const AdminProductForm = ({ product, onSaved, onCancel }: Props) => {
           <Input name="category_slug" value={form.category_slug} onChange={handleChange} />
         </div>
       </div>
+
+      {/* Homepage Slide Text (shown when product is featured) */}
+      {form.featured && (
+        <div className="space-y-4 p-4 border border-dashed rounded-md">
+          <p className="text-sm font-medium text-muted-foreground">Homepage Slide Text (for featured products)</p>
+          <div className="space-y-1.5">
+            <Label>Homepage Title</Label>
+            <Input name="homepage_title" value={form.homepage_title} onChange={handleChange} placeholder="e.g. Artisan\nCraftsmanship (use \n for line breaks)" />
+          </div>
+          <div className="space-y-1.5">
+            <Label>Homepage Subtitle</Label>
+            <Input name="homepage_subtitle" value={form.homepage_subtitle} onChange={handleChange} placeholder="e.g. Where Heritage Meets Modern Elegance" />
+          </div>
+        </div>
+      )}
 
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-1.5">

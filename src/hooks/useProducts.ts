@@ -25,6 +25,8 @@ export interface DBProduct {
   product_details: string | null;
   shipping_info: string | null;
   returns_info: string | null;
+  homepage_title: string | null;
+  homepage_subtitle: string | null;
 }
 
 // Adapts DB product to the shape components expect
