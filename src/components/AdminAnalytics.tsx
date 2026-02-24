@@ -107,6 +107,25 @@ const AdminAnalytics = ({ orders, inquiries, productsCount, articlesCount }: Adm
     return Object.entries(months).map(([month, count]) => ({ month, count }));
   }, [inquiries]);
 
+  // Top-selling products
+  const topProducts = useMemo(() => {
+    const counts: Record<string, { name: string; qty: number; revenue: number }> = {};
+    orders.forEach((o) => {
+      const items = Array.isArray(o.items) ? o.items : [];
+      items.forEach((item: any) => {
+        const name = item.name || item.product_name || "Unknown";
+        const qty = Number(item.quantity) || 1;
+        const price = Number(item.price) || 0;
+        if (!counts[name]) counts[name] = { name, qty: 0, revenue: 0 };
+        counts[name].qty += qty;
+        counts[name].revenue += price * qty;
+      });
+    });
+    return Object.values(counts)
+      .sort((a, b) => b.qty - a.qty)
+      .slice(0, 8);
+  }, [orders]);
+
   const formatCurrency = (v: number) => `GH₵${v.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 
   const kpis = [
@@ -246,6 +265,44 @@ const AdminAnalytics = ({ orders, inquiries, productsCount, articlesCount }: Adm
                   <Line type="monotone" dataKey="count" stroke="hsl(38, 50%, 55%)" strokeWidth={2} dot={{ fill: "hsl(38, 50%, 55%)", r: 4 }} />
                 </LineChart>
               </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Top-Selling Products */}
+        <Card className="lg:col-span-2">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-base font-medium" style={{ fontFamily: "var(--font-sans)" }}>
+              Top-Selling Products
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="h-[300px]">
+              {topProducts.length === 0 ? (
+                <p className="text-muted-foreground text-sm text-center pt-20">No product data yet</p>
+              ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={topProducts} layout="vertical" margin={{ left: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(35, 20%, 85%)" />
+                    <XAxis type="number" tick={{ fontSize: 12 }} stroke="hsl(30, 8%, 45%)" allowDecimals={false} />
+                    <YAxis
+                      type="category"
+                      dataKey="name"
+                      tick={{ fontSize: 11 }}
+                      stroke="hsl(30, 8%, 45%)"
+                      width={140}
+                    />
+                    <Tooltip
+                      formatter={(value: number, name: string) => [
+                        name === "qty" ? `${value} units` : formatCurrency(value),
+                        name === "qty" ? "Quantity" : "Revenue",
+                      ]}
+                      contentStyle={{ borderRadius: 0, border: "1px solid hsl(35, 20%, 85%)", fontSize: 12 }}
+                    />
+                    <Bar dataKey="qty" fill="hsl(32, 35%, 45%)" radius={[0, 2, 2, 0]} name="qty" />
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
             </div>
           </CardContent>
         </Card>
