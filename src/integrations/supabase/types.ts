@@ -23,6 +23,7 @@ export type Database = {
           excerpt: string
           featured: boolean
           homepage_collection: string | null
+          homepage_order: number
           homepage_subtitle: string | null
           homepage_title: string | null
           id: string
@@ -40,6 +41,7 @@ export type Database = {
           excerpt?: string
           featured?: boolean
           homepage_collection?: string | null
+          homepage_order?: number
           homepage_subtitle?: string | null
           homepage_title?: string | null
           id?: string
@@ -57,6 +59,7 @@ export type Database = {
           excerpt?: string
           featured?: boolean
           homepage_collection?: string | null
+          homepage_order?: number
           homepage_subtitle?: string | null
           homepage_title?: string | null
           id?: string
@@ -207,6 +210,7 @@ export type Database = {
           featured: boolean
           finish: string | null
           homepage_collection: string | null
+          homepage_order: number
           homepage_subtitle: string | null
           homepage_title: string | null
           id: string
@@ -235,6 +239,7 @@ export type Database = {
           featured?: boolean
           finish?: string | null
           homepage_collection?: string | null
+          homepage_order?: number
           homepage_subtitle?: string | null
           homepage_title?: string | null
           id?: string
@@ -263,6 +268,7 @@ export type Database = {
           featured?: boolean
           finish?: string | null
           homepage_collection?: string | null
+          homepage_order?: number
           homepage_subtitle?: string | null
           homepage_title?: string | null
           id?: string

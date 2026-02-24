@@ -17,6 +17,7 @@ export interface DBArticle {
   homepage_title: string | null;
   homepage_subtitle: string | null;
   homepage_collection: string | null;
+  homepage_order: number;
 }
 
 export const useArticles = () =>
