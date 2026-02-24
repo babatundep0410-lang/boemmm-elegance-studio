@@ -311,7 +311,6 @@ const AdminDashboard = () => {
             )}
           </TabsContent>
 
-          {/* Categories Tab */}
           <TabsContent value="categories" className="mt-4">
             {categories.length === 0 ? (
               <p className="text-muted-foreground text-sm py-8 text-center">No categories yet.</p>
@@ -320,6 +319,7 @@ const AdminDashboard = () => {
                 <Table>
                   <TableHeader>
                     <TableRow>
+                      <TableHead className="w-20">Order</TableHead>
                       <TableHead>Name</TableHead>
                       <TableHead>Collection</TableHead>
                       <TableHead>Slug</TableHead>
@@ -328,8 +328,44 @@ const AdminDashboard = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {categories.map((c) => (
+                    {categories.map((c, idx) => (
                       <TableRow key={c.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-1">
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7"
+                              disabled={idx === 0}
+                              onClick={async () => {
+                                const prev = categories[idx - 1];
+                                await Promise.all([
+                                  supabase.from("categories").update({ display_order: idx - 1 }).eq("id", c.id),
+                                  supabase.from("categories").update({ display_order: idx }).eq("id", prev.id),
+                                ]);
+                                refetchCategories();
+                              }}
+                            >
+                              <ArrowUp className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="h-7 w-7"
+                              disabled={idx === categories.length - 1}
+                              onClick={async () => {
+                                const next = categories[idx + 1];
+                                await Promise.all([
+                                  supabase.from("categories").update({ display_order: idx + 1 }).eq("id", c.id),
+                                  supabase.from("categories").update({ display_order: idx }).eq("id", next.id),
+                                ]);
+                                refetchCategories();
+                              }}
+                            >
+                              <ArrowDown className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
                         <TableCell className="font-medium">{c.name}</TableCell>
                         <TableCell className="text-muted-foreground">
                           {collections.find(col => col.id === c.collection_id)?.name || '—'}

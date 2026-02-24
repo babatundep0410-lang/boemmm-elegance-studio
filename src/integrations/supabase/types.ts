@@ -75,6 +75,7 @@ export type Database = {
         Row: {
           collection_id: string | null
           created_at: string
+          display_order: number
           id: string
           name: string
           slug: string
@@ -82,6 +83,7 @@ export type Database = {
         Insert: {
           collection_id?: string | null
           created_at?: string
+          display_order?: number
           id?: string
           name: string
           slug: string
@@ -89,6 +91,7 @@ export type Database = {
         Update: {
           collection_id?: string | null
           created_at?: string
+          display_order?: number
           id?: string
           name?: string
           slug?: string

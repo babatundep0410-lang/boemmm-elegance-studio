@@ -14,6 +14,7 @@ export interface CategoryRow {
   name: string;
   slug: string;
   collection_id: string | null;
+  display_order: number;
   created_at: string;
 }
 
@@ -37,6 +38,7 @@ export const useCategories = () =>
       const { data, error } = await supabase
         .from('categories')
         .select('*')
+        .order('display_order')
         .order('name');
       if (error) throw error;
       return (data as CategoryRow[]) || [];
