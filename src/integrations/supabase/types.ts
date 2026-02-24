@@ -163,6 +163,7 @@ export type Database = {
           id: string
           items: Json
           order_notes: string | null
+          order_status: string
           shipping_address: string | null
           total_price: number
         }
@@ -174,6 +175,7 @@ export type Database = {
           id?: string
           items?: Json
           order_notes?: string | null
+          order_status?: string
           shipping_address?: string | null
           total_price?: number
         }
@@ -185,6 +187,7 @@ export type Database = {
           id?: string
           items?: Json
           order_notes?: string | null
+          order_status?: string
           shipping_address?: string | null
           total_price?: number
         }

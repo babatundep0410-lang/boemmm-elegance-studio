@@ -18,6 +18,15 @@ import { useArticles, type DBArticle } from "@/hooks/useArticles";
 import AdminProductForm from "@/components/AdminProductForm";
 import AdminArticleForm from "@/components/AdminArticleForm";
 
+const ORDER_STAGES = ['confirmed', 'procurement', 'production', 'shipping', 'delivered'] as const;
+const ORDER_STAGE_LABELS: Record<string, string> = {
+  confirmed: 'Order Confirmed',
+  procurement: 'Procurement',
+  production: 'Production',
+  shipping: 'Shipping',
+  delivered: 'Delivered',
+};
+
 interface Order {
   id: string;
   customer_name: string;
@@ -28,6 +37,7 @@ interface Order {
   items: any;
   total_price: number;
   created_at: string;
+  order_status: string;
 }
 
 interface Inquiry {
@@ -339,6 +349,7 @@ const AdminDashboard = () => {
                       <TableHead>Date</TableHead>
                       <TableHead>Customer</TableHead>
                       <TableHead>Email</TableHead>
+                      <TableHead>Status</TableHead>
                       <TableHead className="text-right">Total</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -359,12 +370,73 @@ const AdminDashboard = () => {
                             <TableCell className="whitespace-nowrap">{formatDate(order.created_at)}</TableCell>
                             <TableCell className="font-medium">{order.customer_name}</TableCell>
                             <TableCell>{order.customer_email}</TableCell>
+                            <TableCell>
+                              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                                order.order_status === 'delivered' ? 'bg-green-100 text-green-800' :
+                                order.order_status === 'shipping' ? 'bg-blue-100 text-blue-800' :
+                                order.order_status === 'production' ? 'bg-amber-100 text-amber-800' :
+                                order.order_status === 'procurement' ? 'bg-orange-100 text-orange-800' :
+                                'bg-muted text-muted-foreground'
+                              }`}>
+                                {ORDER_STAGE_LABELS[order.order_status] || order.order_status}
+                              </span>
+                            </TableCell>
                             <TableCell className="text-right font-medium">GH₵{order.total_price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</TableCell>
                           </TableRow>
                           {isExpanded && (
                             <TableRow key={`${order.id}-detail`}>
-                              <TableCell colSpan={5} className="bg-muted/30 p-0">
-                                <div className="px-6 py-4 space-y-4">
+                              <TableCell colSpan={6} className="bg-muted/30 p-0">
+                                <div className="px-6 py-4 space-y-5">
+                                  {/* Order Progress Tracker */}
+                                  <div>
+                                    <p className="text-muted-foreground text-xs uppercase tracking-wide mb-3">Order Progress</p>
+                                    <div className="flex items-center gap-0">
+                                      {ORDER_STAGES.map((stage, idx) => {
+                                        const currentIdx = ORDER_STAGES.indexOf(order.order_status as any);
+                                        const isCompleted = idx <= currentIdx;
+                                        const isCurrent = idx === currentIdx;
+                                        return (
+                                          <div key={stage} className="flex items-center flex-1 last:flex-none">
+                                            <button
+                                              type="button"
+                                              onClick={async (e) => {
+                                                e.stopPropagation();
+                                                const { error } = await supabase.from('orders').update({ order_status: stage } as any).eq('id', order.id);
+                                                if (error) {
+                                                  toast({ title: 'Error', description: error.message, variant: 'destructive' });
+                                                } else {
+                                                  setOrders(prev => prev.map(o => o.id === order.id ? { ...o, order_status: stage } : o));
+                                                  toast({ title: `Status updated to ${ORDER_STAGE_LABELS[stage]}` });
+                                                }
+                                              }}
+                                              className={`relative flex flex-col items-center gap-1 group`}
+                                              title={`Set to: ${ORDER_STAGE_LABELS[stage]}`}
+                                            >
+                                              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold border-2 transition-all ${
+                                                isCurrent
+                                                  ? 'border-primary bg-primary text-primary-foreground scale-110'
+                                                  : isCompleted
+                                                    ? 'border-primary bg-primary/20 text-primary'
+                                                    : 'border-muted-foreground/30 bg-background text-muted-foreground/50 group-hover:border-muted-foreground'
+                                              }`}>
+                                                {isCompleted && idx < currentIdx ? '✓' : idx + 1}
+                                              </div>
+                                              <span className={`text-[10px] leading-tight text-center max-w-[70px] ${
+                                                isCurrent ? 'font-semibold text-foreground' : isCompleted ? 'text-foreground/70' : 'text-muted-foreground/50'
+                                              }`}>
+                                                {ORDER_STAGE_LABELS[stage]}
+                                              </span>
+                                            </button>
+                                            {idx < ORDER_STAGES.length - 1 && (
+                                              <div className={`flex-1 h-0.5 mx-1 mt-[-16px] ${
+                                                idx < currentIdx ? 'bg-primary' : 'bg-muted-foreground/20'
+                                              }`} />
+                                            )}
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
                                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                                     <div>
                                       <p className="text-muted-foreground text-xs uppercase tracking-wide mb-1">Customer</p>
