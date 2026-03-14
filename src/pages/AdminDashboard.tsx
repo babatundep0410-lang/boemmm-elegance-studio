@@ -456,6 +456,15 @@ const AdminDashboard = () => {
                                                 } else {
                                                   setOrders(prev => prev.map(o => o.id === order.id ? { ...o, order_status: stage } : o));
                                                   toast({ title: `Status updated to ${ORDER_STAGE_LABELS[stage]}` });
+                                                  // Send order update email to customer
+                                                  supabase.functions.invoke('send-order-update', {
+                                                    body: {
+                                                      customerName: order.customer_name,
+                                                      customerEmail: order.customer_email,
+                                                      orderId: order.id,
+                                                      newStatus: stage,
+                                                    },
+                                                  }).catch(console.error);
                                                 }
                                               }}
                                               className={`relative flex flex-col items-center gap-1 group`}
