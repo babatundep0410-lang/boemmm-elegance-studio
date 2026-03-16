@@ -87,7 +87,7 @@ export default function ModelViewerAR() {
             '--poster-color': 'transparent',
           } as React.CSSProperties}
         >
-          {/* AR button slot */}
+          {/* AR button slot — only visible on AR-capable devices */}
           <button
             slot="ar-button"
             className="absolute bottom-20 left-1/2 -translate-x-1/2 flex items-center gap-2 px-5 py-3 bg-foreground text-background text-xs uppercase tracking-[0.15em] hover:bg-foreground/90 transition-colors z-20 border border-border"
@@ -102,6 +102,12 @@ export default function ModelViewerAR() {
           </div>
         {/* @ts-expect-error model-viewer web component closing */}
         </model-viewer>
+
+        {/* Always-visible AR prompt for desktop users */}
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 px-5 py-3 bg-foreground/90 text-background text-xs uppercase tracking-[0.15em] z-20 border border-border backdrop-blur-sm pointer-events-none">
+          <Smartphone className="w-4 h-4" />
+          <span>Open on mobile to view in your space</span>
+        </div>
 
         {/* Product info overlay */}
         {selected && (
