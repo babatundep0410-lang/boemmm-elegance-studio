@@ -209,7 +209,7 @@ const Home = () => {
       </button>
 
       {/* Slides */}
-      <div className="relative w-full h-full">
+      <div ref={containerRef} className="relative w-full h-full">
         {slides.map((slide, index) => (
           <SlideContent key={slide.id} slide={slide} isActive={currentSlide === index} />
         ))}
