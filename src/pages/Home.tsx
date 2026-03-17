@@ -59,7 +59,7 @@ const Home = () => {
 
   const { totalItems, setIsOpen: openCart } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { currentSlide, goToSlide, nextSlide, prevSlide, isTransitioning } = useSlider({
+  const { currentSlide, goToSlide, nextSlide, prevSlide, isTransitioning, containerRef } = useSlider({
     totalSlides: slides.length,
     autoPlayInterval: 6000,
   });
