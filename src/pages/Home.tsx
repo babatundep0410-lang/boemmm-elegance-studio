@@ -59,7 +59,7 @@ const Home = () => {
 
   const { totalItems, setIsOpen: openCart } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { currentSlide, goToSlide, nextSlide, prevSlide, isTransitioning } = useSlider({
+  const { currentSlide, goToSlide, nextSlide, prevSlide, isTransitioning, containerRef } = useSlider({
     totalSlides: slides.length,
     autoPlayInterval: 6000,
   });
@@ -209,7 +209,7 @@ const Home = () => {
       </button>
 
       {/* Slides */}
-      <div className="relative w-full h-full">
+      <div ref={containerRef} className="relative w-full h-full">
         {slides.map((slide, index) => (
           <SlideContent key={slide.id} slide={slide} isActive={currentSlide === index} />
         ))}
