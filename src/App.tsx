@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import { Layout } from "@/components/Layout";
 import { CartDrawer } from "@/components/CartDrawer";
+import { ScrollToTop } from "@/components/ScrollToTop";
 
 // Pages
 import Home from "./pages/Home";
