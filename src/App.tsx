@@ -33,6 +33,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             {/* Home - Special layout without header/footer */}
             <Route path="/" element={<><Home /><CartDrawer /></>} />
