@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Phone } from 'lucide-react';
 
 const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
@@ -53,7 +53,7 @@ const Checkout = () => {
     setIsSubmitting(false);
 
     if (error) {
-      toast({ title: 'Error', description: 'Failed to place order. Please try again.', variant: 'destructive' });
+      toast({ title: 'Error', description: 'Failed to submit your request. Please try again.', variant: 'destructive' });
       return;
     }
 
@@ -91,11 +91,29 @@ const Checkout = () => {
           <ArrowLeft className="w-4 h-4" /> Back
         </button>
 
-        <h1 className="font-serif text-3xl mb-10">Checkout</h1>
+        <h1 className="font-serif text-3xl mb-4">Complete Your Order</h1>
+        <p className="text-muted-foreground mb-10 max-w-lg">
+          Fill in your details below and our team will contact you to finalize your purchase. You can also reach us directly by phone.
+        </p>
+
+        {/* Call Us Banner */}
+        <a
+          href="tel:+2348000000000"
+          className="flex items-center gap-4 border border-border rounded-md p-5 mb-10 hover:bg-muted/50 transition-colors group"
+        >
+          <div className="w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+            <Phone className="w-5 h-5" />
+          </div>
+          <div>
+            <p className="font-serif text-base">Prefer to speak with us?</p>
+            <p className="text-sm text-muted-foreground mt-0.5">Call us directly — we'd love to help you complete your order.</p>
+          </div>
+        </a>
 
         <div className="grid md:grid-cols-5 gap-12">
           {/* Form */}
           <form onSubmit={handleSubmit} className="md:col-span-3 space-y-6">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground font-medium">Your Information</p>
             <div>
               <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Full Name *</label>
               <Input name="name" autoComplete="name" value={formData.name} onChange={handleChange} required />
@@ -105,24 +123,27 @@ const Checkout = () => {
               <Input name="email" type="email" autoComplete="email" value={formData.email} onChange={handleChange} required />
             </div>
             <div>
-              <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Phone</label>
-              <Input name="phone" type="tel" autoComplete="tel" value={formData.phone} onChange={handleChange} />
+              <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Phone *</label>
+              <Input name="phone" type="tel" autoComplete="tel" value={formData.phone} onChange={handleChange} required placeholder="So we can reach you quickly" />
             </div>
             <div>
               <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Shipping Address</label>
               <Textarea name="address" autoComplete="street-address" value={formData.address} onChange={handleChange} rows={3} />
             </div>
             <div>
-              <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Order Notes</label>
-              <Textarea name="notes" value={formData.notes} onChange={handleChange} rows={2} />
+              <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Additional Notes</label>
+              <Textarea name="notes" value={formData.notes} onChange={handleChange} rows={2} placeholder="Any preferences or questions about your order" />
             </div>
             <Button
               type="submit"
               disabled={isSubmitting}
               className="w-full bg-foreground text-background hover:bg-foreground/90 h-12"
             >
-              {isSubmitting ? 'Placing Order...' : `Place Order — ${formatPrice(totalPrice)}`}
+              {isSubmitting ? 'Submitting...' : 'Submit Order Request'}
             </Button>
+            <p className="text-xs text-center text-muted-foreground">
+              We'll reach out within 24 hours to confirm your order and arrange payment.
+            </p>
           </form>
 
           {/* Order Summary */}
