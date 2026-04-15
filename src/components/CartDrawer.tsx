@@ -74,7 +74,7 @@ export const CartDrawer = () => {
                 className="w-full bg-foreground text-background hover:bg-foreground/90"
                 onClick={() => { setIsOpen(false); navigate('/checkout'); }}
               >
-                Proceed to Checkout
+                Proceed to Order Request
               </Button>
               <button onClick={clearCart} className="w-full text-sm text-muted-foreground hover:text-foreground transition-colors">
                 Clear Cart
