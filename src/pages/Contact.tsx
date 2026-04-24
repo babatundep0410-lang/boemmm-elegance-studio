@@ -190,7 +190,7 @@ const Contact = () => {
                 <div>
                   <h3 className="font-serif text-lg mb-2">Location</h3>
                   <address className="not-italic text-muted-foreground text-sm leading-relaxed">
-                    West Africa
+                    Accra, Ghana
                   </address>
                 </div>
               </div>
