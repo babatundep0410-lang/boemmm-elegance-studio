@@ -52,6 +52,9 @@ export const Footer = () => {
             <h4 className="text-sm uppercase tracking-wider mb-4">Get in Touch</h4>
             <address className="not-italic text-sm text-background/70 space-y-2">
               <p>West Africa</p>
+              <a href="tel:+233504504492" className="block hover:text-background transition-colors">
+                0504504492
+              </a>
               <a href="mailto:hello@boemmm.com" className="block hover:text-background transition-colors">
                 hello@boemmm.com
               </a>
