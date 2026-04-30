@@ -9,11 +9,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, MessageCircle, Phone } from 'lucide-react';
 
+const WHATSAPP_NUMBER = '233504504492'; // BÖEMMM official WhatsApp
+
 const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isWhatsApping, setIsWhatsApping] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -26,13 +29,8 @@ const Checkout = () => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (items.length === 0) return;
-
-    setIsSubmitting(true);
-
-    const orderItems = items.map(item => ({
+  const buildOrderItems = () =>
+    items.map(item => ({
       id: item.id,
       name: item.name,
       price: item.price,
@@ -40,20 +38,112 @@ const Checkout = () => {
       collection: item.collection,
     }));
 
+  const persistOrder = async (orderItems: ReturnType<typeof buildOrderItems>) => {
     const { error } = await supabase.from('orders').insert({
-      customer_name: formData.name,
-      customer_email: formData.email,
-      customer_phone: formData.phone || null,
-      shipping_address: formData.address || null,
-      order_notes: formData.notes || null,
+      customer_name: formData.name.trim(),
+      customer_email: formData.email.trim(),
+      customer_phone: formData.phone.trim() || null,
+      shipping_address: formData.address.trim() || null,
+      order_notes: formData.notes.trim() || null,
       items: orderItems,
       total_price: totalPrice,
     });
+    return error;
+  };
 
+  const buildWhatsAppMessage = (orderItems: ReturnType<typeof buildOrderItems>) => {
+    const lines: string[] = [];
+    lines.push('Hello BÖEMMM, I would like to place an order request.');
+    lines.push('');
+    lines.push('*Customer Details*');
+    lines.push(`Name: ${formData.name.trim()}`);
+    lines.push(`Email: ${formData.email.trim()}`);
+    if (formData.phone.trim()) lines.push(`Phone: ${formData.phone.trim()}`);
+    if (formData.address.trim()) lines.push(`Shipping Address: ${formData.address.trim()}`);
+    lines.push('');
+    lines.push('*Order Items*');
+    orderItems.forEach((item, i) => {
+      lines.push(
+        `${i + 1}. ${item.name}${item.collection ? ` (${item.collection})` : ''} — × ${item.quantity} — ${formatPrice(item.price * item.quantity)}`
+      );
+    });
+    lines.push('');
+    lines.push(`*Total:* ${formatPrice(totalPrice)}`);
+    if (formData.notes.trim()) {
+      lines.push('');
+      lines.push('*Notes*');
+      lines.push(formData.notes.trim());
+    }
+    lines.push('');
+    lines.push('Please get back to me to confirm and arrange payment. Thank you.');
+    return lines.join('\n');
+  };
+
+  const validateForm = () => {
+    if (!formData.name.trim() || !formData.email.trim() || !formData.phone.trim()) {
+      toast({
+        title: 'Missing details',
+        description: 'Please fill in your name, email, and phone before continuing.',
+        variant: 'destructive',
+      });
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (items.length === 0) return;
+
+    setIsSubmitting(true);
+    const orderItems = buildOrderItems();
+    const error = await persistOrder(orderItems);
     setIsSubmitting(false);
 
     if (error) {
       toast({ title: 'Error', description: 'Failed to submit your request. Please try again.', variant: 'destructive' });
+      return;
+    }
+
+    supabase.functions.invoke('send-order-confirmation', {
+      body: {
+        customerName: formData.name,
+        customerEmail: formData.email,
+        items: orderItems,
+        totalPrice,
+      },
+    }).catch(console.error);
+
+    clearCart();
+    navigate('/checkout/success');
+  };
+
+  const handleWhatsAppOrder = async () => {
+    if (items.length === 0) return;
+    if (!validateForm()) return;
+
+    setIsWhatsApping(true);
+    const orderItems = buildOrderItems();
+    const message = buildWhatsAppMessage(orderItems);
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+
+    // Open WhatsApp first (must happen synchronously after the click to avoid popup blockers)
+    const waWindow = window.open(url, '_blank', 'noopener,noreferrer');
+    if (!waWindow) {
+      // Fallback: navigate current tab
+      window.location.href = url;
+    }
+
+    // Persist the order in the background so admin still sees it
+    const error = await persistOrder(orderItems);
+    setIsWhatsApping(false);
+
+    if (error) {
+      toast({
+        title: 'Saved locally only',
+        description: 'We opened WhatsApp, but could not save your request to our system. Please send the message to confirm.',
+        variant: 'destructive',
+      });
       return;
     }
 
@@ -150,13 +240,25 @@ const Checkout = () => {
               <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Additional Notes</label>
               <Textarea name="notes" value={formData.notes} onChange={handleChange} rows={2} placeholder="Any preferences or questions about your order" />
             </div>
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="w-full bg-foreground text-background hover:bg-foreground/90 h-12"
-            >
-              {isSubmitting ? 'Submitting...' : 'Submit Order Request'}
-            </Button>
+            <div className="space-y-3 pt-2">
+              <Button
+                type="submit"
+                disabled={isSubmitting || isWhatsApping}
+                className="w-full bg-foreground text-background hover:bg-foreground/90 h-12"
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit Order Request'}
+              </Button>
+              <Button
+                type="button"
+                onClick={handleWhatsAppOrder}
+                disabled={isSubmitting || isWhatsApping}
+                variant="outline"
+                className="w-full h-12 border-foreground/20 hover:bg-muted/50"
+              >
+                <MessageCircle className="w-4 h-4 mr-2" />
+                {isWhatsApping ? 'Opening WhatsApp...' : 'Send Order via WhatsApp'}
+              </Button>
+            </div>
             <p className="text-xs text-center text-muted-foreground">
               We'll reach out within 24 hours to confirm your order and arrange payment.
             </p>
