@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
-import { ArrowLeft, Phone } from 'lucide-react';
+import { ArrowLeft, MessageCircle, Phone } from 'lucide-react';
 
 const Checkout = () => {
   const { items, totalPrice, clearCart } = useCart();
@@ -96,19 +96,35 @@ const Checkout = () => {
           Fill in your details below and our team will contact you to finalize your purchase. You can also reach us directly by phone.
         </p>
 
-        {/* Call Us Banner */}
-        <a
-          href="tel:+2348000000000"
-          className="flex items-center gap-4 border border-border rounded-md p-5 mb-10 hover:bg-muted/50 transition-colors group"
-        >
-          <div className="w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-            <Phone className="w-5 h-5" />
-          </div>
-          <div>
-            <p className="font-serif text-base">Prefer to speak with us?</p>
-            <p className="text-sm text-muted-foreground mt-0.5">Call us directly — we'd love to help you complete your order.</p>
-          </div>
-        </a>
+        {/* Contact Banners */}
+        <div className="grid sm:grid-cols-2 gap-4 mb-10">
+          <a
+            href="tel:+233504504492"
+            className="flex items-center gap-4 border border-border rounded-md p-5 hover:bg-muted/50 transition-colors group"
+          >
+            <div className="w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <Phone className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="font-serif text-base">Call us</p>
+              <p className="text-sm text-muted-foreground mt-0.5">+233 (0) 50 450 4492</p>
+            </div>
+          </a>
+          <a
+            href="https://wa.me/message/LLUDPXVH3YJ3L1"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-4 border border-border rounded-md p-5 hover:bg-muted/50 transition-colors group"
+          >
+            <div className="w-12 h-12 rounded-full bg-foreground text-background flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <MessageCircle className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="font-serif text-base">Chat on WhatsApp</p>
+              <p className="text-sm text-muted-foreground mt-0.5">Quick replies during business hours.</p>
+            </div>
+          </a>
+        </div>
 
         <div className="grid md:grid-cols-5 gap-12">
           {/* Form */}

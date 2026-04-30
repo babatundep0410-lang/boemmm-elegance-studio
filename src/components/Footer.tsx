@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Instagram, Twitter } from 'lucide-react';
+import { Instagram, MessageCircle, Twitter } from 'lucide-react';
 import boemmLogo from '@/assets/Boemm_logoo.png';
 
 export const Footer = () => {

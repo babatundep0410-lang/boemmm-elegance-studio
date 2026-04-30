@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, MapPin, Phone } from 'lucide-react';
+import { Mail, MapPin, MessageCircle, Phone } from 'lucide-react';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -222,6 +222,25 @@ const Contact = () => {
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
                     Monday - Friday, 9am - 6pm GMT
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="w-12 h-12 bg-secondary flex items-center justify-center flex-shrink-0">
+                  <MessageCircle className="w-5 h-5 text-accent" />
+                </div>
+                <div>
+                  <h3 className="font-serif text-lg mb-2">WhatsApp</h3>
+                  <p className="text-muted-foreground text-sm">
+                    <a
+                      href="https://wa.me/message/LLUDPXVH3YJ3L1"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-foreground transition-colors"
+                    >
+                      Click to chat with us
+                    </a>
                   </p>
                 </div>
               </div>
