@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Instagram, Twitter } from 'lucide-react';
+import { Instagram, MessageCircle, Twitter } from 'lucide-react';
 import boemmLogo from '@/assets/Boemm_logoo.png';
 
 export const Footer = () => {
@@ -64,6 +64,9 @@ export const Footer = () => {
             © {new Date().getFullYear()} BÖEMMM. All rights reserved.
           </p>
           <div className="flex gap-4 items-center">
+            <a href="https://wa.me/message/LLUDPXVH3YJ3L1" target="_blank" rel="noopener noreferrer" className="text-background/50 hover:text-background transition-colors" aria-label="WhatsApp">
+              <MessageCircle size={18} />
+            </a>
             <a href="https://www.instagram.com/boemmm_official/" target="_blank" rel="noopener noreferrer" className="text-background/50 hover:text-background transition-colors" aria-label="Instagram">
               <Instagram size={18} />
             </a>
