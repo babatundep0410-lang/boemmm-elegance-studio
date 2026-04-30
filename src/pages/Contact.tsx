@@ -217,7 +217,7 @@ const Contact = () => {
                   <h3 className="font-serif text-lg mb-2">Phone</h3>
                   <p className="text-muted-foreground text-sm">
 <a href="tel:+233504504492" className="hover:text-foreground transition-colors">
-                      +233 (0) 50 450 4492
+                      0504504492
                     </a>
                   </p>
                   <p className="text-xs text-muted-foreground mt-1">
