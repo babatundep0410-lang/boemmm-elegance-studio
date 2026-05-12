@@ -53,7 +53,7 @@ export const Footer = () => {
             <address className="not-italic text-sm text-background/70 space-y-2">
               <p>West Africa</p>
               <a href="tel:+233504504492" className="block hover:text-background transition-colors">
-                (+233) 50 450 4492
+                +233 (0) 50 450 4492
               </a>
               <a href="mailto:hello@boemmm.com" className="block hover:text-background transition-colors">
                 hello@boemmm.com
