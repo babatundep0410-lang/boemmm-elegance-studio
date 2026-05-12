@@ -197,7 +197,7 @@ const Checkout = () => {
             </div>
             <div>
               <p className="font-serif text-base">Call us</p>
-              <p className="text-sm text-muted-foreground mt-0.5">0504504492</p>
+              <p className="text-sm text-muted-foreground mt-0.5">(+233) 50 450 4492</p>
             </div>
           </a>
           <a
